@@ -549,6 +549,12 @@ export async function spawnTypedWorker(
         }
         return
       case "worker.heartbeat":
+        // Shutdown travels supervisor -> worker while heartbeats travel in the
+        // opposite direction. An authenticated heartbeat emitted immediately
+        // before shutdown can therefore arrive after local state is already
+        // closing. It is stale-but-valid lifecycle evidence, not a protocol
+        // violation that warrants killing an otherwise graceful worker.
+        if (state === "closing") return
         if (state !== "ready" && state !== "busy") {
           throw new Error(`Worker heartbeat is invalid while lifecycle state is ${state}`)
         }

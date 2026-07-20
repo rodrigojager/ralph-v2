@@ -34,8 +34,11 @@ const STEP_TIMEOUT_MS = 20_000
 const PTY_EXIT_OUTPUT_IDLE_MS = 75
 const PTY_EXIT_OUTPUT_LIMIT_MS = 750
 const temporaryDirectories: string[] = []
+// ConPTY may preserve either the seven-bit ESC+[ form or the equivalent
+// eight-bit C1 CSI byte. OpenTUI cursor moves can split visible words, so both
+// forms must be removed before semantic text assertions.
 // biome-ignore lint/complexity/useRegexLiterals: literals with terminal controls are rejected by noControlCharactersInRegex.
-const CSI_ESCAPE = new RegExp("\\x1b\\[[0-?]*[ -/]*[@-~]", "gu")
+const CSI_ESCAPE = new RegExp("(?:\\x1b\\[|\\x9b)[0-?]*[ -/]*[@-~]", "gu")
 // biome-ignore lint/complexity/useRegexLiterals: literals with terminal controls are rejected by noControlCharactersInRegex.
 const OSC_ESCAPE = new RegExp("\\x1b\\][^\\x07]*(?:\\x07|$)", "gu")
 

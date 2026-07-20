@@ -164,16 +164,32 @@ async function processStartToken(pid: number): Promise<string> {
   }
   if (process.platform === "win32") {
     const systemRoot = process.env.SystemRoot
-    const executable = systemRoot
-      ? join(systemRoot, "System32", "WindowsPowerShell", "v1.0", "powershell.exe")
-      : "powershell.exe"
-    const ticks = await execute(executable, [
+    const args = [
       "-NoLogo",
       "-NoProfile",
       "-NonInteractive",
       "-Command",
       `$ErrorActionPreference='Stop'; $p=Get-Process -Id ${pid}; [Console]::Out.Write($p.StartTime.ToUniversalTime().Ticks)`,
-    ])
+    ] as const
+    const candidates = [
+      ...(systemRoot
+        ? [join(systemRoot, "System32", "WindowsPowerShell", "v1.0", "powershell.exe")]
+        : ["powershell.exe"]),
+      "pwsh.exe",
+    ]
+    let ticks: string | undefined
+    let firstError: unknown
+    for (const executable of candidates) {
+      try {
+        ticks = await execute(executable, args)
+        break
+      } catch (error) {
+        firstError ??= error
+      }
+    }
+    if (ticks === undefined) {
+      throw new Error("Windows process start time is unavailable", { cause: firstError })
+    }
     if (!/^\d+$/u.test(ticks)) throw new Error("Windows process start time was not an integer")
     return `windows:${ticks}`
   }

@@ -168,7 +168,7 @@ describe("S03 immutable raw gate evidence", () => {
       "const value = await Bun.file('product/capability.txt').text()",
       "const secret = process.env.CANARY ?? ''",
       "process.stdout.write('wiggum stdout ' + value + ' ' + secret + '\\n')",
-      `process.stdout.write('x'.repeat(${emittedPayloadBytes}))`,
+      `await new Promise((resolve) => process.stdout.write('x'.repeat(${emittedPayloadBytes}), resolve))`,
       "process.stderr.write('wiggum stderr ' + value + ' ' + secret + '\\n')",
       "if (value !== 'converged') process.exit(1)",
     ].join("; ")
