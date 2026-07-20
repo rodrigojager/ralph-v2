@@ -96,6 +96,66 @@
       "rationale": "BLK-AUTH-REAL: the provider smoke requires an explicitly supplied real API credential and remains opt-in outside ordinary CI.",
       "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
       "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "native-platform",
+      "report": "native-platform.xml",
+      "file": "tests/hardening/pty.test.ts",
+      "testName": "renders varied streams (no-usage), large output, child placeholder and resize",
+      "os": "windows",
+      "architecture": "arm64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-MULTIPLATFORM: Bun 1.3.14 for Windows ARM64 omits bun:ffi/TinyCC, so the OpenTUI native renderer cannot initialize; headless CLI, persistence, supervision and distribution remain mandatory in this job.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "native-platform",
+      "report": "native-platform.xml",
+      "file": "tests/hardening/pty.test.ts",
+      "testName": "renders varied streams (reported), large output, child placeholder and resize",
+      "os": "windows",
+      "architecture": "arm64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-MULTIPLATFORM: Bun 1.3.14 for Windows ARM64 omits bun:ffi/TinyCC, so the OpenTUI native renderer cannot initialize; headless CLI, persistence, supervision and distribution remain mandatory in this job.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "native-platform",
+      "report": "native-platform.xml",
+      "file": "tests/hardening/pty.test.ts",
+      "testName": "applies a mutable pre-run draft and saves workspace/global defaults through shared handlers",
+      "os": "windows",
+      "architecture": "arm64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-MULTIPLATFORM: Bun 1.3.14 for Windows ARM64 omits bun:ffi/TinyCC, so the OpenTUI native renderer cannot initialize; headless CLI, persistence, supervision and distribution remain mandatory in this job.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "native-platform",
+      "report": "native-platform.xml",
+      "file": "tests/hardening/pty.test.ts",
+      "testName": "q leaves the source in background, reattach observes progress and Ctrl+C uses the command bridge",
+      "os": "windows",
+      "architecture": "arm64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-MULTIPLATFORM: Bun 1.3.14 for Windows ARM64 omits bun:ffi/TinyCC, so the OpenTUI native renderer cannot initialize; headless CLI, persistence, supervision and distribution remain mandatory in this job.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "native-platform",
+      "report": "native-platform.xml",
+      "file": "tests/hardening/pty.test.ts",
+      "testName": "attach/replay stay read-only and final TUI, human, JSON and replay status agree",
+      "os": "windows",
+      "architecture": "arm64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-MULTIPLATFORM: Bun 1.3.14 for Windows ARM64 omits bun:ffi/TinyCC, so the OpenTUI native renderer cannot initialize; headless CLI, persistence, supervision and distribution remain mandatory in this job.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
     }
   ]
 }

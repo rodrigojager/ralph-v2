@@ -4313,10 +4313,14 @@ async function handleExecution(
     context.runUi !== undefined &&
     (uiMode === "tui" || (uiMode === "auto" && interactivePresentation))
   if (uiMode === "tui" && !context.runUi) {
-    throw new RalphError("RALPH_TUI_UNAVAILABLE", "This Ralph executable has no TUI adapter", {
-      exitCode: EXIT_CODES.operationalError,
-      hint: "Use --ui plain/none or install the full distribution.",
-    })
+    throw new RalphError(
+      "RALPH_TUI_UNAVAILABLE",
+      "This Ralph executable or runtime platform has no TUI adapter",
+      {
+        exitCode: EXIT_CODES.operationalError,
+        hint: "Use --ui plain/none; Windows ARM64 on Bun 1.3.14 cannot initialize OpenTUI because bun:ffi is unavailable.",
+      },
+    )
   }
   if (parsed.command !== "resume" && useTui && context.runUi?.prepare) {
     if (!interactivePresentation) {

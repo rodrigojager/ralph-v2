@@ -117,16 +117,17 @@
       "status": "open",
       "owner": "ci-and-platform-owner",
       "disposition": "block-release",
-      "affectedRequirements": ["R070"],
+      "affectedRequirements": ["R044", "R055", "R070"],
       "requiredEvidence": [
         "successful blocking CI runs for Windows, Linux and macOS on x64 and arm64",
         "JUnit classification and content-addressed artifacts for all six target pairs",
-        "approved explicit waiver for any unavailable runner, never a silent skip"
+        "approved explicit waiver for any unavailable runner or native capability, never a silent skip",
+        "Windows ARM64 interactive TUI retest after Bun exposes bun:ffi or Ralph adopts a renderer that does not require it"
       ],
       "waiver": {
         "disposition": "not-granted",
         "owner": "ci-and-platform-owner",
-        "rationale": "Only the local Windows x64 target has observed runtime evidence.",
+        "rationale": "The six-target matrix is not yet archived; additionally, Bun 1.3.14 on Windows ARM64 cannot initialize OpenTUI because bun:ffi/TinyCC is unavailable.",
         "expiresOn": null,
         "candidateDigest": null
       }

@@ -149,6 +149,13 @@ default, e `included` em canais anteriores não significa suporte testado. O tem
 `examples/release-support-policy.template.json` mantém as seis linhas visíveis, mas é
 deliberadamente inválido até o release owner escolher versão/channel e pelo menos um target.
 
+No Bun `1.3.14` para Windows ARM64, `bun:ffi`/TinyCC não está disponível e o renderer nativo do
+OpenTUI não pode inicializar. Nesse target, `--ui auto` preserva a execução pela apresentação
+headless e `--ui tui` falha fechado com diagnóstico; a engine, persistência, supervisão e comandos
+headless continuam na matriz obrigatória. O target permanece `not-promoted` até existir uma
+combinação de runtime/renderer validada. Os skips de PTY/TUI correspondentes são waivers
+classificados, não resultados aprovados.
+
 Os comandos de execução aceitam `--ui auto|tui|plain|none`. Em terminal interativo, `auto` pode
 abrir a paleta pré-run e, depois da persistência durável do run, a TUI operacional. `plain` e `none`
 preservam o uso direto por linha de comando e automação headless. Attach observa o run ao vivo;

@@ -61,15 +61,17 @@ function fingerprint(metadata: Stats): string {
 }
 
 function stableDirectoryFingerprint(metadata: Stats): string {
+  // dev+ino+type preserve identity while mode/owner preserve the security
+  // boundary. nlink and birthtime are intentionally excluded: APFS can expose
+  // them as mutable directory-entry metadata while this writer stages its own
+  // temporary file, which is not an identity or containment change.
   return [
     metadata.dev,
     metadata.ino,
     metadata.mode,
-    metadata.nlink,
     metadata.uid,
     metadata.gid,
     metadata.rdev,
-    metadata.birthtimeMs,
     metadata.isDirectory(),
     metadata.isSymbolicLink(),
   ].join(":")

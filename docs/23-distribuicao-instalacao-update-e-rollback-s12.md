@@ -163,6 +163,14 @@ exatamente as seis entradas abaixo, nesta ordem:
 | `bun-darwin-x64` | file fsync + directory fsync; garantia `full` | `included` ou `not-promoted` |
 | `bun-darwin-arm64` | file fsync + directory fsync; garantia `full` | `included` ou `not-promoted` |
 
+No runtime fixado Bun `1.3.14`, Windows ARM64 possui ainda uma limitação independente de
+durabilidade: esse build não expõe `bun:ffi`/TinyCC, necessário pelo renderer nativo do OpenTUI.
+O comando preserva CLI headless, persistência, supervisão e distribuição; `--ui auto` usa a
+apresentação headless e `--ui tui` falha com `RALPH_TUI_UNAVAILABLE`. Até um Bun compatível ou um
+renderer sem essa dependência ser validado, a policy de release deve manter `bun-windows-arm64`
+como `not-promoted`, com esse motivo público. Os cinco skips PTY/TUI na CI são classificados e
+temporários; não constituem teste aprovado nem alegação de suporte.
+
 As duas formas fechadas de entry são:
 
 ```text

@@ -23,7 +23,7 @@ try {
   )
 } catch {
   $code = $_.Exception.HResult -band 0xffff
-  [Console]::Error.Write("RALPH_WINDOWS_ERROR:$code:" + $_.Exception.Message)
+  [Console]::Error.Write("RALPH_WINDOWS_ERROR:$($code):" + $_.Exception.Message)
   exit 1
 }
 `

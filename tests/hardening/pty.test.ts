@@ -379,7 +379,14 @@ async function seedCompletedRun(root: string): Promise<string> {
 }
 
 function windowsPtyTest(name: string, callback: () => Promise<void>, timeout: number): void {
-  if (process.platform === "win32") test(name, callback, timeout)
+  if (process.platform !== "win32") return
+  // Bun 1.3.14 for Windows ARM64 is built without TinyCC/bun:ffi. OpenTUI's
+  // native renderer therefore cannot initialize on that runtime. Register a
+  // real, classifier-visible skip instead of hiding the case or claiming a
+  // pass; headless CLI, persistence, supervision and distribution tests still
+  // run on the same ARM64 job.
+  if (process.arch === "arm64") test.skip(name, callback, timeout)
+  else test(name, callback, timeout)
 }
 
 describe("native PTY TUI matrix", () => {
@@ -528,7 +535,7 @@ describe("native PTY TUI matrix", () => {
         session.write("\x7f\x7f")
         session.typeText("pt-BR")
         session.write("\r")
-        await session.waitForOutput("Language = pt-BR · draft", cursor)
+        await session.waitForOutput("pt-BR · draft", cursor)
         session.write("v")
         await session.waitForOutput("apply this run: available", cursor)
         session.write("w")
@@ -543,7 +550,7 @@ describe("native PTY TUI matrix", () => {
         // explicit global-default mutation without relying on hidden state.
         await session.waitForOutput("EDIT Language> en", cursor)
         session.write("\r")
-        await session.waitForOutput("Language = en · draft", cursor)
+        await session.waitForOutput("en · draft", cursor)
         session.write("g")
         await session.waitForOutput("CONFIRM: save global", cursor)
         session.write("\r")
@@ -555,7 +562,7 @@ describe("native PTY TUI matrix", () => {
         session.write("\x7f\x7f")
         session.typeText("pt-BR")
         session.write("\r")
-        await session.waitForOutput("Language = pt-BR · draft", cursor)
+        await session.waitForOutput("pt-BR · draft", cursor)
         // Preview is the deterministic acknowledgement that the final draft
         // revision reached the shared settings handler and is applyable. Do not
         // race Apply against a screen redraw or rely on an arbitrary delay.

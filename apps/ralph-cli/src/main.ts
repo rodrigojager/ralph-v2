@@ -259,30 +259,38 @@ async function runCommandMain(): Promise<Awaited<ReturnType<typeof runCli>>> {
   }
   const shutdown = createCommandShutdownLifecycle()
   const pullRequests = createPullRequestPortFromEnvironment(process.env)
-  const runUi: RunUiCommandService = {
-    async prepare(request) {
-      const { createTuiServices } = await import("./tui-services")
-      const tui = createTuiServices({
-        runControl: runLifecycle.runControl,
-        interrupt: shutdown.interrupt,
-        resolveModelCatalog: services.resolveModelCatalog,
-        credentials: services.credentials,
-        configureProfile: configureTuiProfile,
-      })
-      if (!tui.prepare) throw new Error("TUI preparation service is unavailable")
-      return tui.prepare(request)
-    },
-    async attach(request) {
-      const { createTuiServices } = await import("./tui-services")
-      return createTuiServices({
-        runControl: runLifecycle.runControl,
-        interrupt: shutdown.interrupt,
-        resolveModelCatalog: services.resolveModelCatalog,
-        credentials: services.credentials,
-        configureProfile: configureTuiProfile,
-      }).attach(request)
-    },
-  }
+  // The Windows ARM64 build of Bun 1.3.14 has no bun:ffi/TinyCC, while the
+  // OpenTUI native renderer requires it. Keep the command engine available and
+  // let `--ui auto` select its headless presentation by omitting only the TUI
+  // adapter on that exact runtime. Explicit `--ui tui` still fails closed with
+  // RALPH_TUI_UNAVAILABLE instead of reaching an opaque dlopen crash.
+  const interactiveTuiAvailable = !(process.platform === "win32" && process.arch === "arm64")
+  const runUi: RunUiCommandService | undefined = interactiveTuiAvailable
+    ? {
+        async prepare(request) {
+          const { createTuiServices } = await import("./tui-services")
+          const tui = createTuiServices({
+            runControl: runLifecycle.runControl,
+            interrupt: shutdown.interrupt,
+            resolveModelCatalog: services.resolveModelCatalog,
+            credentials: services.credentials,
+            configureProfile: configureTuiProfile,
+          })
+          if (!tui.prepare) throw new Error("TUI preparation service is unavailable")
+          return tui.prepare(request)
+        },
+        async attach(request) {
+          const { createTuiServices } = await import("./tui-services")
+          return createTuiServices({
+            runControl: runLifecycle.runControl,
+            interrupt: shutdown.interrupt,
+            resolveModelCatalog: services.resolveModelCatalog,
+            credentials: services.credentials,
+            configureProfile: configureTuiProfile,
+          }).attach(request)
+        },
+      }
+    : undefined
   try {
     commandContext = {
       version: packageJson.version,
@@ -305,7 +313,7 @@ async function runCommandMain(): Promise<Awaited<ReturnType<typeof runCli>>> {
       gitProcessSupervisorFactory: createWorkerGitProcessSupervisor,
       childRunWorkerSessionFactory: createWorkerChildRunSession,
       ...(pullRequests ? { pullRequests } : {}),
-      runUi,
+      ...(runUi ? { runUi } : {}),
       runControl: runLifecycle.runControl,
       contextControl: runLifecycle.contextControl,
       sandboxCapabilities: {

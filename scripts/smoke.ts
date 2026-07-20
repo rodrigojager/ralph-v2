@@ -47,6 +47,7 @@ const DoctorCheckSchema = z
     required: z.boolean(),
     message: z.string().min(1),
     hint: z.string().optional(),
+    details: z.record(z.string(), z.unknown()).optional(),
   })
   .strict()
 

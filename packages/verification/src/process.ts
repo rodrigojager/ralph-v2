@@ -106,6 +106,20 @@ function inheritedEnvironment(source: Record<string, string | undefined>): Recor
   return output
 }
 
+function commandEnvironment(
+  overrides: Record<string, string | undefined> | undefined,
+): Record<string, string> {
+  const output = inheritedEnvironment(process.env)
+  if (!overrides) return output
+  for (const key of SAFE_ENVIRONMENT_KEYS) {
+    if (!Object.hasOwn(overrides, key)) continue
+    const value = overrides[key]
+    if (value === undefined) delete output[key]
+    else output[key] = value
+  }
+  return output
+}
+
 function resolveEnvironmentReferences(
   refs: Record<string, string> | undefined,
   source: Record<string, string | undefined>,
@@ -198,7 +212,13 @@ export async function runStructuredCommand(
     ...Object.values(referencedEnvironment),
   ]
   const environment = {
-    ...inheritedEnvironment(sourceEnvironment),
+    // CommandContext environments may intentionally contain only Ralph
+    // overrides (for example RALPH_CONFIG_HOME). Preserve the host's bounded
+    // execution variables in that case so a portable bare executable such as
+    // `bun` remains discoverable on POSIX. Explicit own-key undefined still
+    // removes a safe variable; secrets and arbitrary host variables never enter
+    // this projection.
+    ...commandEnvironment(options.environment),
     ...referencedEnvironment,
     CI: "1",
     NO_COLOR: "1",

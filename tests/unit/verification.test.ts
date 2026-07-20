@@ -487,6 +487,24 @@ describe("workspace evidence", () => {
 })
 
 describe("structured command gates", () => {
+  test("inherits bounded host execution variables when command overrides are sparse", async () => {
+    const root = await temporaryDirectory()
+    const spec = CommandSpecSchema.parse({
+      executable: "bun",
+      args: ["-e", "process.stdout.write(process.env.CI === '1' ? 'ready' : 'wrong')"],
+      timeoutMs: 5_000,
+      successExitCodes: [0],
+      outputLimitBytes: 1_024,
+    })
+    const result = await runStructuredCommand(spec, {
+      workspaceRoot: root,
+      environment: { RALPH_CONFIG_HOME: resolve(root, "isolated-config") },
+    })
+
+    expect(result).toMatchObject({ exitCode: 0, stdout: "ready" })
+    expect(result.error).toBeUndefined()
+  })
+
   test("preserves argv boundaries, resolves explicit env refs and redacts captured secrets", async () => {
     const root = await temporaryDirectory()
     const spec = CommandSpecSchema.parse({
