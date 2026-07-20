@@ -36,12 +36,48 @@ const PTY_EXIT_OUTPUT_LIMIT_MS = 750
 const temporaryDirectories: string[] = []
 // ConPTY may preserve either the seven-bit ESC+[ form, the equivalent
 // eight-bit C1 CSI byte, or an invalid standalone 0x9b decoded as U+FFFD.
-// OpenTUI cursor moves can split visible words, so each complete CSI form must
-// be removed before semantic text assertions.
+// Keep the parameter/intermediate/final fields separate: incremental OpenTUI
+// redraws use CSI n C to skip cells whose glyphs are already on screen.
 // biome-ignore lint/complexity/useRegexLiterals: literals with terminal controls are rejected by noControlCharactersInRegex.
-const CSI_ESCAPE = new RegExp("(?:\\x1b\\[|\\x9b|\\ufffd)[0-?]*[ -/]*[@-~]", "gu")
+const CSI_ESCAPE = new RegExp("(?:\\x1b\\[|\\x9b|\\ufffd)([0-?]*)([ -/]*)([@-~])", "gu")
 // biome-ignore lint/complexity/useRegexLiterals: literals with terminal controls are rejected by noControlCharactersInRegex.
 const OSC_ESCAPE = new RegExp("\\x1b\\][^\\x07]*(?:\\x07|$)", "gu")
+const PRESERVED_SCREEN_CELL = "\u0000"
+
+function renderedTerminalText(output: string): string {
+  return output
+    .replace(CSI_ESCAPE, (_escape, parameters: string, intermediates: string, final: string) => {
+      if (intermediates !== "" || final !== "C" || !/^\d*$/u.test(parameters)) return ""
+      const requestedColumns = parameters === "" ? 1 : Number.parseInt(parameters, 10)
+      const columns = requestedColumns > 0 ? requestedColumns : 1
+      // A renderer should never need an unbounded forward move. Cap malformed
+      // hostile output without changing ordinary terminal semantics.
+      return PRESERVED_SCREEN_CELL.repeat(Math.min(columns, 4_096))
+    })
+    .replace(OSC_ESCAPE, "")
+}
+
+function includesRenderedText(output: string, needle: string): boolean {
+  const rendered = renderedTerminalText(output)
+  const lastStart = rendered.length - needle.length
+  for (let start = 0; start <= lastStart; start += 1) {
+    let matches = true
+    let literalMatches = 0
+    for (let offset = 0; offset < needle.length; offset += 1) {
+      const observed = rendered[start + offset]
+      if (observed !== PRESERVED_SCREEN_CELL && observed !== needle[offset]) {
+        matches = false
+        break
+      }
+      if (observed !== PRESERVED_SCREEN_CELL) literalMatches += 1
+    }
+    // Cursor-forward cells are evidence that the terminal preserved existing
+    // glyphs, not a wildcard license for a long blank/redraw jump to satisfy an
+    // arbitrary phrase. Require most of the semantic text in the same update.
+    if (matches && literalMatches >= Math.ceil(needle.length * 0.75)) return true
+  }
+  return false
+}
 
 interface OutputObserver {
   readonly needle: string
@@ -83,6 +119,13 @@ function waitWithTimeout<T>(promise: Promise<T>, milliseconds: number, label: st
 function pauseForInput(milliseconds = 75): Promise<void> {
   return new Promise((resolvePause) => setTimeout(resolvePause, milliseconds))
 }
+
+test("terminal text matching preserves cells skipped by incremental cursor-forward redraws", () => {
+  const notice = "NOTICE: Defa\x1b[1Clts s\x1b[1Cved for workspace"
+  expect(includesRenderedText(notice, "Defaults saved for workspace")).toBeTrue()
+  expect(includesRenderedText(notice, "Defaults failed for workspace")).toBeFalse()
+  expect(includesRenderedText("prefix\x1b[80Csuffix", "Defaults saved for workspace")).toBeFalse()
+})
 
 function openPty(
   fixture: string,
@@ -259,11 +302,8 @@ function openPty(
     const deadline = performance.now() + STEP_TIMEOUT_MS
     while (performance.now() < deadline) {
       const absoluteStart = Math.max(after, outputOffset)
-      const rendered = output
-        .slice(absoluteStart - outputOffset)
-        .replace(CSI_ESCAPE, "")
-        .replace(OSC_ESCAPE, "")
-      if (rendered.includes(needle)) return
+      const rendered = output.slice(absoluteStart - outputOffset)
+      if (includesRenderedText(rendered, needle)) return
       if (child.exitCode !== null) {
         throw new Error(
           `PTY child exited with code ${child.exitCode} before rendered text: ${needle}`,
