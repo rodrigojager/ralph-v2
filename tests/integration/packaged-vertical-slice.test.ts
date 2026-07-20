@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, test } from "bun:test"
+import { afterAll, beforeAll, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { dirname, join, relative, resolve, sep } from "node:path"
@@ -19,6 +19,11 @@ type JsonCommandResult = {
 
 const projectRoot = resolve(import.meta.dir, "..", "..")
 const fixtureRoot = resolve(projectRoot, "tests", "fixtures", "execution", "single-pass")
+
+// Building and removing the packaged fixture can exceed Bun's 5 s hook budget
+// when a hosted macOS quality runner is contended.
+setDefaultTimeout(120_000)
+
 let temporaryRoot = ""
 let workspace = ""
 let executable = ""
