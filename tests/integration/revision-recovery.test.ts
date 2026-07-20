@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
-import { cp } from "node:fs/promises"
+import { cp, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import { executeCli } from "@ralph-next/commands"
 import { ContextAssessmentFeedbackSchema, type JudgeOutput } from "@ralph-next/domain"
@@ -30,7 +30,7 @@ const temporaryDirectories: string[] = []
 // Recovery scenarios execute multiple durable runs and judge turns. This
 // envelope prevents hosted Windows scheduling pressure from aborting them;
 // command-owned production deadlines are asserted independently.
-setDefaultTimeout(60_000)
+setDefaultTimeout(120_000)
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map(removeTestDirectory))
@@ -100,6 +100,13 @@ async function fixtureWorkspace(): Promise<string> {
   await cp(resolve("tests", "fixtures", "execution", "single-pass"), root, {
     recursive: true,
   })
+  const prdPath = resolve(root, "PRD.md")
+  const fixturePrd = await readFile(prdPath, "utf8")
+  const recoveryPrd = fixturePrd.replace("timeout=20s", "timeout=120s")
+  if (recoveryPrd === fixturePrd) throw new Error("Revision recovery task timeout was not found")
+  // Three judge/executor turns plus a manual-review transition exercise
+  // recovery semantics; the short shared deadline is covered elsewhere.
+  await writeFile(prdPath, recoveryPrd, "utf8")
   await initializeWorkspace(root, "0.1.0-test")
   return root
 }

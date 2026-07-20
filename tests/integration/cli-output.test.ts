@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from "bun:test"
+import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { mkdir, writeFile } from "node:fs/promises"
 import { dirname, resolve } from "node:path"
 import { executeCli, runCli } from "@ralph-next/commands"
@@ -9,6 +9,11 @@ import { createTestDirectory, removeTestDirectory } from "../helpers/temp-direct
 const VERSION = "9.8.7-test"
 const CLI_ENTRY = resolve(import.meta.dir, "../../apps/ralph-cli/src/main.ts")
 const temporaryDirectories: string[] = []
+
+// Source-entrypoint cases launch fresh Bun processes and cross the complete
+// workspace/SQLite initialization boundary twice. Five seconds is too short
+// for a contended hosted Windows runner and is not the product health budget.
+setDefaultTimeout(30_000)
 
 async function temporaryDirectory(): Promise<string> {
   const path = await createTestDirectory()

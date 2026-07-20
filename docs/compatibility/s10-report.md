@@ -7,7 +7,7 @@ de produto (compatible/changed/deprecated/removed) permanece separada do assessm
 
 ## Identidade da execução
 
-- Gerado em: 2026-07-20T14:02:39.818Z
+- Gerado em: 2026-07-20T14:42:19.864Z
 - Host: win32/x64
 - Target nativo: bun-windows-x64-baseline
 - Legacy: `<LEGACY_BINARY_DIR>\ralph.exe` — `ffd6b016713e8754b06ad1c9a2f51d6ba761e7b223bd2083fd1f99c9b0a217ee`

@@ -1668,7 +1668,13 @@ describe("S03 command-authoritative runner", () => {
     const root = await fixtureWorkspace("deadline")
     const prdPath = resolve(root, "PRD.md")
     const prd = await readFile(prdPath, "utf8")
-    await writeFile(prdPath, prd.replace("timeout=2s", "timeout=8s"))
+    // The deadline-specific cases above retain the intentionally short
+    // fixture. This case validates takeover and reconciliation across two
+    // durable executions, so native Windows scheduling must not become the
+    // behavior under test.
+    const takeoverPrd = prd.replace("timeout=2s", "timeout=120s")
+    if (takeoverPrd === prd) throw new Error("Dead-writer takeover task timeout was not found")
+    await writeFile(prdPath, takeoverPrd)
     const options = await optionsFor(root, {
       mode: "once",
       noChangePolicy: "allow-no-change",

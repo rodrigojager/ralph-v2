@@ -84,6 +84,13 @@ describe("S03 public command handlers", () => {
 
   test("attach selects persisted state through a read-only UI port and requires a TTY", async () => {
     const root = await fixtureWorkspace("single-pass")
+    const prdPath = resolve(root, "PRD.md")
+    const fixturePrd = await readFile(prdPath, "utf8")
+    const attachPrd = fixturePrd.replace("timeout=20s", "timeout=120s")
+    if (attachPrd === fixturePrd) throw new Error("Attach fixture task timeout was not found")
+    // This case validates attach/UI routing after a completed run, not the
+    // shared fixture's short task deadline.
+    await writeFile(prdPath, attachPrd, "utf8")
     const backend = await backendFor(root)
     const context = commandContext(root, backend)
     const executed = await executeCli(
@@ -122,7 +129,7 @@ describe("S03 public command handlers", () => {
       },
     })
     expect(requests).toEqual([{ workspaceRoot: root, runId }])
-  }, 20_000)
+  }, 60_000)
 
   test("dry-run exposes skip-policy provenance and exact impact without calling a skip passed", async () => {
     const root = await fixtureWorkspace("single-pass")

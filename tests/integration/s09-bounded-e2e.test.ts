@@ -1161,7 +1161,10 @@ defaults:
       network: { mode: "none" as const, destinations: [] },
       environmentAllowlist,
       environment,
-      resources: { timeoutMs: 5_000 },
+      // The child is a one-line Node command, but cold process startup on a
+      // loaded Windows runner can exceed five seconds. This test validates the
+      // supervised sandbox contract; timeout behavior has dedicated coverage.
+      resources: { timeoutMs: 30_000 },
       ports: [],
     }
     const prepared = await prepareSandbox({

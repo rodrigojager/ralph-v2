@@ -52,4 +52,4 @@ test("next-only harness exercises every S01 command in disposable workspaces", a
   await expect(
     writeCompatibilityReports(report, resolve(projectRoot, "docs", "compatibility")),
   ).rejects.toThrow("require a standalone binary")
-}, 20_000)
+}, 120_000)

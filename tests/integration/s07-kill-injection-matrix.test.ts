@@ -42,7 +42,7 @@ const temporaryDirectories: string[] = []
 
 type FaultPoint = Parameters<NonNullable<ExecuteRunInput["dependencies"]["fault"]>>[0]
 
-setDefaultTimeout(90_000)
+setDefaultTimeout(120_000)
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map(removeTestDirectory))
@@ -54,17 +54,19 @@ async function fixtureWorkspace(toolBudget = false): Promise<string> {
   await cp(resolve("tests", "fixtures", "execution", "single-pass"), root, {
     recursive: true,
   })
+  const prdPath = resolve(root, "PRD.md")
+  const fixturePrd = await readFile(prdPath, "utf8")
+  let recoveryPrd = fixturePrd.replace("timeout=20s", "timeout=120s")
+  if (recoveryPrd === fixturePrd) throw new Error("Kill-matrix task timeout was not found")
   if (toolBudget) {
-    const prdPath = resolve(root, "PRD.md")
-    await writeFile(
-      prdPath,
-      (await readFile(prdPath, "utf8")).replace(
-        "model_calls=1; timeout=20s",
-        "model_calls=1; tool_calls=1; timeout=20s",
-      ),
-      "utf8",
+    recoveryPrd = recoveryPrd.replace(
+      "model_calls=1; timeout=120s",
+      "model_calls=1; tool_calls=1; timeout=120s",
     )
   }
+  // Literal crash/restart boundaries validate durable convergence, not the
+  // shared fixture's short deadline. A separate suite owns deadline behavior.
+  await writeFile(prdPath, recoveryPrd, "utf8")
   await initializeWorkspace(root, "0.1.0-s07-kill-matrix")
   return root
 }
