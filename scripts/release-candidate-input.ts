@@ -242,10 +242,20 @@ async function verifyCandidatePayload(
   }
   if (
     excludedIdentity &&
+    before.ino !== 0 &&
+    excludedIdentity.ino !== 0 &&
     before.dev === excludedIdentity.dev &&
     before.ino === excludedIdentity.ino
   ) {
     throw new Error(`Candidate payload cannot alias its own metadata file: ${payload.path}`)
+  }
+  // Bun on Windows can expose zero as the inode for unrelated files. Treating
+  // that sentinel as a stable identity rejects every payload as a metadata
+  // alias. A single-link policy remains fail-closed on platforms where inode
+  // identity is unavailable and rejects metadata aliases as well as any other
+  // hard-linked candidate payload.
+  if (before.nlink !== 1) {
+    throw new Error(`Candidate payload cannot be hard-linked: ${payload.path}`)
   }
   const canonical = await realpath(requested)
   if (!inside(root, canonical)) {
@@ -296,6 +306,8 @@ async function verifyCandidatePayload(
       afterHandle.ino !== opened.ino ||
       afterPath.dev !== opened.dev ||
       afterPath.ino !== opened.ino ||
+      afterHandle.nlink !== 1 ||
+      afterPath.nlink !== 1 ||
       afterHandle.size !== opened.size ||
       afterPath.size !== opened.size ||
       afterHandle.mtimeMs !== opened.mtimeMs ||
