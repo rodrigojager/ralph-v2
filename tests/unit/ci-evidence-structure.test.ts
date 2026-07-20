@@ -25,8 +25,10 @@ describe("CI evidence structure", () => {
     expect(workflow).toContain("--runner-label ${{ matrix.runner }}")
     expect(workflow).toContain("--runner-label ubuntu-24.04")
     expect(workflow).not.toContain("continue-on-error")
+    expect(workflow).toMatch(/bun test\s+--timeout=120000\s+--reporter=junit/u)
 
     expect(capture).toContain('issues.push("--runner-label is required')
+    expect(capture).toContain('"--timeout=120000"')
     expect(capture).toContain("requestedLabel: options.runnerLabel ?? null")
     expect(capture).toContain("imageOs: process.env.ImageOS ?? null")
     expect(capture).toContain("imageVersion: process.env.ImageVersion ?? null")

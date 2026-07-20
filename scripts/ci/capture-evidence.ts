@@ -394,6 +394,7 @@ function commandContracts(
         executable: "bun",
         arguments: [
           "test",
+          "--timeout=120000",
           "--reporter=junit",
           "--reporter-outfile=artifacts/ci/junit/quality.xml",
         ],

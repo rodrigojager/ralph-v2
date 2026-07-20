@@ -20,7 +20,8 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
   usada em produção e resultado estruturado durável fora do canal ConPTY desmontado.
 - Deadlines/guards de fixtures, sandbox e leases de child toleram fases nativas lentas em runners
   Windows congestionados sem confundir atraso de processamento com travamento ou perda de
-  ownership; os testes intencionalmente curtos de timeout permanecem separados.
+  ownership; o job quality usa um guard padrão de 120 s, enquanto testes intencionalmente curtos
+  de timeout permanecem separados e explícitos.
 - O baseline de coexistência reconhece as mensagens de inicialização em português e inglês
   realmente emitidas pelo Ralph clássico, sem enfraquecer os invariantes de produto e layout.
 
