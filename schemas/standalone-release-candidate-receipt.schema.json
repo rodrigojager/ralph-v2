@@ -1,0 +1,663 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/standalone-release-candidate-receipt.schema.json",
+  "title": "Ralph standalone release candidate receipt v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "product": {
+      "type": "string",
+      "const": "ralph-next"
+    },
+    "subject": {
+      "type": "string",
+      "const": "standalone-release-candidate"
+    },
+    "status": {
+      "type": "string",
+      "const": "candidate-only"
+    },
+    "publishable": {
+      "type": "boolean",
+      "const": false
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "promotionCandidate": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "channel": {
+          "type": "string",
+          "enum": ["beta", "stable"]
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "sourceFingerprintSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "support": {
+          "type": "object",
+          "properties": {
+            "licenseSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "thirdPartyNoticesSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "sbomSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "skillArtifactSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "supportPolicySha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "licenseSha256",
+            "thirdPartyNoticesSha256",
+            "sbomSha256",
+            "skillArtifactSha256",
+            "supportPolicySha256"
+          ],
+          "additionalProperties": false
+        },
+        "supportPolicy": {
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "type": "number",
+              "const": 1
+            },
+            "product": {
+              "type": "string",
+              "const": "ralph-next"
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+            },
+            "channel": {
+              "type": "string",
+              "enum": ["dev", "nightly", "beta", "stable"]
+            },
+            "matrix": {
+              "minItems": 6,
+              "maxItems": 6,
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "target": {
+                        "type": "string",
+                        "enum": [
+                          "bun-windows-x64-baseline",
+                          "bun-windows-arm64",
+                          "bun-linux-x64-baseline",
+                          "bun-linux-arm64",
+                          "bun-darwin-x64",
+                          "bun-darwin-arm64"
+                        ]
+                      },
+                      "status": {
+                        "type": "string",
+                        "const": "included"
+                      },
+                      "capabilities": {
+                        "type": "object",
+                        "properties": {
+                          "installControlStateDurability": {
+                            "type": "object",
+                            "properties": {
+                              "fileSync": {
+                                "type": "string",
+                                "const": "fsync-before-rename"
+                              },
+                              "directorySync": {
+                                "type": "string",
+                                "enum": ["fsync-after-rename", "unsupported-file-sync-only"]
+                              },
+                              "guarantee": {
+                                "type": "string",
+                                "enum": ["full", "reduced"]
+                              }
+                            },
+                            "required": ["fileSync", "directorySync", "guarantee"],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": ["installControlStateDurability"],
+                        "additionalProperties": false
+                      },
+                      "limitations": {
+                        "maxItems": 64,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 2000
+                        }
+                      }
+                    },
+                    "required": ["target", "status", "capabilities", "limitations"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "target": {
+                        "type": "string",
+                        "enum": [
+                          "bun-windows-x64-baseline",
+                          "bun-windows-arm64",
+                          "bun-linux-x64-baseline",
+                          "bun-linux-arm64",
+                          "bun-darwin-x64",
+                          "bun-darwin-arm64"
+                        ]
+                      },
+                      "status": {
+                        "type": "string",
+                        "const": "not-promoted"
+                      },
+                      "capabilities": {
+                        "type": "object",
+                        "properties": {
+                          "installControlStateDurability": {
+                            "type": "object",
+                            "properties": {
+                              "fileSync": {
+                                "type": "string",
+                                "const": "fsync-before-rename"
+                              },
+                              "directorySync": {
+                                "type": "string",
+                                "enum": ["fsync-after-rename", "unsupported-file-sync-only"]
+                              },
+                              "guarantee": {
+                                "type": "string",
+                                "enum": ["full", "reduced"]
+                              }
+                            },
+                            "required": ["fileSync", "directorySync", "guarantee"],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": ["installControlStateDurability"],
+                        "additionalProperties": false
+                      },
+                      "reason": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                      }
+                    },
+                    "required": ["target", "status", "capabilities", "reason"],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          },
+          "required": ["schemaVersion", "product", "version", "channel", "matrix"],
+          "additionalProperties": false
+        },
+        "targets": {
+          "minItems": 1,
+          "maxItems": 6,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "target": {
+                "type": "string",
+                "enum": [
+                  "bun-windows-x64-baseline",
+                  "bun-windows-arm64",
+                  "bun-linux-x64-baseline",
+                  "bun-linux-arm64",
+                  "bun-darwin-x64",
+                  "bun-darwin-arm64"
+                ]
+              },
+              "engineSha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "launcherSha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "buildMetadataSha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "launcherBuildMetadataSha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "archiveSha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "target",
+              "engineSha256",
+              "launcherSha256",
+              "buildMetadataSha256",
+              "launcherBuildMetadataSha256",
+              "archiveSha256"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "publishedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        }
+      },
+      "required": [
+        "version",
+        "channel",
+        "repository",
+        "commit",
+        "sourceFingerprintSha256",
+        "support",
+        "supportPolicy",
+        "targets",
+        "publishedAt"
+      ],
+      "additionalProperties": false
+    },
+    "files": {
+      "type": "object",
+      "properties": {
+        "license": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "sizeBytes": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 4294967296
+            },
+            "mediaType": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          "required": ["path", "sha256", "sizeBytes", "mediaType"],
+          "additionalProperties": false
+        },
+        "thirdPartyNotices": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "sizeBytes": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 4294967296
+            },
+            "mediaType": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          "required": ["path", "sha256", "sizeBytes", "mediaType"],
+          "additionalProperties": false
+        },
+        "sbom": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "sizeBytes": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 4294967296
+            },
+            "mediaType": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          "required": ["path", "sha256", "sizeBytes", "mediaType"],
+          "additionalProperties": false
+        },
+        "skill": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "sizeBytes": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 4294967296
+            },
+            "mediaType": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          "required": ["path", "sha256", "sizeBytes", "mediaType"],
+          "additionalProperties": false
+        },
+        "checksums": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "sizeBytes": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 4294967296
+            },
+            "mediaType": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          "required": ["path", "sha256", "sizeBytes", "mediaType"],
+          "additionalProperties": false
+        },
+        "targets": {
+          "minItems": 1,
+          "maxItems": 6,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "target": {
+                "type": "string",
+                "enum": [
+                  "bun-windows-x64-baseline",
+                  "bun-windows-arm64",
+                  "bun-linux-x64-baseline",
+                  "bun-linux-arm64",
+                  "bun-darwin-x64",
+                  "bun-darwin-arm64"
+                ]
+              },
+              "evidenceStatus": {
+                "type": "string",
+                "const": "built-not-tested"
+              },
+              "launcher": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "sizeBytes": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 4294967296
+                  },
+                  "mediaType": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": ["path", "sha256", "sizeBytes", "mediaType"],
+                "additionalProperties": false
+              },
+              "executable": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "sizeBytes": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 4294967296
+                  },
+                  "mediaType": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": ["path", "sha256", "sizeBytes", "mediaType"],
+                "additionalProperties": false
+              },
+              "buildMetadata": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "sizeBytes": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 4294967296
+                  },
+                  "mediaType": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": ["path", "sha256", "sizeBytes", "mediaType"],
+                "additionalProperties": false
+              },
+              "launcherBuildMetadata": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "sizeBytes": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 4294967296
+                  },
+                  "mediaType": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": ["path", "sha256", "sizeBytes", "mediaType"],
+                "additionalProperties": false
+              },
+              "archive": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "sizeBytes": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 4294967296
+                  },
+                  "mediaType": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": ["path", "sha256", "sizeBytes", "mediaType"],
+                "additionalProperties": false
+              },
+              "limitations": {
+                "maxItems": 64,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              }
+            },
+            "required": [
+              "target",
+              "evidenceStatus",
+              "launcher",
+              "executable",
+              "buildMetadata",
+              "launcherBuildMetadata",
+              "archive",
+              "limitations"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["license", "thirdPartyNotices", "sbom", "skill", "checksums", "targets"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "product",
+    "subject",
+    "status",
+    "publishable",
+    "reason",
+    "promotionCandidate",
+    "files"
+  ],
+  "additionalProperties": false
+}

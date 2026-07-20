@@ -1,0 +1,12 @@
+{
+  "name": "@ralph-next/persistence",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@ralph-next/domain": "workspace:*",
+    "@ralph-next/telemetry": "workspace:*",
+    "yaml": "2.9.0"
+  }
+}

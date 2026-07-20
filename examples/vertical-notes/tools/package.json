@@ -1,0 +1,9 @@
+{
+  "name": "@ralph-next/sample-judge",
+  "version": "0.0.0-private",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "ralph-sample-judge": "./ralph-sample-judge.mjs"
+  }
+}

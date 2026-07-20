@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "assessment-invalid-score",
+  "kind": "self",
+  "profileSnapshot": {
+    "id": "executor-profile",
+    "role": "executor",
+    "backend": "embedded",
+    "provider": "openai",
+    "model": "gpt-executor",
+    "contentHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "evidenceBundleId": "evidence-1",
+  "score": 101,
+  "summary": "Invalid score fixture.",
+  "adequate": [],
+  "problems": [],
+  "missingEvidence": [],
+  "recommendations": [],
+  "criterionScores": [],
+  "createdAt": "2026-07-18T12:00:00.000Z"
+}

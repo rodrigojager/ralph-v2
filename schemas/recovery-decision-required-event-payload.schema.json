@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/recovery-decision-required-event-payload.schema.json",
+  "title": "Ralph explicit recovery decision request event payload v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "recoveryRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "recoveryHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "recoveryStorageHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "taskBaselineHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "expectedWorkspaceHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "observedWorkspaceHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "supersedesDecisionEventId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "availableActions": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["continue", "inspect", "checkpoint", "rollback-explicit"]
+      }
+    },
+    "recommendedAction": {
+      "type": "string",
+      "enum": ["continue", "inspect", "checkpoint", "rollback-explicit"]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "recoveryRef",
+    "recoveryHash",
+    "recoveryStorageHash",
+    "taskBaselineHash",
+    "expectedWorkspaceHash",
+    "observedWorkspaceHash",
+    "availableActions",
+    "recommendedAction"
+  ],
+  "additionalProperties": false
+}

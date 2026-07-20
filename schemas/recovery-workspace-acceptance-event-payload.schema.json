@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/recovery-workspace-acceptance-event-payload.schema.json",
+  "title": "Ralph hash-bound workspace recovery acceptance event payload v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "action": {
+      "type": "string",
+      "const": "continue"
+    },
+    "source": {
+      "type": "string",
+      "const": "cli"
+    },
+    "decisionEventId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "decisionAttemptId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "decisionRecoveryRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "decisionRecoveryHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "decisionRecoveryStorageHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "currentRecoveryRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "currentRecoveryHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "currentRecoveryStorageHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "taskBaselineHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "expectedWorkspaceHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "observedWorkspaceHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "action",
+    "source",
+    "decisionEventId",
+    "decisionAttemptId",
+    "decisionRecoveryRef",
+    "decisionRecoveryHash",
+    "decisionRecoveryStorageHash",
+    "currentRecoveryRef",
+    "currentRecoveryHash",
+    "currentRecoveryStorageHash",
+    "taskBaselineHash",
+    "expectedWorkspaceHash",
+    "observedWorkspaceHash"
+  ],
+  "additionalProperties": false
+}

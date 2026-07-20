@@ -1,0 +1,63 @@
+{
+  "$schema": "ralph.sample.executed-evidence-index.v1",
+  "evidenceStatus": "executed-local-integration",
+  "hashes": "redacted-after-runtime-validation",
+  "tasks": [
+    {
+      "ref": "vertical-notes/health-surface",
+      "mode": "change+artifact",
+      "artifact": "artifacts/health-runbook.md",
+      "artifactStatus": "passed",
+      "filePresent": true,
+      "attemptStatuses": [
+        "passed"
+      ]
+    },
+    {
+      "ref": "vertical-notes-lifecycle/note-create-flow",
+      "mode": "change+artifact",
+      "artifact": "artifacts/note-contract.md",
+      "artifactStatus": "passed",
+      "filePresent": true,
+      "attemptStatuses": [
+        "rejected",
+        "passed"
+      ],
+      "judgeSequence": [
+        72,
+        96
+      ]
+    },
+    {
+      "ref": "vertical-notes-lifecycle/note-resume-flow",
+      "mode": "change+artifact",
+      "artifact": "artifacts/resume-checkpoint.md",
+      "artifactStatus": "passed",
+      "filePresent": true,
+      "attemptStatuses": [
+        "passed"
+      ]
+    },
+    {
+      "ref": "vertical-notes/operator-diagnostics",
+      "mode": "change+artifact",
+      "artifact": "artifacts/operator-runbook.md",
+      "artifactStatus": "passed",
+      "filePresent": true,
+      "attemptStatuses": [
+        "passed"
+      ]
+    }
+  ],
+  "parentReconciliation": {
+    "ref": "vertical-notes/notes-lifecycle",
+    "child": "plans/notes-lifecycle.prd.md",
+    "childStatus": "passed",
+    "parentStatus": "completed",
+    "requiresAllChildLeaves": true,
+    "allChildLeavesCompleted": true
+  },
+  "containsTokenValues": false,
+  "containsCredentialValues": false,
+  "containsNoteText": false
+}

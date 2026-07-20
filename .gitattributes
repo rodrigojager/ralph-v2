@@ -1,0 +1,10 @@
+* text=auto eol=lf
+
+*.exe -text
+*.sqlite -text
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.gif -text
+*.webp -text
+*.ico -text

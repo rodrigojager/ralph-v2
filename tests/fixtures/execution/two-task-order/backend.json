@@ -1,0 +1,22 @@
+[
+  {
+    "expectedTask": "two-task-order/publish-contract",
+    "actions": [
+      {
+        "type": "write",
+        "path": "delivery/contract.txt",
+        "content": "v1"
+      }
+    ]
+  },
+  {
+    "expectedTask": "two-task-order/consume-contract",
+    "actions": [
+      {
+        "type": "write",
+        "path": "delivery/result.txt",
+        "content": "ready"
+      }
+    ]
+  }
+]

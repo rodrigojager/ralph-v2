@@ -1,0 +1,6 @@
+0/0 width=1 percentage=0 filled=0 ascii=- unicode=░
+1/2 width=12 percentage=50 filled=6 ascii=######------ unicode=██████░░░░░░
+6/12 width=12 percentage=50 filled=6 ascii=######------ unicode=██████░░░░░░
+50/100 width=12 percentage=50 filled=6 ascii=######------ unicode=██████░░░░░░
+1/3 width=10 percentage=33 filled=3 ascii=###------- unicode=███░░░░░░░
+2/2 width=7 percentage=100 filled=7 ascii=####### unicode=███████

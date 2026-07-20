@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ralph Vertical PRD Generator"
+  short_description: "Gera PRDs Ralph v2 em slices verticais"
+  default_prompt: "Use $ralph-loop-prd-generator para transformar este projeto em um PRD Ralph v2 verticalizado, com todos os Sub-PRDs escritos antes da execução."

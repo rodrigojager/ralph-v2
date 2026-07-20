@@ -1,0 +1,44 @@
+schema_version: 1
+defaults:
+  judge_profile: sample-fake-judge
+evaluation:
+  mode: external
+  threshold: 85
+  max_revision_attempts: 2
+  judge_call_retries: 1
+  on_judge_unavailable: pause
+  blocking_severities: [major, critical]
+  exhausted_policy: manual-review
+profiles:
+  sample-fake-judge:
+    role: judge
+    backend: external-cli
+    provider: sample-fixture
+    model: deterministic-revision-v1
+    requirements:
+      input: [text]
+      tools: false
+      tool_streaming: false
+      reasoning: false
+      structured_output: true
+      usage: []
+      access: []
+    fallback_profiles: []
+    fallback_on: []
+    limits: {}
+    external_cli:
+      executable: ralph-sample-judge
+      args: []
+      cwd: .
+      environment_refs: {}
+      input_mode: stdin-json
+      adapter: known-output
+      adapter_id: judge-output-json-v1
+      capabilities:
+        streaming: false
+        tool_calling: unavailable
+        cancellation: true
+        usage: unavailable
+      mutation_mode: read-only
+      timeout_ms: 30000
+      output_limit_bytes: 262144

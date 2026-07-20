@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vertical Notes</title>
+  </head>
+  <body>
+    <main>
+      <h1>Vertical Notes</h1>
+      <p id="health" role="status">Checking service health…</p>
+      <form id="note-form" hidden>
+        <label for="note-text">New note</label>
+        <textarea id="note-text" maxlength="280" required></textarea>
+        <button type="submit">Create note</button>
+      </form>
+      <p id="feedback" role="alert"></p>
+      <ul id="notes" aria-label="Saved notes"></ul>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

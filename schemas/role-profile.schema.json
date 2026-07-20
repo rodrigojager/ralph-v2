@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/role-profile.schema.json",
+  "title": "Ralph executor or judge role profile v1",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "role": {
+      "type": "string",
+      "enum": ["executor", "judge"]
+    },
+    "backend": {
+      "type": "string",
+      "enum": ["embedded", "external-cli"]
+    },
+    "provider": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^\\S+$"
+    },
+    "credential": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+        },
+        "provider": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "api-key",
+            "environment",
+            "oauth-browser",
+            "device-code",
+            "subscription-session",
+            "existing-session",
+            "external-cli"
+          ]
+        },
+        "store": {
+          "type": "string",
+          "enum": [
+            "os-keychain",
+            "secret-provider",
+            "encrypted-file",
+            "environment",
+            "insecure-file"
+          ]
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accountHint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        }
+      },
+      "required": ["id", "provider", "method", "store", "locator", "label"],
+      "additionalProperties": false
+    },
+    "variant": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "parameters": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128,
+        "pattern": "^\\S+$"
+      },
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["text", "image", "file"]
+          }
+        },
+        "tools": {
+          "type": "boolean"
+        },
+        "toolStreaming": {
+          "type": "boolean"
+        },
+        "reasoning": {
+          "type": "boolean"
+        },
+        "structuredOutput": {
+          "type": "boolean"
+        },
+        "usage": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["input", "output", "reasoning", "cache-read", "cache-write", "cost"]
+          }
+        },
+        "access": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["api", "subscription"]
+          }
+        },
+        "minimumContext": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "minimumOutput": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "input",
+        "tools",
+        "toolStreaming",
+        "reasoning",
+        "structuredOutput",
+        "usage",
+        "access"
+      ],
+      "additionalProperties": false
+    },
+    "fallbackProfiles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+      }
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "maxInputTokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "maxOutputTokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "maxReasoningTokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "maxTotalTokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "maxCost": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "number",
+              "minimum": 0
+            },
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            }
+          },
+          "required": ["amount", "currency"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "externalCli": {
+      "type": "object",
+      "properties": {
+        "executable": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "args": {
+          "maxItems": 1024,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 32768
+          }
+        },
+        "cwd": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "environmentRefs": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^env:[A-Za-z_][A-Za-z0-9_]*$"
+          }
+        },
+        "inputMode": {
+          "type": "string",
+          "const": "stdin-json"
+        },
+        "adapter": {
+          "type": "string",
+          "enum": ["protocol", "known-output", "generic"]
+        },
+        "adapterId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "streaming": {
+              "type": "boolean"
+            },
+            "toolCalling": {
+              "type": "string",
+              "enum": ["ralph", "internal", "unavailable"]
+            },
+            "cancellation": {
+              "type": "boolean"
+            },
+            "usage": {
+              "type": "string",
+              "enum": ["reported", "estimated", "unavailable"]
+            }
+          },
+          "required": ["streaming", "toolCalling", "cancellation", "usage"],
+          "additionalProperties": false
+        },
+        "mutationMode": {
+          "type": "string",
+          "enum": ["read-only", "workspace"]
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "outputLimitBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "executable",
+        "args",
+        "cwd",
+        "environmentRefs",
+        "inputMode",
+        "adapter",
+        "capabilities",
+        "mutationMode",
+        "timeoutMs",
+        "outputLimitBytes"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "role",
+    "backend",
+    "provider",
+    "model",
+    "parameters",
+    "requirements",
+    "fallbackProfiles",
+    "limits"
+  ],
+  "additionalProperties": false
+}

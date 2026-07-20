@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "version",
+  "data": {
+    "name": "ralph-next",
+    "version": "9.8.7-test"
+  },
+  "diagnostics": []
+}

@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "https://github.com/anomalyco/opencode",
+    "revision": "45cd8d76920839e4a7b6b931c4e26b52e1495636",
+    "packageVersion": "1.18.3",
+    "licenseExpression": "MIT",
+    "licensePath": "third_party/opencode/LICENSE",
+    "licenseSha256Lf": "625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b",
+    "snapshotVerifiedDate": "2026-07-18"
+  },
+  "sources": [
+    {
+      "path": "LICENSE",
+      "classification": "copied",
+      "gitBlobSha1": "6439474beed8e0271df9862eff97ffd70ec2464c",
+      "sha256AuditedCheckout": "b5c625d157735f04e1b2b7ceccee849130b554bdb23cd58db55a38a257efbbdd",
+      "sha256Lf": "625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b",
+      "patchIds": ["P0001"],
+      "destinationPaths": ["third_party/opencode/LICENSE"]
+    },
+    {
+      "path": "packages/core/src/model.ts",
+      "classification": "derived",
+      "gitBlobSha1": "52fff98733b11acdd292115bd4dabe320ebc592f",
+      "sha256AuditedCheckout": "8f7f41ea76733a53b39c5dc2b3b29ca9f7597ca9b877a45a9c86dc76d839058b",
+      "sha256Lf": "e4825ddfa8bceadccaffb9572092ea1628892f42be1f37beeeeb92c2deb28f8c",
+      "patchIds": ["P0003"],
+      "destinationPaths": [
+        "packages/providers/src/catalog.ts",
+        "packages/providers/src/contracts.ts",
+        "packages/providers/src/curated.ts"
+      ]
+    },
+    {
+      "path": "packages/core/src/models-dev.ts",
+      "classification": "derived",
+      "gitBlobSha1": "602133d9047a3d168408afaa5d7530c3e4df2917",
+      "sha256AuditedCheckout": "e6d49702b893225a21f55fa2f01ccdc3e1cd4aa484e92d3dfe37e65f60233c76",
+      "sha256Lf": "236c8e3ecfaf33da7c1cf194316367cce3868a3c66c57e2cc7d62746f8457d50",
+      "patchIds": ["P0003"],
+      "destinationPaths": [
+        "packages/providers/src/file-cache.ts",
+        "packages/providers/src/models-dev.ts",
+        "packages/providers/src/runtime.ts"
+      ]
+    },
+    {
+      "path": "packages/core/src/provider.ts",
+      "classification": "derived",
+      "gitBlobSha1": "03f7d7eef378ce8843c31635bbe95956d8f1ae5a",
+      "sha256AuditedCheckout": "a3ed3133952b52ae847615ddb40166b6398ed9c3cb0b3db6ce909479269b3921",
+      "sha256Lf": "ec95c474575bc7e4be36f7286b7b883c6bb92e685c8e5b31bac3fe97cab9edc4",
+      "patchIds": ["P0003"],
+      "destinationPaths": [
+        "packages/providers/src/contracts.ts",
+        "packages/providers/src/curated.ts",
+        "packages/providers/src/registry.ts"
+      ]
+    },
+    {
+      "path": "packages/opencode/src/auth/index.ts",
+      "classification": "reference-only",
+      "gitBlobSha1": "a133e88498d5b2c3b274f3e7eb7a1d63f59a7851",
+      "sha256AuditedCheckout": "6b174df5b71cbed1ba1887f201f2357511c2563abbfb88919150e6e8fc930e43",
+      "sha256Lf": "dc897ff4b04dba1ed81f3fe24cdce7289ae32acc6bac60bc430a884bb60ad5b0",
+      "patchIds": [],
+      "destinationPaths": []
+    },
+    {
+      "path": "packages/opencode/src/plugin/openai/codex.ts",
+      "classification": "derived",
+      "gitBlobSha1": "d16b7495654c8da0bc1522d9e96118162ff9489f",
+      "sha256AuditedCheckout": "1ceef8facd9b537bcb328d9ea6898f555d525fb01cebbb2e7b1d482df514fb78",
+      "sha256Lf": "f3f9525559c5774ab420ed3c425fd13dfd16fdffd1140345ee510d79f0efd5df",
+      "patchIds": ["P0002"],
+      "destinationPaths": [
+        "apps/ralph-cli/src/s04-services.ts",
+        "packages/openai-driver/src/device-auth.ts",
+        "packages/openai-driver/src/driver.ts",
+        "packages/openai-driver/src/protocol.ts"
+      ]
+    },
+    {
+      "path": "packages/opencode/src/provider/provider.ts",
+      "classification": "derived",
+      "gitBlobSha1": "5ac916e412a8ff95465780dedf4c911d7be1dadf",
+      "sha256AuditedCheckout": "fca4c0686dc6c3ee4ccb63d2401af9f4f205356e77316793e3df87a5eefe8e09",
+      "sha256Lf": "dbcf86afd30352ac21104a07433bde2e40d2c98d67d15f62c201b4e06780ce4e",
+      "patchIds": ["P0003"],
+      "destinationPaths": [
+        "packages/providers/src/contracts.ts",
+        "packages/providers/src/curated.ts",
+        "packages/providers/src/registry.ts"
+      ]
+    }
+  ],
+  "destinations": [
+    {
+      "path": "apps/ralph-cli/src/s04-services.ts",
+      "classification": "derived",
+      "sourcePaths": ["packages/opencode/src/plugin/openai/codex.ts"],
+      "patchIds": ["P0002"],
+      "sha256": "d19cf3d7e857114e2b435f736eabd3072a2ae4c8f90fc13b8bc821285c4030e6",
+      "sha256Lf": "d19cf3d7e857114e2b435f736eabd3072a2ae4c8f90fc13b8bc821285c4030e6"
+    },
+    {
+      "path": "packages/openai-driver/src/device-auth.ts",
+      "classification": "derived",
+      "sourcePaths": ["packages/opencode/src/plugin/openai/codex.ts"],
+      "patchIds": ["P0002"],
+      "sha256": "03092923bcee6392e9312451bc684737f1acc485af40f4c7076eded1ede998ec",
+      "sha256Lf": "03092923bcee6392e9312451bc684737f1acc485af40f4c7076eded1ede998ec"
+    },
+    {
+      "path": "packages/openai-driver/src/driver.ts",
+      "classification": "derived",
+      "sourcePaths": ["packages/opencode/src/plugin/openai/codex.ts"],
+      "patchIds": ["P0002"],
+      "sha256": "9b4358029b7e2088e9399493fe90358b892b539cd2f92ab2c40ac7253c3245f2",
+      "sha256Lf": "9b4358029b7e2088e9399493fe90358b892b539cd2f92ab2c40ac7253c3245f2"
+    },
+    {
+      "path": "packages/openai-driver/src/protocol.ts",
+      "classification": "derived",
+      "sourcePaths": ["packages/opencode/src/plugin/openai/codex.ts"],
+      "patchIds": ["P0002"],
+      "sha256": "ef31dfdf8f0aea263f95c7ce7fe0722be5bdbc27b7efad6f4266ac7adf44fe77",
+      "sha256Lf": "ef31dfdf8f0aea263f95c7ce7fe0722be5bdbc27b7efad6f4266ac7adf44fe77"
+    },
+    {
+      "path": "packages/providers/src/catalog.ts",
+      "classification": "derived",
+      "sourcePaths": ["packages/core/src/model.ts"],
+      "patchIds": ["P0003"],
+      "sha256": "fa392028de4da6aca0fd89b239c6ed73682613d6db7bc8ffdca2db73a61113e1",
+      "sha256Lf": "fa392028de4da6aca0fd89b239c6ed73682613d6db7bc8ffdca2db73a61113e1"
+    },
+    {
+      "path": "packages/providers/src/contracts.ts",
+      "classification": "derived",
+      "sourcePaths": [
+        "packages/core/src/model.ts",
+        "packages/core/src/provider.ts",
+        "packages/opencode/src/provider/provider.ts"
+      ],
+      "patchIds": ["P0003"],
+      "sha256": "d43f4d70d43e1318d09fd768e43cd2e45963c4421f37a4966ca546f0703b1987",
+      "sha256Lf": "d43f4d70d43e1318d09fd768e43cd2e45963c4421f37a4966ca546f0703b1987"
+    },
+    {
+      "path": "packages/providers/src/curated.ts",
+      "classification": "derived",
+      "sourcePaths": [
+        "packages/core/src/model.ts",
+        "packages/core/src/provider.ts",
+        "packages/opencode/src/provider/provider.ts"
+      ],
+      "patchIds": ["P0003"],
+      "sha256": "b17981daecbc6597c63e1a957f911b9354ee415fca7255c682c24beccc824b6a",
+      "sha256Lf": "b17981daecbc6597c63e1a957f911b9354ee415fca7255c682c24beccc824b6a"
+    },
+    {
+      "path": "packages/providers/src/file-cache.ts",
+      "classification": "derived",
+      "sourcePaths": ["packages/core/src/models-dev.ts"],
+      "patchIds": ["P0003"],
+      "sha256": "e721f08a326d44a137adfad9e0c4088c643a7c6253113edc85ced925a19f9c4a",
+      "sha256Lf": "e721f08a326d44a137adfad9e0c4088c643a7c6253113edc85ced925a19f9c4a"
+    },
+    {
+      "path": "packages/providers/src/models-dev.ts",
+      "classification": "derived",
+      "sourcePaths": ["packages/core/src/models-dev.ts"],
+      "patchIds": ["P0003"],
+      "sha256": "43ffcc280a9170bcdce5cf7bb6e5a5759715b314ee894177f25d7d81f147ea97",
+      "sha256Lf": "43ffcc280a9170bcdce5cf7bb6e5a5759715b314ee894177f25d7d81f147ea97"
+    },
+    {
+      "path": "packages/providers/src/registry.ts",
+      "classification": "derived",
+      "sourcePaths": [
+        "packages/core/src/provider.ts",
+        "packages/opencode/src/provider/provider.ts"
+      ],
+      "patchIds": ["P0003"],
+      "sha256": "6b495b38e2d13090fab3d86fb579c525f93a23cabd168c47acafa5ed66f4126c",
+      "sha256Lf": "6b495b38e2d13090fab3d86fb579c525f93a23cabd168c47acafa5ed66f4126c"
+    },
+    {
+      "path": "packages/providers/src/runtime.ts",
+      "classification": "derived",
+      "sourcePaths": ["packages/core/src/models-dev.ts"],
+      "patchIds": ["P0003"],
+      "sha256": "d6a11f626e154e84250af0b47c31803380d84405d5d736a588c468e6c1fe7761",
+      "sha256Lf": "d6a11f626e154e84250af0b47c31803380d84405d5d736a588c468e6c1fe7761"
+    },
+    {
+      "path": "third_party/opencode/LICENSE",
+      "classification": "copied",
+      "sourcePaths": ["LICENSE"],
+      "patchIds": ["P0001"],
+      "sha256": "625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b",
+      "sha256Lf": "625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
+    }
+  ],
+  "patches": [
+    {
+      "id": "P0001",
+      "sourcePaths": ["LICENSE"],
+      "destinationPaths": ["third_party/opencode/LICENSE"]
+    },
+    {
+      "id": "P0002",
+      "sourcePaths": ["packages/opencode/src/plugin/openai/codex.ts"],
+      "destinationPaths": [
+        "apps/ralph-cli/src/s04-services.ts",
+        "packages/openai-driver/src/device-auth.ts",
+        "packages/openai-driver/src/driver.ts",
+        "packages/openai-driver/src/protocol.ts"
+      ]
+    },
+    {
+      "id": "P0003",
+      "sourcePaths": [
+        "packages/core/src/model.ts",
+        "packages/core/src/models-dev.ts",
+        "packages/core/src/provider.ts",
+        "packages/opencode/src/provider/provider.ts"
+      ],
+      "destinationPaths": [
+        "packages/providers/src/catalog.ts",
+        "packages/providers/src/contracts.ts",
+        "packages/providers/src/curated.ts",
+        "packages/providers/src/file-cache.ts",
+        "packages/providers/src/models-dev.ts",
+        "packages/providers/src/registry.ts",
+        "packages/providers/src/runtime.ts"
+      ]
+    }
+  ],
+  "brandingPolicy": {
+    "productIdentityCopied": false,
+    "scanRoots": ["apps", "packages"],
+    "excludedDirectoryNames": ["fixtures", "node_modules", "test", "tests"],
+    "forbiddenTokens": ["@opencode-ai", "anomalyco", "opencode"],
+    "allowedOccurrences": [
+      {
+        "path": "packages/commands/src/settings-command.ts",
+        "token": "opencode",
+        "exactCount": 1,
+        "classification": "attribution-disclaimer",
+        "patchIds": [],
+        "reason": "Human-facing disclosure that OpenCode branding and logos are not copied."
+      },
+      {
+        "path": "packages/openai-driver/src/protocol.ts",
+        "token": "opencode",
+        "exactCount": 1,
+        "classification": "protocol-required",
+        "patchIds": ["P0002"],
+        "reason": "Pinned protocol value originator=opencode; it is not a Ralph product identity."
+      }
+    ],
+    "allowedAssets": []
+  }
+}

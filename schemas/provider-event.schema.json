@@ -1,0 +1,872 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/provider-event.schema.json",
+  "title": "Ralph normalized provider event v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.text.delta"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "delta": {
+              "type": "string"
+            },
+            "rawRef": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["delta"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.text.completed"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "rawRef": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["text"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.reasoning.delta"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "delta": {
+              "type": "string"
+            },
+            "rawRef": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["delta"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.reasoning.completed"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "rawRef": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["summary"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.tool.input.delta"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "toolCallId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "delta": {
+              "type": "string"
+            },
+            "rawRef": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["toolCallId", "delta"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.tool.call"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "toolCallId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "input": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "rawRef": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["toolCallId", "name", "input"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.provider.warning"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1
+            },
+            "code": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rawRef": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["message"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.provider.error"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1
+            },
+            "code": {
+              "type": "string",
+              "minLength": 1
+            },
+            "retryAfterMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "rawRef": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["kind", "message"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.usage.updated"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "usage": {
+              "type": "object",
+              "properties": {
+                "input": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "inputNonCached": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "cacheRead": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "cacheWrite": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "output": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "reasoning": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "total": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "cost": {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "currency": {
+                      "type": "string",
+                      "pattern": "^[A-Z]{3}$"
+                    },
+                    "priceSnapshotId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "source": {
+                      "type": "string",
+                      "enum": ["reported", "derived", "estimated"]
+                    }
+                  },
+                  "required": ["amount", "currency", "priceSnapshotId"],
+                  "additionalProperties": false
+                },
+                "source": {
+                  "type": "string",
+                  "enum": ["reported", "derived", "estimated", "unavailable"]
+                },
+                "semantics": {
+                  "type": "string",
+                  "enum": ["delta", "cumulative", "final"]
+                },
+                "providerRawRef": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": ["source", "semantics"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["usage"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerEventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["trace", "debug", "info", "warn", "error"]
+        },
+        "synthesized": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "model.call.finished"
+        },
+        "payload": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "finishReason": {
+                  "type": "string",
+                  "enum": [
+                    "stop",
+                    "length",
+                    "tool-call",
+                    "content-filter",
+                    "error",
+                    "cancelled",
+                    "unknown"
+                  ]
+                },
+                "rawRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "catalogSnapshotId": {
+                  "type": "string",
+                  "pattern": "^catalog:[a-f0-9]{64}$"
+                },
+                "catalogOrigin": {
+                  "type": "string",
+                  "enum": ["source", "cache", "stale-cache", "fallback"]
+                },
+                "catalogStale": {
+                  "type": "boolean"
+                },
+                "catalogSource": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": ["curated", "remote", "test"]
+                    },
+                    "revision": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  },
+                  "required": ["id", "kind", "revision"],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "finishReason",
+                "catalogSnapshotId",
+                "catalogOrigin",
+                "catalogStale",
+                "catalogSource"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "finishReason": {
+                  "type": "string",
+                  "enum": [
+                    "stop",
+                    "length",
+                    "tool-call",
+                    "content-filter",
+                    "error",
+                    "cancelled",
+                    "unknown"
+                  ]
+                },
+                "rawRef": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": ["finishReason"],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "callId",
+        "sequence",
+        "timestamp",
+        "level",
+        "synthesized",
+        "type",
+        "payload"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

@@ -1,0 +1,478 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-x64:
+    name: Quality / ${{ matrix.os }} x64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2025
+          - ubuntu-24.04
+          - macos-15-intel
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Install Bun 1.3.14
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.14
+
+      - name: Runtime versions
+        run: |
+          bun --version
+          git --version
+
+      - name: Install dependencies from frozen lockfile
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id install
+          --output artifacts/ci/steps/install.json
+          --
+          bun install --frozen-lockfile
+
+      - name: Prepare CI evidence contract
+        run: bun run ci:evidence:prepare
+
+      - name: Assert x64 quality runner architecture
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id architecture
+          --output artifacts/ci/steps/architecture.json
+          --
+          bun run scripts/ci/assert-architecture.ts
+          --expected x64
+
+      - name: Documentation contracts
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id documentation
+          --output artifacts/ci/steps/documentation.json
+          --
+          bun run docs:check
+
+      - name: Lint
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id lint
+          --output artifacts/ci/steps/lint.json
+          --
+          bun run lint
+
+      - name: Validate generated public schemas
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id schemas
+          --output artifacts/ci/steps/schemas.json
+          --
+          bun run schemas:check
+
+      - name: Typecheck
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id typecheck
+          --output artifacts/ci/steps/typecheck.json
+          --
+          bun run typecheck
+
+      - name: Test with JUnit evidence
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id tests
+          --output artifacts/ci/steps/tests.json
+          --
+          bun test
+          --reporter=junit
+          --reporter-outfile=artifacts/ci/junit/quality.xml
+
+      - name: Classify JUnit results and enforce skip waivers
+        if: ${{ !cancelled() }}
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id classify
+          --output artifacts/ci/steps/classify.json
+          --
+          bun run ci:junit:classify
+          --kind quality-x64
+          --input artifacts/ci/junit
+          --expect quality.xml
+          --waivers .github/ci/junit-skip-waivers.json
+          --output artifacts/ci/test-classification.json
+          --expected-os ${{ runner.os }}
+          --expected-arch x64
+
+      - name: Build native standalone
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id build
+          --output artifacts/ci/steps/build.json
+          --
+          bun run build
+
+      - name: Smoke native standalone outside checkout
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id smoke
+          --output artifacts/ci/steps/smoke.json
+          --
+          bun run smoke
+
+      - name: Check patch whitespace
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id whitespace
+          --output artifacts/ci/steps/whitespace.json
+          --
+          bun run scripts/ci/check-whitespace.ts
+
+      - name: Capture runner, test and build hashes
+        if: ${{ !cancelled() }}
+        run: >-
+          bun run ci:evidence:capture
+          --kind quality-x64
+          --output artifacts/ci/runner-evidence.json
+          --expected-os ${{ runner.os }}
+          --expected-arch x64
+          --runner-label ${{ matrix.os }}
+          --input .github/workflows/ci.yml
+          --input artifacts/ci/evidence-contract.json
+          --input artifacts/ci/steps
+          --input artifacts/ci/junit
+          --input artifacts/ci/test-classification.json
+          --input .github/ci/junit-skip-waivers.json
+          --input dist/bundle-build-metadata.json
+          --input dist/ralph-next.js
+          --input dist/ralph-next.js.map
+          --input dist/standalone
+
+      - name: Upload native build evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ralph-next-quality-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            artifacts/ci/**
+            .github/ci/junit-skip-waivers.json
+            dist/ralph-next.js
+            dist/ralph-next.js.map
+            dist/bundle-build-metadata.json
+            dist/standalone/**
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  native-platform-matrix:
+    name: Native / ${{ matrix.platform }} ${{ matrix.architecture }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows
+            architecture: x64
+            runner: windows-2025
+            target: bun-windows-x64-baseline
+            extension: .exe
+          - platform: windows
+            architecture: arm64
+            runner: windows-11-arm
+            target: bun-windows-arm64
+            extension: .exe
+          - platform: linux
+            architecture: x64
+            runner: ubuntu-24.04
+            target: bun-linux-x64-baseline
+            extension: ""
+          - platform: linux
+            architecture: arm64
+            runner: ubuntu-24.04-arm
+            target: bun-linux-arm64
+            extension: ""
+          - platform: macos
+            architecture: x64
+            runner: macos-15-intel
+            target: bun-darwin-x64
+            extension: ""
+          - platform: macos
+            architecture: arm64
+            runner: macos-15
+            target: bun-darwin-arm64
+            extension: ""
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Install Bun 1.3.14
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.14
+
+      - name: Install dependencies from frozen lockfile
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id install
+          --output artifacts/ci/steps/install.json
+          --
+          bun install --frozen-lockfile
+
+      - name: Prepare CI evidence contract
+        run: bun run ci:evidence:prepare
+
+      - name: Assert native architecture
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id architecture
+          --output artifacts/ci/steps/architecture.json
+          --
+          bun run scripts/ci/assert-architecture.ts
+          --expected ${{ matrix.architecture }}
+
+      - name: Cross-platform filesystem, process, keychain, Git, sandbox and terminal matrix
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id matrix-tests
+          --output artifacts/ci/steps/matrix-tests.json
+          --
+          bun test
+          --reporter=junit
+          --reporter-outfile=artifacts/ci/junit/native-platform.xml
+          ./tests/integration/workspace.test.ts
+          ./packages/supervisor/tests/supervisor.test.ts
+          ./tests/integration/s07-two-phase-shutdown.test.ts
+          ./packages/credentials/tests/os-keychain-secret-store.test.ts
+          ./tests/integration/s09-bounded-e2e.test.ts
+          ./tests/hardening/pty.test.ts
+
+      - name: Standalone distribution lifecycle with JUnit evidence
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id distribution
+          --output artifacts/ci/steps/distribution.json
+          --
+          bun test
+          --reporter=junit
+          --reporter-outfile=artifacts/ci/junit/s12-distribution.xml
+          ./packages/distribution/tests/standalone-lifecycle.test.ts
+
+      - name: Classify JUnit results and enforce skip waivers
+        if: ${{ !cancelled() }}
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id classify
+          --output artifacts/ci/steps/classify.json
+          --
+          bun run ci:junit:classify
+          --kind native-platform
+          --input artifacts/ci/junit
+          --expect native-platform.xml
+          --expect s12-distribution.xml
+          --waivers .github/ci/junit-skip-waivers.json
+          --output artifacts/ci/test-classification.json
+          --expected-os ${{ matrix.platform }}
+          --expected-arch ${{ matrix.architecture }}
+
+      - name: Build native standalone
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id build
+          --output artifacts/ci/steps/build.json
+          --
+          bun run build --target ${{ matrix.target }}
+
+      - name: Smoke native standalone outside checkout
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id smoke
+          --output artifacts/ci/steps/smoke.json
+          --
+          bun run smoke
+          --binary dist/standalone/${{ matrix.target }}/ralph-next${{ matrix.extension }}
+
+      - name: Check patch whitespace
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id whitespace
+          --output artifacts/ci/steps/whitespace.json
+          --
+          bun run scripts/ci/check-whitespace.ts
+
+      - name: Capture runner, test and build hashes
+        if: ${{ !cancelled() }}
+        run: >-
+          bun run ci:evidence:capture
+          --kind native-platform
+          --output artifacts/ci/runner-evidence.json
+          --expected-os ${{ matrix.platform }}
+          --expected-arch ${{ matrix.architecture }}
+          --target ${{ matrix.target }}
+          --runner-label ${{ matrix.runner }}
+          --input .github/workflows/ci.yml
+          --input artifacts/ci/evidence-contract.json
+          --input artifacts/ci/steps
+          --input artifacts/ci/junit
+          --input artifacts/ci/test-classification.json
+          --input .github/ci/junit-skip-waivers.json
+          --input dist/bundle-build-metadata.json
+          --input dist/ralph-next.js
+          --input dist/ralph-next.js.map
+          --input dist/standalone/${{ matrix.target }}
+
+      - name: Upload classified native evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ralph-next-native-${{ matrix.platform }}-${{ matrix.architecture }}
+          path: |
+            artifacts/ci/**
+            .github/ci/junit-skip-waivers.json
+            dist/ralph-next.js
+            dist/ralph-next.js.map
+            dist/bundle-build-metadata.json
+            dist/standalone/${{ matrix.target }}/**
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
+
+  security-gates:
+    name: Dependency, secret and license gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+
+      - name: Install Bun 1.3.14
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.14
+
+      - name: Install dependencies from frozen lockfile
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id install
+          --output artifacts/ci/steps/install.json
+          --
+          bun install --frozen-lockfile
+
+      - name: Prepare CI evidence contract
+        run: bun run ci:evidence:prepare
+
+      - name: Install checksum-pinned Gitleaks
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id secret-tool-install
+          --output artifacts/ci/steps/secret-tool-install.json
+          --
+          bash scripts/ci/install-gitleaks.sh
+
+      - name: Dependency audit
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id dependency-audit
+          --output artifacts/ci/steps/dependency-audit.json
+          --
+          bun run scripts/ci/dependency-audit.ts
+          --output artifacts/ci/dependency-audit.json
+
+      - name: Secret scan
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id secret-scan
+          --output artifacts/ci/steps/secret-scan.json
+          --
+          ./artifacts/ci/tooling/bin/gitleaks git .
+          --no-banner
+          --no-color
+          --redact=100
+          --report-format json
+          --report-path artifacts/ci/gitleaks-report.json
+
+      - name: License and upstream provenance contracts
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id license-provenance
+          --output artifacts/ci/steps/license-provenance.json
+          --
+          bun test
+          --reporter=junit
+          --reporter-outfile=artifacts/ci/junit/license-provenance.xml
+          ./tests/unit/s04-dependency-license.test.ts
+          ./tests/unit/s06-tui-dependency-license.test.ts
+          ./tests/unit/opencode-provenance.test.ts
+          ./tests/unit/release-sbom-license-inventory.test.ts
+
+      - name: Classify JUnit results and enforce skip waivers
+        if: ${{ !cancelled() }}
+        run: >-
+          bun run scripts/ci/run-step.ts
+          --id classify
+          --output artifacts/ci/steps/classify.json
+          --
+          bun run ci:junit:classify
+          --kind security-gates
+          --input artifacts/ci/junit
+          --expect license-provenance.xml
+          --waivers .github/ci/junit-skip-waivers.json
+          --output artifacts/ci/test-classification.json
+          --expected-os ${{ runner.os }}
+          --expected-arch ${{ runner.arch }}
+
+      - name: Capture security runner and test hashes
+        if: ${{ !cancelled() }}
+        run: >-
+          bun run ci:evidence:capture
+          --kind security-gates
+          --output artifacts/ci/runner-evidence.json
+          --expected-os ${{ runner.os }}
+          --expected-arch ${{ runner.arch }}
+          --runner-label ubuntu-24.04
+          --input .github/workflows/ci.yml
+          --input package.json
+          --input bun.lock
+          --input THIRD_PARTY_NOTICES.md
+          --input third_party
+          --input scripts/ci/dependency-audit.ts
+          --input scripts/ci/install-gitleaks.sh
+          --input scripts/opencode-provenance.ts
+          --input scripts/release-licenses.ts
+          --input scripts/release-sbom.ts
+          --input tests/unit/s04-dependency-license.test.ts
+          --input tests/unit/s06-tui-dependency-license.test.ts
+          --input tests/unit/opencode-provenance.test.ts
+          --input tests/unit/release-sbom-license-inventory.test.ts
+          --input artifacts/ci/evidence-contract.json
+          --input artifacts/ci/steps
+          --input artifacts/ci/tooling
+          --input artifacts/ci/dependency-audit.json
+          --input artifacts/ci/gitleaks-report.json
+          --input artifacts/ci/junit
+          --input artifacts/ci/test-classification.json
+          --input .github/ci/junit-skip-waivers.json
+
+      - name: Upload security gate evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ralph-next-security-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            artifacts/ci/**
+            .github/ci/junit-skip-waivers.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14

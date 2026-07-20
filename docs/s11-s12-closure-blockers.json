@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "artifactClass": "s11-s12-release-blocker-registry",
+  "policy": {
+    "partialRequirementsBlockRelease": true,
+    "waiversMustBeCandidateBound": true,
+    "waiverAuthority": "external-candidate-bound-artifact",
+    "nonWaivableBlockers": ["BLK-SOURCE-BINDING"],
+    "waiverRequiredFields": [
+      "owner",
+      "rationale",
+      "expiresOn",
+      "effectiveCandidateDigest",
+      "approvalRef"
+    ],
+    "note": "Declared blocker status is policy, not observed run state. The closure runner derives observed resolution from exact receipts or an approved unexpired waiver bound to the effective candidate digest (metadata plus payload content address), never metadata alone; foundational source binding is non-waivable. A local pass is not a release pass."
+  },
+  "blockers": [
+    {
+      "id": "BLK-SOURCE-BINDING",
+      "status": "open",
+      "owner": "release-owner",
+      "disposition": "block-release",
+      "affectedRequirements": ["R003", "R055", "R066", "R069", "R070"],
+      "requiredEvidence": [
+        "identical source commit SHA, clean tree and canonical repository identity before and after closure",
+        "stable source inventory and fingerprint matched by a content-verified Ralph candidate receipt or manifest",
+        "candidate repository, commit and fingerprint bound to the same source without archiving the raw remote URL",
+        "content-addressed closure envelope whose manifest and checksums cover the source-binding receipt"
+      ],
+      "waiver": {
+        "disposition": "not-granted",
+        "owner": "release-owner",
+        "rationale": "Source identity is foundational evidence and no candidate-bound waiver was supplied.",
+        "expiresOn": null,
+        "candidateDigest": null
+      }
+    },
+    {
+      "id": "BLK-AUTH-REAL",
+      "status": "open",
+      "owner": "account-and-provider-owner",
+      "disposition": "block-release",
+      "affectedRequirements": ["R007", "R008"],
+      "requiredEvidence": [
+        "opt-in real API-key or account-auth smoke with redacted output",
+        "ChatGPT Plus or Pro device/browser authorization smoke where supported",
+        "quota, revocation and keychain behavior bound to the candidate"
+      ],
+      "waiver": {
+        "disposition": "not-granted",
+        "owner": "account-and-provider-owner",
+        "rationale": "Mocks and protocol fixtures cannot establish access to a real account or provider.",
+        "expiresOn": null,
+        "candidateDigest": null
+      }
+    },
+    {
+      "id": "BLK-R015-REVIEW",
+      "status": "open",
+      "owner": "parser-owner-and-independent-reviewer",
+      "disposition": "block-release",
+      "affectedRequirements": ["R015"],
+      "requiredEvidence": [
+        "docs/reviews/r015-parser-static-review.json with independent review identity and APPROVED verdict",
+        "review claims proving regex is limited to leaf tokens rather than raw Markdown",
+        "current packages/prd/src/parser.ts bytes, line count and SHA-256 exactly matching the receipt"
+      ],
+      "waiver": {
+        "disposition": "not-granted",
+        "owner": "parser-owner-and-independent-reviewer",
+        "rationale": "No waiver is granted. The declared blocker is observed as resolved only while the independent receipt remains exactly bound to the current parser.",
+        "expiresOn": null,
+        "candidateDigest": null
+      }
+    },
+    {
+      "id": "BLK-R063-FORGE",
+      "status": "open",
+      "owner": "git-and-forge-owner",
+      "disposition": "block-release",
+      "affectedRequirements": ["R063"],
+      "requiredEvidence": [
+        "remote forge fixture or controlled remote proving PR creation and integration",
+        "explicit product decision for unsupported remote operations if any",
+        "candidate-bound branch, commit and PR receipts"
+      ],
+      "waiver": {
+        "disposition": "not-granted",
+        "owner": "git-and-forge-owner",
+        "rationale": "Local Git fixtures do not prove behavior against a remote forge.",
+        "expiresOn": null,
+        "candidateDigest": null
+      }
+    },
+    {
+      "id": "BLK-SANDBOX-EXT",
+      "status": "open",
+      "owner": "security-and-platform-owner",
+      "disposition": "block-release",
+      "affectedRequirements": ["R064"],
+      "requiredEvidence": [
+        "Docker and Podman lifecycle evidence on supported hosts",
+        "strong-isolation network, mount, process and cleanup receipts",
+        "candidate-bound safe, auto and dangerous policy matrix"
+      ],
+      "waiver": {
+        "disposition": "not-granted",
+        "owner": "security-and-platform-owner",
+        "rationale": "Process-only local tests cannot represent container or strong sandbox guarantees.",
+        "expiresOn": null,
+        "candidateDigest": null
+      }
+    },
+    {
+      "id": "BLK-MULTIPLATFORM",
+      "status": "open",
+      "owner": "ci-and-platform-owner",
+      "disposition": "block-release",
+      "affectedRequirements": ["R070"],
+      "requiredEvidence": [
+        "successful blocking CI runs for Windows, Linux and macOS on x64 and arm64",
+        "JUnit classification and content-addressed artifacts for all six target pairs",
+        "approved explicit waiver for any unavailable runner, never a silent skip"
+      ],
+      "waiver": {
+        "disposition": "not-granted",
+        "owner": "ci-and-platform-owner",
+        "rationale": "Only the local Windows x64 target has observed runtime evidence.",
+        "expiresOn": null,
+        "candidateDigest": null
+      }
+    },
+    {
+      "id": "BLK-RELEASE",
+      "status": "open",
+      "owner": "release-owner",
+      "disposition": "block-release",
+      "affectedRequirements": ["R003", "R055", "R066", "R069", "R070"],
+      "requiredEvidence": [
+        "approved product identity, license, support policy, channels and target list",
+        "candidate SBOM, third-party notices, provenance, signatures and trust policy",
+        "install, update, downgrade, rollback and uninstall drills on real candidate packages",
+        "promotion record bound to immutable candidate digests"
+      ],
+      "waiver": {
+        "disposition": "not-granted",
+        "owner": "release-owner",
+        "rationale": "No release owner decisions, signed candidate or promotion record exists.",
+        "expiresOn": null,
+        "candidateDigest": null
+      }
+    },
+    {
+      "id": "BLK-COMPAT-BINARIES",
+      "status": "conditional",
+      "owner": "migration-and-release-owner",
+      "disposition": "block-release-when-inputs-absent-or-mismatched",
+      "affectedRequirements": ["R017", "R036", "R068"],
+      "requiredEvidence": [
+        "explicit --legacy-binary and --next-binary regular non-symlink inputs",
+        "binary SHA-256 values matching the archived S10 compatibility report",
+        "91/91 compatibility result with zero regressions bound to those exact binaries"
+      ],
+      "waiver": {
+        "disposition": "not-granted",
+        "owner": "migration-and-release-owner",
+        "rationale": "The closure runner must not infer or download a Ralph v1 binary.",
+        "expiresOn": null,
+        "candidateDigest": null
+      }
+    }
+  ]
+}

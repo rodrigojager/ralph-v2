@@ -1,0 +1,559 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/context-manifest.schema.json",
+  "title": "Ralph controlled context manifest v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attemptId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["once", "loop", "wiggum", "parallel"]
+    },
+    "sharedContext": {
+      "type": "string"
+    },
+    "fullPrd": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contentHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": ["ref", "contentHash"],
+      "additionalProperties": false
+    },
+    "task": {
+      "type": "object",
+      "properties": {
+        "documentId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "result": {
+          "type": "string",
+          "minLength": 1
+        },
+        "criteria": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "weight": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "blocking": {
+                "type": "boolean"
+              }
+            },
+            "required": ["id", "text"],
+            "additionalProperties": false
+          }
+        },
+        "boundaries": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "evidenceMode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verificationRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "taskSpecHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "documentId",
+        "taskId",
+        "title",
+        "result",
+        "criteria",
+        "boundaries",
+        "evidenceMode",
+        "verificationRefs",
+        "taskSpecHash"
+      ],
+      "additionalProperties": false
+    },
+    "invariants": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "parentContextRefs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "dependencyOutputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "outputRefs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": ["taskId", "outputRefs"],
+        "additionalProperties": false
+      }
+    },
+    "declaredFileRefs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "previousAssessmentRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "contextRotation": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requestedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "boundary": {
+          "type": "string",
+          "enum": ["next-model-call", "next-task"]
+        }
+      },
+      "required": ["requestId", "reason", "requestedAt", "boundary"],
+      "additionalProperties": false
+    },
+    "revisionFeedback": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "assessment"
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceAssessmentRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceAssessmentId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceEvidenceBundleId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contentHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "includedHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "threshold": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "ref",
+        "sourceAssessmentRef",
+        "sourceAssessmentId",
+        "sourceEvidenceBundleId",
+        "contentHash",
+        "includedHash",
+        "score",
+        "threshold",
+        "truncated"
+      ],
+      "additionalProperties": false
+    },
+    "recovery": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "recovery"
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "manifestHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "contentHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "includedHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sourceStorageHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["clean", "continued", "workspace_changed"]
+        },
+        "changedFiles": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "untrackedFiles": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "previousAttempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "unsettledToolCalls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "recommendedAction": {
+          "type": "string",
+          "enum": ["continue", "inspect", "checkpoint", "rollback-explicit"]
+        },
+        "requiresOperatorDecision": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "ref",
+        "sourceRef",
+        "manifestHash",
+        "contentHash",
+        "includedHash",
+        "sourceStorageHash",
+        "truncated",
+        "state",
+        "changedFiles",
+        "untrackedFiles",
+        "previousAttempts",
+        "unsettledToolCalls",
+        "recommendedAction",
+        "requiresOperatorDecision"
+      ],
+      "additionalProperties": false
+    },
+    "baseline": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["git", "workspace"]
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "branch": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dirty": {
+          "type": "boolean"
+        },
+        "statusHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "workspaceSnapshotHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "capturedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "revision",
+        "branch",
+        "dirty",
+        "statusHash",
+        "workspaceSnapshotHash",
+        "capturedAt"
+      ],
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "remainingModelCalls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "remainingToolCalls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "remainingIterations": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "remainingInputTokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "remainingOutputTokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "remainingReasoningTokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxTotalTokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxCost": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "number",
+              "minimum": 0
+            },
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            }
+          },
+          "required": ["amount", "currency"],
+          "additionalProperties": false
+        },
+        "taskTimeout": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "type": "string",
+              "minLength": 1
+            },
+            "milliseconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["source", "milliseconds"],
+          "additionalProperties": false
+        },
+        "deadlineAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        }
+      },
+      "required": ["remainingModelCalls", "remainingToolCalls", "remainingIterations"],
+      "additionalProperties": false
+    },
+    "authority": {
+      "type": "object",
+      "properties": {
+        "taskSelection": {
+          "type": "string",
+          "const": "ralph"
+        },
+        "taskCompletion": {
+          "type": "string",
+          "const": "ralph-policy"
+        },
+        "subPrdCreation": {
+          "type": "string",
+          "const": "preauthored-only"
+        }
+      },
+      "required": ["taskSelection", "taskCompletion", "subPrdCreation"],
+      "additionalProperties": false
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "runId",
+    "attemptId",
+    "mode",
+    "sharedContext",
+    "task",
+    "invariants",
+    "parentContextRefs",
+    "dependencyOutputs",
+    "declaredFileRefs",
+    "baseline",
+    "budget",
+    "authority",
+    "createdAt",
+    "contentHash"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "wiggum"
+          }
+        },
+        "required": ["mode"]
+      },
+      "then": {
+        "required": ["fullPrd"]
+      }
+    },
+    {
+      "if": {
+        "required": ["revisionFeedback"]
+      },
+      "then": {
+        "required": ["previousAssessmentRef"]
+      }
+    }
+  ]
+}

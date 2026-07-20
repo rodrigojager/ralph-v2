@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 2,
+  "waivers": [
+    {
+      "kind": "quality-x64",
+      "report": "quality.xml",
+      "file": "tests/integration/s04-real-chatgpt-subscription-smoke.test.ts",
+      "testName": "REAL OPT-IN S04: ChatGPT Plus/Pro device-code and read-only model smoke",
+      "os": "windows",
+      "architecture": "x64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-AUTH-REAL: the real account smoke requires explicit interactive device authorization and is unsafe in ordinary CI.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "quality-x64",
+      "report": "quality.xml",
+      "file": "tests/integration/s04-real-chatgpt-subscription-smoke.test.ts",
+      "testName": "REAL OPT-IN S04: ChatGPT Plus/Pro device-code and read-only model smoke",
+      "os": "linux",
+      "architecture": "x64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-AUTH-REAL: the real account smoke requires explicit interactive device authorization and is unsafe in ordinary CI.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "quality-x64",
+      "report": "quality.xml",
+      "file": "tests/integration/s04-real-chatgpt-subscription-smoke.test.ts",
+      "testName": "REAL OPT-IN S04: ChatGPT Plus/Pro device-code and read-only model smoke",
+      "os": "macos",
+      "architecture": "x64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-AUTH-REAL: the real account smoke requires explicit interactive device authorization and is unsafe in ordinary CI.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "quality-x64",
+      "report": "quality.xml",
+      "file": "tests/integration/s04-real-openai-smoke.test.ts",
+      "testName": "REAL OPT-IN S04: OpenAI environment credential read-only smoke",
+      "os": "windows",
+      "architecture": "x64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-AUTH-REAL: the provider smoke requires an explicitly supplied real API credential and remains opt-in outside ordinary CI.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "quality-x64",
+      "report": "quality.xml",
+      "file": "tests/integration/s04-real-openai-smoke.test.ts",
+      "testName": "REAL OPT-IN S04: OpenAI environment credential read-only smoke",
+      "os": "linux",
+      "architecture": "x64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-AUTH-REAL: the provider smoke requires an explicitly supplied real API credential and remains opt-in outside ordinary CI.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "quality-x64",
+      "report": "quality.xml",
+      "file": "tests/integration/s04-real-openai-smoke.test.ts",
+      "testName": "REAL OPT-IN S04: OpenAI environment credential read-only smoke",
+      "os": "macos",
+      "architecture": "x64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-AUTH-REAL: the provider smoke requires an explicitly supplied real API credential and remains opt-in outside ordinary CI.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "s12-closure",
+      "report": "global.xml",
+      "file": "tests/integration/s04-real-chatgpt-subscription-smoke.test.ts",
+      "testName": "REAL OPT-IN S04: ChatGPT Plus/Pro device-code and read-only model smoke",
+      "os": "windows",
+      "architecture": "x64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-AUTH-REAL: the real account smoke requires explicit interactive device authorization and is unsafe in ordinary CI.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    },
+    {
+      "kind": "s12-closure",
+      "report": "global.xml",
+      "file": "tests/integration/s04-real-openai-smoke.test.ts",
+      "testName": "REAL OPT-IN S04: OpenAI environment credential read-only smoke",
+      "os": "windows",
+      "architecture": "x64",
+      "owner": "@rodrigojager",
+      "rationale": "BLK-AUTH-REAL: the provider smoke requires an explicitly supplied real API credential and remains opt-in outside ordinary CI.",
+      "approvalRef": "docs/18-matriz-de-rastreabilidade.md#blockers-e-lacunas-nomeadas",
+      "expiresOn": "2026-12-31"
+    }
+  ]
+}

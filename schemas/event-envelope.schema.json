@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/event-envelope.schema.json",
+  "title": "Ralph v2 EventEnvelope consumer contract v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "eventId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sequence": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "monotonicMs": {
+      "type": "number",
+      "minimum": 0
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["workspace", "run"]
+    },
+    "streamId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workspaceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "documentId": {
+      "type": "string"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "attemptId": {
+      "type": "string"
+    },
+    "callId": {
+      "type": "string"
+    },
+    "workerId": {
+      "type": "string"
+    },
+    "parentRunId": {
+      "type": "string"
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "level": {
+      "type": "string",
+      "enum": ["trace", "debug", "info", "warn", "error"]
+    },
+    "payload": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "eventId",
+    "sequence",
+    "timestamp",
+    "monotonicMs",
+    "type",
+    "scope",
+    "streamId",
+    "workspaceId",
+    "level",
+    "payload"
+  ],
+  "additionalProperties": {},
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "run"
+          }
+        },
+        "required": ["scope"]
+      },
+      "then": {
+        "required": ["runId"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","sequence_number":0,"delta":"Hello "}
+
+event: response.reasoning_summary_text.delta
+data: {"type":"response.reasoning_summary_text.delta","sequence_number":1,"delta":"Checked the fixture. "}
+
+event: response.usage.updated
+data: {"type":"response.usage.updated","sequence_number":2,"usage":{"input_tokens":10,"output_tokens":2,"total_tokens":12,"input_tokens_details":{"cached_tokens":3},"output_tokens_details":{"reasoning_tokens":1}}}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","sequence_number":3,"delta":"world"}
+
+event: response.usage.updated
+data: {"type":"response.usage.updated","sequence_number":4,"usage":{"input_tokens":10,"output_tokens":4,"total_tokens":14,"input_tokens_details":{"cached_tokens":3},"output_tokens_details":{"reasoning_tokens":2}}}
+
+event: response.completed
+data: {"type":"response.completed","sequence_number":5,"response":{"status":"completed","usage":{"input_tokens":10,"output_tokens":4,"total_tokens":14,"input_tokens_details":{"cached_tokens":3},"output_tokens_details":{"reasoning_tokens":2}}}}
+
+data: [DONE]

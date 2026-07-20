@@ -1,0 +1,17 @@
+{
+  "name": "@ralph-next/prd",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@ralph-next/domain": "workspace:*",
+    "@ralph-next/persistence": "workspace:*",
+    "mdast-util-from-markdown": "2.0.3",
+    "yaml": "2.9.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/mdast": "4.0.4"
+  }
+}

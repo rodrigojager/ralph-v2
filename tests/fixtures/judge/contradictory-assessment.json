@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "assessment-duplicate-criterion",
+  "kind": "external",
+  "profileSnapshot": {
+    "id": "judge-profile",
+    "role": "judge",
+    "backend": "external-cli",
+    "provider": "external",
+    "model": "judge",
+    "contentHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "evidenceBundleId": "evidence-1",
+  "score": 50,
+  "summary": "The same criterion is scored twice and is therefore ambiguous.",
+  "adequate": [],
+  "problems": [],
+  "missingEvidence": [],
+  "recommendations": [],
+  "criterionScores": [
+    { "criterion": "criterion-1", "score": 20 },
+    { "criterion": "criterion-1", "score": 80 }
+  ],
+  "createdAt": "2026-07-18T12:00:00.000Z"
+}

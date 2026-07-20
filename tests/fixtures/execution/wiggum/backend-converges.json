@@ -1,0 +1,21 @@
+[
+  {
+    "expectedTask": "wiggum-bounded/converge-capability",
+    "outcome": {
+      "summary": "A primeira iteração não produziu mudança e ainda não converge."
+    }
+  },
+  {
+    "expectedTask": "wiggum-bounded/converge-capability",
+    "actions": [
+      {
+        "type": "write",
+        "path": "product/capability.txt",
+        "content": "converged"
+      }
+    ],
+    "outcome": {
+      "summary": "A segunda iteração materializou o valor verificável."
+    }
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "expectedTask": "no-change-change-only/materialize-change",
+    "outcome": {
+      "summary": "Nenhuma ação foi necessária segundo o executor; a policy deve conferir o delta."
+    }
+  }
+]

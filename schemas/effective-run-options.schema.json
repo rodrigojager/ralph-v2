@@ -1,0 +1,1718 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/effective-run-options.schema.json",
+  "title": "Ralph effective run options v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "mode": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "enum": ["once", "loop", "wiggum", "parallel"]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "executorProfile": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeProfile": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "executorProvider": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "executorModel": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "executorCredential": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "executorVariant": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "executorParameters": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^\\S+$"
+          },
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeProvider": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeModel": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeCredential": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeVariant": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeParameters": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^\\S+$"
+          },
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "task": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "force": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "dryRun": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "skipTests": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "skipLint": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "skipGates": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "noGates": {
+      "default": {
+        "value": false,
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "fast": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "noCommit": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "failFast": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "maxTasks": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "delayMs": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "maxIterations": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "maxModelCallsPerAttempt": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "maxNoChangeAttempts": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "noChangePolicy": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "enum": ["require-change", "allow-no-change", "fail-on-no-change", "retry-on-no-change"]
+        },
+        "original": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notice": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "original", "source"],
+      "additionalProperties": false
+    },
+    "evaluationMode": {
+      "default": {
+        "value": "deterministic-only",
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "enum": ["deterministic-only", "self", "external", "manual"]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeThreshold": {
+      "default": {
+        "value": 85,
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "maxRevisionAttempts": {
+      "default": {
+        "value": 3,
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeCallRetries": {
+      "default": {
+        "value": 2,
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeUnavailablePolicy": {
+      "default": {
+        "value": "pause",
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "enum": ["deterministic", "pause", "fail"]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "blockingJudgeSeverities": {
+      "default": {
+        "value": ["critical"],
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["info", "minor", "major", "critical"]
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeRubric": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "weight_policy": {
+                  "default": "normalize",
+                  "type": "string",
+                  "enum": ["strict-100", "normalize"]
+                },
+                "criteria": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "weight": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      },
+                      "blocking": {
+                        "default": false,
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["id", "description", "weight", "blocking"],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": ["weight_policy", "criteria"],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "judgeExhaustedPolicy": {
+      "default": {
+        "value": "manual-review",
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "enum": ["manual-review", "fail", "stop-run"]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "securityMode": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "enum": ["safe", "auto", "dangerous"]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "headlessAsk": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "enum": ["deny", "allow"]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "toolRules": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[a-z][a-z0-9_.:-]*$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "enum": ["allow", "deny", "ask"]
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "allowedCommands": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "readPaths": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "writePaths": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "allowShell": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "parallelPolicy": {
+      "default": {
+        "value": {
+          "max_parallel": 2,
+          "max_global": 4,
+          "max_per_provider": {},
+          "max_per_model": {},
+          "auto": false,
+          "allowed_groups": [],
+          "require_isolation": true,
+          "integration_strategy": "no-merge",
+          "retry_failed": false,
+          "max_failure_retries": 1,
+          "fail_fast": false,
+          "scope_expansion": "pause"
+        },
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "max_parallel": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 1024
+            },
+            "max_global": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 1024
+            },
+            "max_per_provider": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "additionalProperties": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 1024
+              }
+            },
+            "max_per_model": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "additionalProperties": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 1024
+              }
+            },
+            "auto": {
+              "type": "boolean"
+            },
+            "allowed_groups": {
+              "maxItems": 1024,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            },
+            "require_isolation": {
+              "type": "boolean"
+            },
+            "integration_strategy": {
+              "type": "string",
+              "enum": ["no-merge", "none", "merge", "rebase-merge", "cherry-pick", "create-pr"]
+            },
+            "retry_failed": {
+              "type": "boolean"
+            },
+            "max_failure_retries": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "fail_fast": {
+              "type": "boolean"
+            },
+            "scope_expansion": {
+              "type": "string",
+              "enum": ["deny", "pause", "accept-if-unclaimed"]
+            }
+          },
+          "required": [
+            "max_parallel",
+            "max_global",
+            "max_per_provider",
+            "max_per_model",
+            "auto",
+            "allowed_groups",
+            "require_isolation",
+            "integration_strategy",
+            "retry_failed",
+            "max_failure_retries",
+            "fail_fast",
+            "scope_expansion"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "gitPolicy": {
+      "default": {
+        "value": {
+          "branch_per_task": false,
+          "base_branch": null,
+          "integration_branch": null,
+          "create_pr": false,
+          "draft_pr": false,
+          "pr_labels": [],
+          "dirty_baseline": "deny",
+          "commit_per_task": true,
+          "commit_message_template": "ralph: {taskId}",
+          "sign_commits": false,
+          "worktree_retention": "keep-on-failure",
+          "auto_rollback": false,
+          "auto_checkpoints": false,
+          "checkpoint_before_task": false,
+          "checkpoint_after_task": false,
+          "rollback_preview_ttl": "15m"
+        },
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "branch_per_task": {
+              "type": "boolean"
+            },
+            "base_branch": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "integration_branch": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "create_pr": {
+              "type": "boolean"
+            },
+            "draft_pr": {
+              "type": "boolean"
+            },
+            "pr_labels": {
+              "maxItems": 256,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            },
+            "dirty_baseline": {
+              "type": "string",
+              "enum": ["deny", "allow", "checkpoint-required"]
+            },
+            "commit_per_task": {
+              "type": "boolean"
+            },
+            "commit_message_template": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 8192
+            },
+            "sign_commits": {
+              "type": "boolean"
+            },
+            "worktree_retention": {
+              "type": "string",
+              "enum": ["remove-after-integration", "keep-on-failure", "always-keep"]
+            },
+            "auto_rollback": {
+              "type": "boolean"
+            },
+            "auto_checkpoints": {
+              "type": "boolean"
+            },
+            "checkpoint_before_task": {
+              "type": "boolean"
+            },
+            "checkpoint_after_task": {
+              "type": "boolean"
+            },
+            "rollback_preview_ttl": {
+              "type": "string",
+              "pattern": "^[1-9]\\d*(?:ms|s|m|h|d)$"
+            }
+          },
+          "required": [
+            "branch_per_task",
+            "base_branch",
+            "integration_branch",
+            "create_pr",
+            "draft_pr",
+            "pr_labels",
+            "dirty_baseline",
+            "commit_per_task",
+            "commit_message_template",
+            "sign_commits",
+            "worktree_retention",
+            "auto_rollback",
+            "auto_checkpoints",
+            "checkpoint_before_task",
+            "checkpoint_after_task",
+            "rollback_preview_ttl"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "sandboxPolicy": {
+      "default": {
+        "value": {
+          "enabled": false,
+          "provider": "process",
+          "image": null,
+          "network": null,
+          "network_mode": "none",
+          "network_destinations": [],
+          "require_container_isolation": false,
+          "require_network_isolation": false,
+          "mounts": [],
+          "environment_allowlist": [],
+          "resources": {
+            "cpu_count": null,
+            "memory_bytes": null,
+            "process_count": null,
+            "timeout": "45m"
+          },
+          "user": null
+        },
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "provider": {
+              "type": "string",
+              "enum": ["process", "docker", "podman"]
+            },
+            "image": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "network": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "network_mode": {
+              "type": "string",
+              "enum": ["none", "allowlist", "full"]
+            },
+            "network_destinations": {
+              "maxItems": 1024,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            },
+            "require_container_isolation": {
+              "type": "boolean"
+            },
+            "require_network_isolation": {
+              "type": "boolean"
+            },
+            "mounts": {
+              "maxItems": 256,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024
+                  },
+                  "target": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": ["read-only", "read-write"]
+                  }
+                },
+                "required": ["source", "target", "mode"],
+                "additionalProperties": false
+              }
+            },
+            "environment_allowlist": {
+              "maxItems": 1024,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+              }
+            },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "cpu_count": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1024
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memory_bytes": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "process_count": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1000000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "timeout": {
+                  "type": "string",
+                  "pattern": "^[1-9]\\d*(?:ms|s|m|h|d)$"
+                }
+              },
+              "required": ["cpu_count", "memory_bytes", "process_count", "timeout"],
+              "additionalProperties": false
+            },
+            "user": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "enabled",
+            "provider",
+            "image",
+            "network",
+            "network_mode",
+            "network_destinations",
+            "require_container_isolation",
+            "require_network_isolation",
+            "mounts",
+            "environment_allowlist",
+            "resources",
+            "user"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "securityPolicy": {
+      "default": {
+        "value": {
+          "mode": "safe",
+          "headless_ask": "deny",
+          "tool_rules": {},
+          "allowed_commands": [],
+          "read_paths": ["."],
+          "write_paths": ["."],
+          "allow_shell": false,
+          "network_mode": "none",
+          "network_destinations": [],
+          "external_effects": [],
+          "dangerous_override_reason": null
+        },
+        "source": "builtin"
+      },
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": ["safe", "auto", "dangerous"]
+            },
+            "headless_ask": {
+              "type": "string",
+              "enum": ["deny", "allow"]
+            },
+            "tool_rules": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[a-z][a-z0-9_.:-]*$"
+              },
+              "additionalProperties": {
+                "type": "string",
+                "enum": ["allow", "deny", "ask"]
+              }
+            },
+            "allowed_commands": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            },
+            "read_paths": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "write_paths": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "allow_shell": {
+              "type": "boolean"
+            },
+            "network_mode": {
+              "type": "string",
+              "enum": ["none", "allowlist", "full"]
+            },
+            "network_destinations": {
+              "maxItems": 1024,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            },
+            "external_effects": {
+              "maxItems": 1024,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "capability": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "^[a-z][a-z0-9_.:-]*$"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": ["deny", "ask", "allow"]
+                  },
+                  "require_idempotency_key": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["capability", "action", "require_idempotency_key"],
+                "additionalProperties": false
+              }
+            },
+            "dangerous_override_reason": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "mode",
+            "headless_ask",
+            "tool_rules",
+            "allowed_commands",
+            "read_paths",
+            "write_paths",
+            "allow_shell",
+            "network_mode",
+            "network_destinations",
+            "external_effects",
+            "dangerous_override_reason"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "telemetryPolicy": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "persist_raw_output": {
+              "type": "boolean"
+            },
+            "event_retention": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[1-9]\\d*(?:ms|s|m|h|d)$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "redact": {
+              "type": "boolean"
+            }
+          },
+          "required": ["persist_raw_output", "event_retention", "redact"],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "enum": ["builtin", "global", "workspace", "env", "profile", "prd", "task", "cli"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "mode",
+    "executorProfile",
+    "task",
+    "force",
+    "dryRun",
+    "skipTests",
+    "skipLint",
+    "skipGates",
+    "noGates",
+    "fast",
+    "noCommit",
+    "failFast",
+    "maxTasks",
+    "delayMs",
+    "maxIterations",
+    "maxModelCallsPerAttempt",
+    "maxNoChangeAttempts",
+    "noChangePolicy",
+    "evaluationMode",
+    "judgeThreshold",
+    "maxRevisionAttempts",
+    "judgeCallRetries",
+    "judgeUnavailablePolicy",
+    "blockingJudgeSeverities",
+    "judgeExhaustedPolicy",
+    "securityMode",
+    "headlessAsk",
+    "toolRules",
+    "allowedCommands",
+    "readPaths",
+    "writePaths",
+    "allowShell",
+    "parallelPolicy",
+    "gitPolicy",
+    "sandboxPolicy",
+    "securityPolicy",
+    "contentHash"
+  ],
+  "additionalProperties": false
+}

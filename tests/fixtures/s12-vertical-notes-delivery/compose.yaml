@@ -1,0 +1,11 @@
+services:
+  vertical-notes:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - vertical-notes-data:/data
+    restart: unless-stopped
+
+volumes:
+  vertical-notes-data:

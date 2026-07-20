@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/legacy-migration-rollback-manifest.schema.json",
+  "title": "Ralph legacy workspace migration rollback manifest v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "migrationId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "sourceRoot": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "sourceFingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "destinationRoot": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "destinationWasFresh": {
+      "type": "boolean",
+      "const": true
+    },
+    "createdFiles": {
+      "minItems": 1,
+      "maxItems": 8192,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": ["path", "sha256"],
+        "additionalProperties": false
+      }
+    },
+    "manifestSelfExcluded": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "rollbackPolicy": {
+      "type": "object",
+      "properties": {
+        "automaticOnApplyFailure": {
+          "type": "boolean",
+          "const": true
+        },
+        "laterRollback": {
+          "type": "string",
+          "const": "Delete only listed files whose hashes still match, then remove empty v2 directories. Refuse if any file changed."
+        },
+        "sourceFilesToDelete": {
+          "maxItems": 0,
+          "type": "array",
+          "items": {
+            "not": {}
+          }
+        },
+        "sourceWasModified": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "automaticOnApplyFailure",
+        "laterRollback",
+        "sourceFilesToDelete",
+        "sourceWasModified"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "migrationId",
+    "sourceRoot",
+    "sourceFingerprint",
+    "destinationRoot",
+    "destinationWasFresh",
+    "createdFiles",
+    "manifestSelfExcluded",
+    "rollbackPolicy"
+  ],
+  "additionalProperties": false
+}

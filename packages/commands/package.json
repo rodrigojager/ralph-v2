@@ -1,0 +1,19 @@
+{
+  "name": "@ralph-next/commands",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@ralph-next/credentials": "workspace:*",
+    "@ralph-next/domain": "workspace:*",
+    "@ralph-next/distribution": "workspace:*",
+    "@ralph-next/openai-driver": "workspace:*",
+    "@ralph-next/orchestration": "workspace:*",
+    "@ralph-next/persistence": "workspace:*",
+    "@ralph-next/prd": "workspace:*",
+    "@ralph-next/providers": "workspace:*",
+    "@ralph-next/telemetry": "workspace:*",
+    "yaml": "2.9.0"
+  }
+}

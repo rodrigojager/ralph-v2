@@ -1,0 +1,79 @@
+{
+  "name": "ralph-v2",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "license": "MIT",
+  "author": "Rodrigo Jager",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rodrigojager/ralph-v2.git"
+  },
+  "homepage": "https://github.com/rodrigojager/ralph-v2#readme",
+  "bugs": {
+    "url": "https://github.com/rodrigojager/ralph-v2/issues"
+  },
+  "type": "module",
+  "packageManager": "bun@1.3.14",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run apps/ralph-cli/src/main.ts",
+    "ralph-next": "bun run apps/ralph-cli/src/main.ts",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "test:unit": "bun test tests/unit",
+    "test:integration": "bun test tests/integration",
+    "test:e2e": "bun test tests/integration/orchestration-runner.test.ts tests/integration/packaged-vertical-slice.test.ts tests/integration/s05-embedded-e2e.test.ts tests/integration/s05-external-e2e.test.ts tests/integration/s05-public-cli-smoke.test.ts tests/integration/s05-public-cli-embedded-smoke.test.ts tests/integration/s06-judge-runner.test.ts tests/integration/s06-public-entrypoint-smoke.test.ts tests/integration/s06-command-evidence.test.ts",
+    "test:s11:e2e": "bun test tests/integration/orchestration-runner.test.ts tests/integration/execution-cli.test.ts tests/integration/packaged-vertical-slice.test.ts tests/integration/s05-embedded-e2e.test.ts tests/integration/s05-external-e2e.test.ts tests/integration/s05-public-cli-smoke.test.ts tests/integration/s05-public-cli-embedded-smoke.test.ts tests/integration/s06-judge-runner.test.ts tests/integration/s06-public-entrypoint-smoke.test.ts tests/unit/skip-completion-policy.test.ts tests/integration/s09-bounded-e2e.test.ts packages/tui/tests/dashboard.test.ts",
+    "test:s12:distribution": "bun test packages/distribution/tests/standalone-lifecycle.test.ts",
+    "test:s12:sample": "bun test tests/integration/s12-sample-e2e.test.ts",
+    "test:kill": "bun test tests/integration/s07-kill-injection-matrix.test.ts tests/integration/s09-bounded-e2e.test.ts",
+    "test:properties": "bun test tests/unit/s11-properties.test.ts tests/unit/prd-properties.test.ts tests/unit/prd-marker-format-classic.test.ts tests/unit/prd-graph.test.ts tests/unit/execution-state.test.ts tests/unit/effective-options.test.ts packages/tui/tests/progress.test.ts packages/tui/tests/dashboard.test.ts tests/unit/events-redaction.test.ts packages/tool-host/tests/tool-host.test.ts tests/unit/verification.test.ts tests/unit/help-version.golden.test.ts",
+    "test:pty": "bun test tests/hardening/pty.test.ts",
+    "test:performance": "bun test tests/performance",
+    "test:s11:release-materials": "bun test tests/unit/release-sbom-license-inventory.test.ts",
+    "test:release-security": "bun run scripts/release-security-gates.ts",
+    "test:security": "bun test packages/tool-host/tests/tool-host.test.ts apps/ralph-cli/tests/tool-execution-port.test.ts tests/integration/s05-interactive-permissions.test.ts tests/integration/s03-redaction.test.ts tests/integration/s05-embedded-e2e.test.ts tests/integration/tool-call-journal.test.ts tests/integration/ledger.test.ts tests/unit/events-redaction.test.ts tests/unit/verification.test.ts tests/unit/openai-driver-stream.test.ts tests/unit/config.test.ts tests/unit/prd-parser.test.ts tests/unit/execution-state.test.ts packages/credentials/tests packages/model-drivers/tests/openai-strict-tools.test.ts packages/model-drivers/tests/judge-backends.test.ts",
+    "test:skill": "bun test tests/unit/skill-package.test.ts",
+    "test:watchdog": "bun test tests/hardening/watchdog.test.ts",
+    "ci:evidence:prepare": "bun run scripts/ci/prepare-evidence.ts",
+    "ci:junit:classify": "bun run scripts/ci/classify-junit.ts",
+    "ci:evidence:capture": "bun run scripts/ci/capture-evidence.ts",
+    "ci:step": "bun run scripts/ci/run-step.ts",
+    "docs:check": "bun run scripts/check-docs.ts",
+    "schemas:generate": "bun run scripts/generate-schemas.ts && biome format --write schemas",
+    "schemas:check": "bun run scripts/generate-schemas.ts --check",
+    "goldens:help": "bun run scripts/update-help-goldens.ts",
+    "build": "bun run scripts/build.ts",
+    "build:all": "bun run scripts/build.ts --all",
+    "package:release": "bun run scripts/package-release.ts",
+    "package:npm": "bun run scripts/package-npm.ts",
+    "smoke": "bun run scripts/smoke.ts",
+    "compat": "bun run scripts/compatibility.ts",
+    "compat:s03": "bun run scripts/s03-compatibility.ts",
+    "compat:s10": "bun run scripts/s10-compatibility.ts",
+    "check": "bun run scripts/check.ts",
+    "check:s12": "bun run scripts/s12-closure.ts"
+  },
+  "engines": {
+    "bun": ">=1.3.14"
+  },
+  "dependencies": {
+    "yaml": "2.9.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.4",
+    "@types/bun": "1.3.14",
+    "@types/mdast": "4.0.4",
+    "mdast-util-from-markdown": "2.0.3",
+    "typescript": "7.0.2"
+  },
+  "overrides": {
+    "@babel/core": "7.29.7"
+  }
+}

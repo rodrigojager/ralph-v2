@@ -1,0 +1,28 @@
+[
+  {
+    "expectedTask": "wiggum-bounded/converge-capability",
+    "actions": [
+      {
+        "type": "write",
+        "path": "product/capability.txt",
+        "content": "partial"
+      }
+    ],
+    "outcome": {
+      "summary": "A primeira iteração materializou apenas um estado parcial."
+    }
+  },
+  {
+    "expectedTask": "wiggum-bounded/converge-capability",
+    "actions": [
+      {
+        "type": "write",
+        "path": "product/capability.txt",
+        "content": "converged"
+      }
+    ],
+    "outcome": {
+      "summary": "A segunda iteração corrigiu o estado e satisfez o gate."
+    }
+  }
+]

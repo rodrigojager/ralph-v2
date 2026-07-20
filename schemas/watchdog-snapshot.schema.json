@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/watchdog-snapshot.schema.json",
+  "title": "Ralph watchdog diagnostic snapshot v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "probeId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "type": "string",
+      "enum": ["healthy", "quiet", "slow", "suspect", "stalled", "recovered"]
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["model-call", "tool", "gate", "judge", "child", "integration"]
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "monotonicMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "lastControlHeartbeatAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "lastProgressAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "processAlive": {
+      "type": "string",
+      "enum": ["yes", "no", "unknown"]
+    },
+    "providerPending": {
+      "type": "string",
+      "enum": ["yes", "no", "unknown"]
+    },
+    "negativeConfirmations": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "elapsedMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "progressSilenceMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "controlSilenceMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "phaseDeadlineExceeded": {
+      "type": "boolean"
+    },
+    "hardTimeoutExceeded": {
+      "type": "boolean"
+    },
+    "negativeQuorum": {
+      "type": "boolean"
+    },
+    "signals": {
+      "minItems": 9,
+      "maxItems": 9,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "signal": {
+            "type": "string",
+            "enum": [
+              "control-heartbeat",
+              "progress",
+              "process",
+              "process-activity",
+              "provider",
+              "provider-stream",
+              "deadline",
+              "child-heartbeat",
+              "settlement"
+            ]
+          },
+          "verdict": {
+            "type": "string",
+            "enum": ["positive", "negative", "unknown", "not-applicable"]
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "watchdog-disabled",
+              "control-heartbeat-fresh",
+              "control-heartbeat-missing",
+              "progress-recent",
+              "progress-quiet",
+              "progress-slow",
+              "progress-stale",
+              "process-alive",
+              "process-dead",
+              "process-unknown",
+              "process-active",
+              "process-idle",
+              "provider-pending",
+              "provider-idle",
+              "provider-unknown",
+              "provider-stream-open",
+              "provider-stream-quiet",
+              "provider-retry-after",
+              "child-heartbeat-fresh",
+              "child-heartbeat-missing",
+              "settlement-running",
+              "settlement-finished",
+              "settlement-unknown",
+              "deadline-within-limit",
+              "phase-deadline-exceeded",
+              "hard-timeout-exceeded",
+              "negative-quorum",
+              "insufficient-negative-signals",
+              "awaiting-confirmation",
+              "recovered-signals",
+              "restart-budget-exhausted"
+            ]
+          },
+          "ageMs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": ["signal", "verdict", "reason"],
+        "additionalProperties": false
+      }
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "watchdog-disabled",
+          "control-heartbeat-fresh",
+          "control-heartbeat-missing",
+          "progress-recent",
+          "progress-quiet",
+          "progress-slow",
+          "progress-stale",
+          "process-alive",
+          "process-dead",
+          "process-unknown",
+          "process-active",
+          "process-idle",
+          "provider-pending",
+          "provider-idle",
+          "provider-unknown",
+          "provider-stream-open",
+          "provider-stream-quiet",
+          "provider-retry-after",
+          "child-heartbeat-fresh",
+          "child-heartbeat-missing",
+          "settlement-running",
+          "settlement-finished",
+          "settlement-unknown",
+          "deadline-within-limit",
+          "phase-deadline-exceeded",
+          "hard-timeout-exceeded",
+          "negative-quorum",
+          "insufficient-negative-signals",
+          "awaiting-confirmation",
+          "recovered-signals",
+          "restart-budget-exhausted"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "probeId",
+    "state",
+    "phase",
+    "observedAt",
+    "monotonicMs",
+    "processAlive",
+    "providerPending",
+    "negativeConfirmations",
+    "elapsedMs",
+    "progressSilenceMs",
+    "controlSilenceMs",
+    "phaseDeadlineExceeded",
+    "hardTimeoutExceeded",
+    "negativeQuorum",
+    "signals",
+    "reasons"
+  ],
+  "additionalProperties": false
+}

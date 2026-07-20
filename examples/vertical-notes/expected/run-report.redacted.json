@@ -1,0 +1,87 @@
+{
+  "$schema": "ralph.sample.executed-run-projection.v1",
+  "evidenceStatus": "executed-local-integration",
+  "run": {
+    "terminalStatus": "completed",
+    "sameRunResumed": true,
+    "firstLeafNotReplayed": true,
+    "leafProgress": {
+      "completed": 4,
+      "total": 4,
+      "barAtCompletion": "####################",
+      "percentage": 100
+    },
+    "rootScopeProgress": {
+      "completed": 3,
+      "total": 3
+    },
+    "composedParents": 1
+  },
+  "children": [
+    {
+      "documentId": "vertical-notes-lifecycle",
+      "parentTaskId": "notes-lifecycle",
+      "status": "passed",
+      "progress": {
+        "completed": 2,
+        "total": 2
+      },
+      "barAtCompletion": "############"
+    }
+  ],
+  "judge": {
+    "backend": "external-cli",
+    "profile": "sample-fake-judge",
+    "scriptOutsideWorkspace": true,
+    "supervisedProcessStarts": 6,
+    "threshold": 85,
+    "intentionalRevision": {
+      "taskId": "note-create-flow",
+      "scores": [
+        72,
+        96
+      ],
+      "revisionAttempts": 1
+    },
+    "finalRootLabel": "external · sample-fake-judge · 96/85 · revisions 0/1",
+    "finalChildLabel": "external · sample-fake-judge · 96/85 · revisions 1/1"
+  },
+  "resume": {
+    "crashBoundary": "after-completion-committed",
+    "interruptedStatus": "interrupted",
+    "resumedStatus": "completed",
+    "sameRunId": true,
+    "completedLeafReplayed": false
+  },
+  "usage": {
+    "combined": {
+      "available": false,
+      "source": "root+child:partial-unavailable"
+    },
+    "executor": {
+      "available": false,
+      "source": "root+child:partial-unavailable"
+    },
+    "judge": {
+      "available": false,
+      "source": "root+child:partial-unavailable"
+    }
+  },
+  "product": {
+    "healthContract": true,
+    "htmlEntrypoint": true,
+    "invalidStatus": 400,
+    "invalidCorrelationMatched": true,
+    "createdThenListed": true,
+    "persistedAfterRestart": true,
+    "correlatedStructuredLog": true,
+    "noteTextAbsentFromLogs": true
+  },
+  "redaction": {
+    "containsRunIds": false,
+    "containsHashes": false,
+    "containsTokenValues": false,
+    "containsCredentialValues": false,
+    "containsNoteText": false
+  }
+}

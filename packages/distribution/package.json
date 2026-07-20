@@ -1,0 +1,11 @@
+{
+  "name": "@ralph-next/distribution",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@ralph-next/domain": "workspace:*",
+    "zod": "4.4.3"
+  }
+}

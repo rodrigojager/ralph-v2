@@ -1,0 +1,39 @@
+{
+  "rootDocumentId": "checkout-incremental",
+  "documents": [
+    {
+      "id": "checkout-incremental",
+      "tasks": [
+        ["cart-add", "pending", "change-only"],
+        ["cart-review", "pending", "change-only"],
+        ["checkout-readiness-note", "pending", "artifact"]
+      ]
+    },
+    {
+      "id": "checkout-cart-review-detail",
+      "tasks": [
+        ["cart-review-contract", "pending", "change-only"],
+        ["cart-review-states", "pending", "change-only"],
+        ["cart-review-proof", "pending", "artifact"]
+      ]
+    }
+  ],
+  "dependencyEdges": [
+    "checkout-incremental/cart-review<-checkout-incremental/cart-add",
+    "checkout-incremental/checkout-readiness-note<-checkout-incremental/cart-review",
+    "checkout-cart-review-detail/cart-review-states<-checkout-cart-review-detail/cart-review-contract",
+    "checkout-cart-review-detail/cart-review-proof<-checkout-cart-review-detail/cart-review-states"
+  ],
+  "childEdges": ["checkout-incremental/cart-review->checkout-cart-review-detail"],
+  "topologicalOrder": [
+    "checkout-incremental/cart-add",
+    "checkout-cart-review-detail/cart-review-contract",
+    "checkout-cart-review-detail/cart-review-states",
+    "checkout-cart-review-detail/cart-review-proof",
+    "checkout-incremental/cart-review",
+    "checkout-incremental/checkout-readiness-note"
+  ],
+  "eligibleTasks": ["checkout-incremental/cart-add"],
+  "definitionHash": "0e5ddc2c15234c836ccbbeb4ce5d11e07ee56f211ab132d3bb4d79f491aaf2aa",
+  "graphHash": "5010186541afd853fc9750a53d3618445f9fb3e0545b6932c6b3a6dfc226b9b4"
+}

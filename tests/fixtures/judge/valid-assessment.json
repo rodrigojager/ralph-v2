@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "assessment-1",
+  "kind": "external",
+  "profileSnapshot": {
+    "id": "judge-openai",
+    "role": "judge",
+    "backend": "embedded",
+    "provider": "openai",
+    "model": "gpt-judge",
+    "contentHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "evidenceBundleId": "evidence-1",
+  "score": 88,
+  "summary": "The bounded evidence supports most acceptance criteria.",
+  "adequate": ["The blocking gate passed."],
+  "problems": [
+    {
+      "severity": "minor",
+      "criterion": "criterion-2",
+      "message": "The artifact documents the result but not the failure path.",
+      "evidenceRefs": ["artifact:report"]
+    }
+  ],
+  "missingEvidence": ["Failure-path end-to-end evidence"],
+  "recommendations": ["Add a bounded failure-path check."],
+  "criterionScores": [
+    { "criterion": "criterion-1", "score": 100, "rationale": "Gate passed." },
+    { "criterion": "criterion-2", "score": 76, "rationale": "Partial artifact evidence." }
+  ],
+  "confidence": 0.82,
+  "createdAt": "2026-07-18T12:00:00.000Z"
+}

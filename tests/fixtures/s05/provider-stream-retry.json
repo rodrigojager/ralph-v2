@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "attempts": [
+    {
+      "callId": "provider-attempt-1",
+      "rawRef": "raw:model/provider-attempt-1.jsonl",
+      "source": [
+        {
+          "type": "text",
+          "sequence": 0,
+          "providerEventId": "attempt-1-text",
+          "delta": "partial before retry"
+        },
+        {
+          "type": "error",
+          "sequence": 1,
+          "providerEventId": "attempt-1-error",
+          "error": {
+            "kind": "rate-limit",
+            "message": "retryable fixture failure",
+            "code": "rate_limit"
+          }
+        }
+      ],
+      "failAfterSource": "transport closed after provider error",
+      "expected": {
+        "finishReason": "error",
+        "text": "partial before retry",
+        "types": [
+          "model.text.delta",
+          "model.provider.error",
+          "model.text.completed",
+          "model.usage.updated",
+          "model.call.finished"
+        ]
+      }
+    },
+    {
+      "callId": "provider-attempt-2",
+      "rawRef": "raw:model/provider-attempt-2.jsonl",
+      "source": [
+        {
+          "type": "text",
+          "sequence": 0,
+          "providerEventId": "attempt-2-text-1",
+          "delta": "retry "
+        },
+        {
+          "type": "text",
+          "sequence": 1,
+          "providerEventId": "attempt-2-text-2",
+          "delta": "succeeded"
+        },
+        {
+          "type": "usage",
+          "sequence": 2,
+          "providerEventId": "attempt-2-usage",
+          "semantics": "final",
+          "delta": {
+            "input": 8,
+            "output": 2,
+            "total": 10,
+            "source": "reported"
+          },
+          "aggregate": {
+            "input": 8,
+            "output": 2,
+            "total": 10,
+            "source": "reported"
+          }
+        },
+        {
+          "type": "finish",
+          "sequence": 3,
+          "providerEventId": "attempt-2-finish",
+          "reason": "stop"
+        }
+      ],
+      "expected": {
+        "finishReason": "stop",
+        "text": "retry succeeded",
+        "types": [
+          "model.text.delta",
+          "model.text.delta",
+          "model.provider.warning",
+          "model.usage.updated",
+          "model.text.completed",
+          "model.call.finished"
+        ]
+      }
+    }
+  ]
+}

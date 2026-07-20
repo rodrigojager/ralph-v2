@@ -1,0 +1,14 @@
+[
+  {
+    "expectedTask": "wiggum-bounded/converge-capability",
+    "outcome": {
+      "summary": "A primeira iteração não produziu mudança."
+    }
+  },
+  {
+    "expectedTask": "wiggum-bounded/converge-capability",
+    "outcome": {
+      "summary": "A segunda iteração também não produziu mudança."
+    }
+  }
+]

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/provider-model-input.schema.json",
+  "title": "Ralph ordered provider model input v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": ["system", "user", "assistant"]
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "message"
+        }
+      },
+      "required": ["role", "content", "type"],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "function-call"
+        },
+        "itemId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z_][A-Za-z0-9_.:-]*$"
+        },
+        "argumentsJson": {
+          "type": "string",
+          "minLength": 2
+        },
+        "input": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema0"
+          }
+        }
+      },
+      "required": ["type", "itemId", "callId", "name", "argumentsJson", "input"],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "function-call-output"
+        },
+        "callId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output": {
+          "type": "string"
+        }
+      },
+      "required": ["type", "callId", "output"],
+      "additionalProperties": false
+    }
+  ],
+  "$defs": {
+    "__schema0": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema0"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema0"
+          }
+        }
+      ]
+    }
+  }
+}

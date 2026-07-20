@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "artifact": "ralph.r015.parser-static-review",
+  "requirementId": "R015",
+  "blockerId": "BLK-R015-REVIEW",
+  "review": {
+    "reviewer": "Codex independent static review agent r015_parser_review",
+    "reviewedAt": "2026-07-20T00:29:28.579Z",
+    "method": "independent-static-source-review",
+    "verdict": "APPROVED"
+  },
+  "source": {
+    "path": "packages/prd/src/parser.ts",
+    "sha256": "e69dd71f508e9f7ce9646ec0cb3af3faff4757f424e6b2d012c854624988073a",
+    "bytes": 41965,
+    "lines": 1313
+  },
+  "claims": [
+    {
+      "id": "safe-yaml-frontmatter",
+      "status": "confirmed",
+      "evidence": [
+        "packages/prd/src/parser.ts:410-432"
+      ],
+      "description": "PRD v2 frontmatter is decoded by the YAML document parser with strict mode, unique keys, the core schema and aliases disabled during conversion."
+    },
+    {
+      "id": "commonmark-ast-structure",
+      "status": "confirmed",
+      "evidence": [
+        "packages/prd/src/parser.ts:4",
+        "packages/prd/src/parser.ts:33",
+        "packages/prd/src/parser.ts:1064-1112"
+      ],
+      "description": "Normative Markdown structure is selected and validated from typed mdast/CommonMark nodes, including the Vertical slices heading and its single unordered list."
+    },
+    {
+      "id": "regex-bounded-to-leaf-values",
+      "status": "confirmed",
+      "evidence": [
+        "packages/prd/src/parser.ts:654-668",
+        "packages/prd/src/parser.ts:709-768"
+      ],
+      "description": "Regular expressions in the PRD v2 task-header path operate on scalar text already selected from AST leaf nodes; leaf coercion and diagnostics remain inside the leaf parser boundary."
+    },
+    {
+      "id": "marker-edit-is-position-bound",
+      "status": "confirmed",
+      "evidence": [
+        "packages/prd/src/parser.ts:1016-1041"
+      ],
+      "description": "The mutable three-character task marker is located from the AST source position and revalidated against the exact source slice before its location is exposed."
+    },
+    {
+      "id": "classic-regex-isolation",
+      "status": "confirmed",
+      "evidence": [
+        "packages/prd/src/classic.ts:72-75",
+        "packages/prd/src/parser.ts:1-33"
+      ],
+      "description": "Broad line-oriented regular expressions belong to the separate classic compatibility adapter and are not imported into the PRD v2 parser."
+    }
+  ],
+  "evidenceTrail": [
+    {
+      "step": 1,
+      "action": "Bind the review to the exact parser source snapshot",
+      "result": "SHA-256, byte count and line count recorded"
+    },
+    {
+      "step": 2,
+      "action": "Inspect YAML and Markdown parser entry boundaries",
+      "result": "Safe YAML settings and CommonMark/mdast structural selection confirmed"
+    },
+    {
+      "step": 3,
+      "action": "Trace every structural regular-expression use in the PRD v2 task path",
+      "result": "Uses are limited to AST-selected scalar leaf text and the bounded three-character marker"
+    },
+    {
+      "step": 4,
+      "action": "Inspect the classic compatibility boundary",
+      "result": "Line-oriented classic parsing remains isolated in packages/prd/src/classic.ts"
+    }
+  ],
+  "limitations": [
+    "This receipt attests to the exact source snapshot identified above; any parser source change invalidates the binding until a new independent review is recorded.",
+    "The review was static. It did not execute Bun, tests, builds, the CLI or the TUI."
+  ],
+  "conclusion": "APPROVED: the reviewed PRD v2 parser uses YAML and CommonMark/mdast parsing for document structure, confines regular expressions to leaf/scalar validation or an exact three-character marker, and keeps classic line-oriented parsing in a separate adapter."
+}

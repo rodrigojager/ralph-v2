@@ -1,0 +1,15 @@
+[
+  {
+    "expectedTask": "single-pass/deliver-capability",
+    "actions": [
+      {
+        "type": "write",
+        "path": "product/capability.txt",
+        "content": "delivered"
+      }
+    ],
+    "outcome": {
+      "summary": "A capacidade mínima foi materializada para verificação determinística."
+    }
+  }
+]

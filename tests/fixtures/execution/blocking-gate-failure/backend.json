@@ -1,0 +1,15 @@
+[
+  {
+    "expectedTask": "blocking-gate-failure/deliver-accepted-value",
+    "actions": [
+      {
+        "type": "write",
+        "path": "product/capability.txt",
+        "content": "rejected"
+      }
+    ],
+    "outcome": {
+      "summary": "Uma mudança material foi submetida, mas ainda precisa passar pelo gate."
+    }
+  }
+]

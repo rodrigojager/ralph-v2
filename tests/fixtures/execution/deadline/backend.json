@@ -1,0 +1,7 @@
+[
+  {
+    "expectedTask": "deadline-bounded/deadline-slice",
+    "delayMs": 4000,
+    "actions": [{ "type": "write", "path": "delivery/late.txt", "content": "too late" }]
+  }
+]

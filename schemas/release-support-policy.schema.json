@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/release-support-policy.schema.json",
+  "title": "Ralph release support policy v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "product": {
+      "type": "string",
+      "const": "ralph-next"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "channel": {
+      "type": "string",
+      "enum": ["dev", "nightly", "beta", "stable"]
+    },
+    "matrix": {
+      "minItems": 6,
+      "maxItems": 6,
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "target": {
+                "type": "string",
+                "enum": [
+                  "bun-windows-x64-baseline",
+                  "bun-windows-arm64",
+                  "bun-linux-x64-baseline",
+                  "bun-linux-arm64",
+                  "bun-darwin-x64",
+                  "bun-darwin-arm64"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "const": "included"
+              },
+              "capabilities": {
+                "type": "object",
+                "properties": {
+                  "installControlStateDurability": {
+                    "type": "object",
+                    "properties": {
+                      "fileSync": {
+                        "type": "string",
+                        "const": "fsync-before-rename"
+                      },
+                      "directorySync": {
+                        "type": "string",
+                        "enum": ["fsync-after-rename", "unsupported-file-sync-only"]
+                      },
+                      "guarantee": {
+                        "type": "string",
+                        "enum": ["full", "reduced"]
+                      }
+                    },
+                    "required": ["fileSync", "directorySync", "guarantee"],
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["installControlStateDurability"],
+                "additionalProperties": false
+              },
+              "limitations": {
+                "maxItems": 64,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              }
+            },
+            "required": ["target", "status", "capabilities", "limitations"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "target": {
+                "type": "string",
+                "enum": [
+                  "bun-windows-x64-baseline",
+                  "bun-windows-arm64",
+                  "bun-linux-x64-baseline",
+                  "bun-linux-arm64",
+                  "bun-darwin-x64",
+                  "bun-darwin-arm64"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "const": "not-promoted"
+              },
+              "capabilities": {
+                "type": "object",
+                "properties": {
+                  "installControlStateDurability": {
+                    "type": "object",
+                    "properties": {
+                      "fileSync": {
+                        "type": "string",
+                        "const": "fsync-before-rename"
+                      },
+                      "directorySync": {
+                        "type": "string",
+                        "enum": ["fsync-after-rename", "unsupported-file-sync-only"]
+                      },
+                      "guarantee": {
+                        "type": "string",
+                        "enum": ["full", "reduced"]
+                      }
+                    },
+                    "required": ["fileSync", "directorySync", "guarantee"],
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["installControlStateDurability"],
+                "additionalProperties": false
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              }
+            },
+            "required": ["target", "status", "capabilities", "reason"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": ["schemaVersion", "product", "version", "channel", "matrix"],
+  "additionalProperties": false
+}

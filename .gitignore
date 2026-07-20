@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+.ralph/
+artifacts/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

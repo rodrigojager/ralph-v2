@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/workspace-status.schema.json",
+  "title": "Ralph v2 workspace status v1",
+  "type": "object",
+  "properties": {
+    "initialized": {
+      "type": "boolean"
+    },
+    "state": {
+      "type": "string",
+      "enum": ["uninitialized", "ready", "invalid"]
+    },
+    "root": {
+      "type": "string"
+    },
+    "workspaceId": {
+      "type": "string"
+    },
+    "workspaceSchemaVersion": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "configSchemaVersion": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "eventCursor": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "eventCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "lastEventType": {
+      "type": "string"
+    },
+    "moved": {
+      "type": "boolean"
+    }
+  },
+  "required": ["initialized", "state", "root", "eventCursor", "eventCount"],
+  "additionalProperties": false
+}

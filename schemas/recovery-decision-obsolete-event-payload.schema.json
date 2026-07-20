@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/recovery-decision-obsolete-event-payload.schema.json",
+  "title": "Ralph obsolete recovery decision event payload v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "decisionEventId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "decisionAttemptId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "decisionRecoveryHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "currentRecoveryRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "currentRecoveryHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "currentRecoveryStorageHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "currentState": {
+      "type": "string",
+      "enum": ["clean", "continued", "workspace_changed"]
+    },
+    "reason": {
+      "type": "string",
+      "const": "workspace-no-longer-requires-decision"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "decisionEventId",
+    "decisionAttemptId",
+    "decisionRecoveryHash",
+    "currentRecoveryRef",
+    "currentRecoveryHash",
+    "currentRecoveryStorageHash",
+    "currentState",
+    "reason"
+  ],
+  "additionalProperties": false
+}

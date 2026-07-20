@@ -1,0 +1,6 @@
+[
+  {
+    "expectedTask": "task-options/second-profile",
+    "actions": [{ "type": "write", "path": "delivery/second.txt", "content": "second" }]
+  }
+]

@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/recovery-manifest.schema.json",
+  "title": "Ralph crash recovery manifest v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "documentId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "attemptId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "state": {
+      "type": "string",
+      "enum": ["clean", "continued", "workspace_changed"]
+    },
+    "taskBaselineHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "observedWorkspaceHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "expectedWorkspaceHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "externalMutation": {
+      "type": "string",
+      "enum": ["not-detected", "suspected", "unknown"]
+    },
+    "diff": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "contentHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "reproducible": {
+          "type": "boolean"
+        }
+      },
+      "required": ["ref", "contentHash", "reproducible"],
+      "additionalProperties": false
+    },
+    "changes": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "included": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "omittedPathsHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "created": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "modified": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "deleted": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "untrackedTotal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "untracked": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "outsideScope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "kind": {
+                "type": "string",
+                "enum": ["created", "modified", "deleted"]
+              },
+              "beforeSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "afterSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "beforeRef": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "afterRef": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            },
+            "required": ["path", "kind"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "total",
+        "included",
+        "truncated",
+        "created",
+        "modified",
+        "deleted",
+        "untrackedTotal",
+        "untracked",
+        "outsideScope",
+        "files"
+      ],
+      "additionalProperties": false
+    },
+    "previousAttemptIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4096
+      }
+    },
+    "unsettledToolCallIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4096
+      }
+    },
+    "availableActions": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["continue", "inspect", "checkpoint", "rollback-explicit"]
+      }
+    },
+    "recommendedAction": {
+      "type": "string",
+      "enum": ["continue", "inspect", "checkpoint", "rollback-explicit"]
+    },
+    "requiresOperatorDecision": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4096
+      }
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "runId",
+    "documentId",
+    "taskId",
+    "attemptId",
+    "state",
+    "taskBaselineHash",
+    "observedWorkspaceHash",
+    "externalMutation",
+    "changes",
+    "previousAttemptIds",
+    "unsettledToolCallIds",
+    "availableActions",
+    "recommendedAction",
+    "requiresOperatorDecision",
+    "notes",
+    "capturedAt",
+    "contentHash"
+  ],
+  "additionalProperties": false
+}

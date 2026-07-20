@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/recovery-context-pointer.schema.json",
+  "title": "Ralph bounded recovery context pointer v1",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "recovery"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "sourceRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "manifestHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "includedHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "sourceStorageHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "truncated": {
+      "type": "boolean"
+    },
+    "state": {
+      "type": "string",
+      "enum": ["clean", "continued", "workspace_changed"]
+    },
+    "changedFiles": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "untrackedFiles": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "previousAttempts": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "unsettledToolCalls": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "recommendedAction": {
+      "type": "string",
+      "enum": ["continue", "inspect", "checkpoint", "rollback-explicit"]
+    },
+    "requiresOperatorDecision": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "kind",
+    "ref",
+    "sourceRef",
+    "manifestHash",
+    "contentHash",
+    "includedHash",
+    "sourceStorageHash",
+    "truncated",
+    "state",
+    "changedFiles",
+    "untrackedFiles",
+    "previousAttempts",
+    "unsettledToolCalls",
+    "recommendedAction",
+    "requiresOperatorDecision"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@ralph-next/supervisor",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./process-identity": "./src/process-identity.ts"
+  },
+  "dependencies": {
+    "@ralph-next/domain": "workspace:*",
+    "@ralph-next/telemetry": "workspace:*",
+    "zod": "4.4.3"
+  }
+}

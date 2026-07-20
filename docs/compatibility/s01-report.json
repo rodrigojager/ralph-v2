@@ -1,0 +1,848 @@
+{
+  "schemaVersion": 1,
+  "suite": "s01-foundation-compatibility",
+  "comparisonMode": "legacy-vs-next",
+  "normalization": {
+    "portableRaw": [
+      "temporary fixture root -> <FIXTURE_ROOT>",
+      "RFC 4122 UUID -> indexed <RAW_UUID_n>",
+      "ISO 8601 timestamp -> indexed <RAW_TIMESTAMP_n>"
+    ],
+    "normalized": ["indexed <RAW_UUID_n> -> <UUID>", "indexed <RAW_TIMESTAMP_n> -> <TIMESTAMP>"]
+  },
+  "environment": {
+    "platform": "win32",
+    "architecture": "x64",
+    "bunVersion": "1.3.14"
+  },
+  "binaries": {
+    "legacy": {
+      "kind": "binary",
+      "path": "<LEGACY_BINARY_DIR>/ralph.exe",
+      "sha256": "FFD6B016713E8754B06AD1C9A2F51D6BA761E7B223BD2083FD1F99C9B0A217EE",
+      "versionExitCode": 0,
+      "versionStdout": "ralph 0.2.0\r\n",
+      "versionStderr": ""
+    },
+    "next": {
+      "kind": "binary",
+      "path": "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+      "sha256": "8430E875F49084B94DF0740547EB6DAA3C177E892614B45E53A2BB15C2AB76AF",
+      "versionExitCode": 0,
+      "versionStdout": "ralph-next 0.1.0-dev.1\n",
+      "versionStderr": ""
+    }
+  },
+  "platformEvidence": [
+    {
+      "target": "bun-windows-x64-baseline",
+      "platform": "windows",
+      "architecture": "x64",
+      "state": "tested",
+      "evidence": "The compatibility harness executed a standalone binary on win32/x64."
+    },
+    {
+      "target": "bun-windows-arm64",
+      "platform": "windows",
+      "architecture": "arm64",
+      "state": "not-evidenced",
+      "evidence": "No fresh standalone artifact evidence exists for the current source revision."
+    },
+    {
+      "target": "bun-linux-x64-baseline",
+      "platform": "linux",
+      "architecture": "x64",
+      "state": "not-evidenced",
+      "evidence": "No fresh standalone artifact evidence exists for the current source revision."
+    },
+    {
+      "target": "bun-linux-arm64",
+      "platform": "linux",
+      "architecture": "arm64",
+      "state": "not-evidenced",
+      "evidence": "No fresh standalone artifact evidence exists for the current source revision."
+    },
+    {
+      "target": "bun-darwin-x64",
+      "platform": "darwin",
+      "architecture": "x64",
+      "state": "not-evidenced",
+      "evidence": "No fresh standalone artifact evidence exists for the current source revision."
+    },
+    {
+      "target": "bun-darwin-arm64",
+      "platform": "darwin",
+      "architecture": "arm64",
+      "state": "not-evidenced",
+      "evidence": "No fresh standalone artifact evidence exists for the current source revision."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "help",
+      "purpose": "Compare the discoverable S01 command surface and successful help behavior.",
+      "legacy": {
+        "invocation": ["<LEGACY_BINARY_DIR>/ralph.exe", "--help"],
+        "cwd": "<FIXTURE_ROOT>\\help",
+        "snapshotRoot": "<FIXTURE_ROOT>\\help",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "ralph - Executor de loop de tarefas PRD\r\nUSO\n  ralph <comando> [opcoes]\n\nWORKSPACE\n  ralph init [--force]                  Inicializa o workspace .ralph/ no diretorio atual\n  ralph clean [--force]                 Remove o workspace .ralph/\n  ralph doctor [--yes|--non-interactive]\n                                        Verifica workspace, PRD, engines e PATH\n\nEXECUCAO DE TAREFAS\n  ralph run|loop [opcoes]               Executa tarefas pendentes do PRD em loop\n  ralph once [tarefa] [opcoes]          Executa uma tarefa do PRD ou tarefa avulsa\n  ralph parallel [tarefa ...] [opcoes]  Executa tarefas em paralelo\n  ralph status [--json]                 Mostra status atual do workspace/run\n  ralph events [--follow]               Acompanha .ralph/events.jsonl\n  ralph checkpoint <create|list|show|restore>\n                                        Gerencia checkpoints leves de execucao\n  ralph context <refresh|show>          Gera/mostra .ralph/context/repo-map.md\n  ralph adapters <list|new>             Lista ou cria adapters de engine\n  ralph recipes <list|new>              Lista ou cria receitas de workflow\n\nOPCOES DE EXECUCAO\n  --prd CAMINHO                         Caminho do PRD (padrao: PRD.md)\n  --engine NOME                         Engine ou adapter a usar\n  --model NOME                          Override de modelo\n  --sonnet | --opus | --haiku           Atalhos de modelos Claude\n  --mode loop|wiggum                    Modo de contexto do prompt\n  --loop | --wiggum                     Atalhos para --mode\n  --force                               Mantem supervisor rodando ate concluir ou pedir revisao\n  -r, --retries N | --max-retries N     Maximo de tentativas por tarefa\n  --retry-delay SEC                     Segundos entre tentativas\n  --max-iterations N                    Para apos N iteracoes\n  --max-parallel N                      Maximo de workers no modo parallel\n  --retry-failed                        Reexecuta falhas do parallel uma vez\n  --parallel-integration merge|create-pr|no-merge\n                                        Estrategia de integracao apos parallel\n  --max-tokens N                        Limite de tokens enviado para a engine\n  --temperature T                       Temperatura enviada para a engine\n  --run-tests                           Executa test_command do PRD quando declarado\n  --skip-tests                          Pula test_command do PRD\n  --no-lint | --skip-lint               Pula lint_command do PRD\n  --gate nome=comando                   Executa quality gate explicito apos cada tarefa\n  --test-command CMD                    Alias para --gate test=CMD\n  --lint-command CMD                    Alias para --gate lint=CMD\n  --fast                                Ativa fast mode do Codex via config quando suportado\n  --no-commit                           Pula commit/branch/PR do fluxo PRD\n  --security safe|auto|dangerous        Perfil de seguranca da engine\n  --sandbox | --no-sandbox              Ativa ou desativa sandbox de processo\n  --sandbox-provider NOME               process, docker ou podman\n  --sandbox-image IMAGE                 Imagem para sandbox docker/podman\n  --sandbox-network MODO                Modo de rede do container\n  --dry-run                             Mostra previa sem executar a engine\n  --debug-engine-json                   Salva snapshots brutos da engine\n  --verbose | -v                        Mostra prompt, stdout e tempo\n  --branch-per-task                     Cria uma branch git por tarefa\n  --base-branch NOME                    Branch base para branches de tarefa\n  --create-pr | --draft-pr              Abre PRs no GitHub apos tarefas\n  --auto-rollback                       Reverte mudancas da tarefa em falha\n  --ignore-context-stops                Ignora sinais DEFER/GUTTER (padrao)\n  --respect-context-stops               Para em sinais DEFER/GUTTER\n  --no-change-policy fallback|retry|fail-fast\n                                        Comportamento quando nao houver alteracoes\n  --no-change-max-retries N             Maximo de tentativas sem alteracoes\n  --no-change-stop-on-max-retries       Para apos maximo sem alteracoes\n  --no-change-continue-on-max-retries   Continua apos maximo sem alteracoes\n  -- ...args                            Passa argumentos restantes direto para a engine\n\nTASKS\n  ralph tasks list|next|done|sync        Gerencia tarefas do PRD e sync de issues GitHub\n\nCONFIG, RULES, LOGS, RELATORIOS\n  ralph config list|get|set              Gerencia configuracao\n  ralph rules list|add|clear             Gerencia guardrails\n  ralph logs tail [--follow]             Acompanha logs de execucao\n  ralph report last                      Mostra ultimo relatorio\n\nINSTALACAO, UPDATE, IDIOMA E UI\n  ralph install [DIR]                    Instala ralph globalmente\n  ralph update                           Autoatualiza para a ultima release\n  ralph lang current|list|set|update     Gerencia arquivos de idioma\n  ralph ui current|set|toggle            Gerencia modo de UI\n  --ui <modo>                            Override de UI nesta execucao\n\nOUTROS\n  ralph about                            Sobre o ralph e o autor\n  ralph --version / -V                   Mostra versao\n  ralph --help / -h                      Mostra esta ajuda\r\n",
+          "normalized": "ralph - Executor de loop de tarefas PRD\r\nUSO\n  ralph <comando> [opcoes]\n\nWORKSPACE\n  ralph init [--force]                  Inicializa o workspace .ralph/ no diretorio atual\n  ralph clean [--force]                 Remove o workspace .ralph/\n  ralph doctor [--yes|--non-interactive]\n                                        Verifica workspace, PRD, engines e PATH\n\nEXECUCAO DE TAREFAS\n  ralph run|loop [opcoes]               Executa tarefas pendentes do PRD em loop\n  ralph once [tarefa] [opcoes]          Executa uma tarefa do PRD ou tarefa avulsa\n  ralph parallel [tarefa ...] [opcoes]  Executa tarefas em paralelo\n  ralph status [--json]                 Mostra status atual do workspace/run\n  ralph events [--follow]               Acompanha .ralph/events.jsonl\n  ralph checkpoint <create|list|show|restore>\n                                        Gerencia checkpoints leves de execucao\n  ralph context <refresh|show>          Gera/mostra .ralph/context/repo-map.md\n  ralph adapters <list|new>             Lista ou cria adapters de engine\n  ralph recipes <list|new>              Lista ou cria receitas de workflow\n\nOPCOES DE EXECUCAO\n  --prd CAMINHO                         Caminho do PRD (padrao: PRD.md)\n  --engine NOME                         Engine ou adapter a usar\n  --model NOME                          Override de modelo\n  --sonnet | --opus | --haiku           Atalhos de modelos Claude\n  --mode loop|wiggum                    Modo de contexto do prompt\n  --loop | --wiggum                     Atalhos para --mode\n  --force                               Mantem supervisor rodando ate concluir ou pedir revisao\n  -r, --retries N | --max-retries N     Maximo de tentativas por tarefa\n  --retry-delay SEC                     Segundos entre tentativas\n  --max-iterations N                    Para apos N iteracoes\n  --max-parallel N                      Maximo de workers no modo parallel\n  --retry-failed                        Reexecuta falhas do parallel uma vez\n  --parallel-integration merge|create-pr|no-merge\n                                        Estrategia de integracao apos parallel\n  --max-tokens N                        Limite de tokens enviado para a engine\n  --temperature T                       Temperatura enviada para a engine\n  --run-tests                           Executa test_command do PRD quando declarado\n  --skip-tests                          Pula test_command do PRD\n  --no-lint | --skip-lint               Pula lint_command do PRD\n  --gate nome=comando                   Executa quality gate explicito apos cada tarefa\n  --test-command CMD                    Alias para --gate test=CMD\n  --lint-command CMD                    Alias para --gate lint=CMD\n  --fast                                Ativa fast mode do Codex via config quando suportado\n  --no-commit                           Pula commit/branch/PR do fluxo PRD\n  --security safe|auto|dangerous        Perfil de seguranca da engine\n  --sandbox | --no-sandbox              Ativa ou desativa sandbox de processo\n  --sandbox-provider NOME               process, docker ou podman\n  --sandbox-image IMAGE                 Imagem para sandbox docker/podman\n  --sandbox-network MODO                Modo de rede do container\n  --dry-run                             Mostra previa sem executar a engine\n  --debug-engine-json                   Salva snapshots brutos da engine\n  --verbose | -v                        Mostra prompt, stdout e tempo\n  --branch-per-task                     Cria uma branch git por tarefa\n  --base-branch NOME                    Branch base para branches de tarefa\n  --create-pr | --draft-pr              Abre PRs no GitHub apos tarefas\n  --auto-rollback                       Reverte mudancas da tarefa em falha\n  --ignore-context-stops                Ignora sinais DEFER/GUTTER (padrao)\n  --respect-context-stops               Para em sinais DEFER/GUTTER\n  --no-change-policy fallback|retry|fail-fast\n                                        Comportamento quando nao houver alteracoes\n  --no-change-max-retries N             Maximo de tentativas sem alteracoes\n  --no-change-stop-on-max-retries       Para apos maximo sem alteracoes\n  --no-change-continue-on-max-retries   Continua apos maximo sem alteracoes\n  -- ...args                            Passa argumentos restantes direto para a engine\n\nTASKS\n  ralph tasks list|next|done|sync        Gerencia tarefas do PRD e sync de issues GitHub\n\nCONFIG, RULES, LOGS, RELATORIOS\n  ralph config list|get|set              Gerencia configuracao\n  ralph rules list|add|clear             Gerencia guardrails\n  ralph logs tail [--follow]             Acompanha logs de execucao\n  ralph report last                      Mostra ultimo relatorio\n\nINSTALACAO, UPDATE, IDIOMA E UI\n  ralph install [DIR]                    Instala ralph globalmente\n  ralph update                           Autoatualiza para a ultima release\n  ralph lang current|list|set|update     Gerencia arquivos de idioma\n  ralph ui current|set|toggle            Gerencia modo de UI\n  --ui <modo>                            Override de UI nesta execucao\n\nOUTROS\n  ralph about                            Sobre o ralph e o autor\n  ralph --version / -V                   Mostra versao\n  ralph --help / -h                      Mostra esta ajuda\r\n",
+          "lineEndings": "mixed"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [],
+        "invariants": [
+          {
+            "id": "legacy.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "legacy.help.product-and-commands",
+            "passed": true,
+            "evidence": "Legacy help identifies the product and every required command in this baseline."
+          },
+          {
+            "id": "legacy.help.non-mutating",
+            "passed": true,
+            "evidence": "Help left the fixture directory empty."
+          }
+        ]
+      },
+      "next": {
+        "invocation": [
+          "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+          "help",
+          "--format",
+          "human",
+          "--no-color"
+        ],
+        "cwd": "<FIXTURE_ROOT>\\help",
+        "snapshotRoot": "<FIXTURE_ROOT>\\help",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "ralph-next 0.1.0-dev.1 — command-authoritative AI task runner\n\nUSAGE\n  ralph-next <command> [options]\n\nCOMMANDS\n  init                Initialize an isolated Ralph v2 workspace\n  once                Execute at most one selected or eligible PRD task\n  run                 Execute eligible PRD tasks with bounded orchestration\n  loop                Run the same bounded orchestration through the loop spelling\n  run --wiggum        Run with verified full-PRD context and bounded iterations\n  status              Show workspace and event-ledger status\n  status run          Show the status of a persisted execution run\n  events              Read persisted run events, including JSONL output\n  report last         Show the most recent run report\n  report show         Show a run report selected by run ID\n  doctor              Check runtime, Git, filesystem, TTY and workspace\n  config explain      Explain one effective config value and source\n  config list         List the effective configuration\n  prd validate        Validate a v2 or classic PRD deterministically\n  prd inspect         Print the typed document or recursive graph\n  prd format          Canonicalize v2 task grammar without losing context\n  prd migrate         Migrate a classic PRD with an explicit loss report\n  providers list      List embedded provider descriptors\n  providers inspect   Inspect one provider and its auth methods\n  models list         List models and filter required capabilities\n  models inspect      Inspect one model, limits, access and catalog source\n  auth connect        Connect a credential without putting secrets in argv\n  auth list           List non-secret credential references\n  auth status         Check credential availability and expiry metadata\n  auth revoke         Revoke and remove one credential reference\n  profiles list       List independent executor and judge profiles\n  profiles inspect    Inspect one resolved role profile\n  profiles configure  Configure a role profile through shared CLI/form metadata\n  model smoke         Make a read-only, no-tools model smoke call\n  about               Describe Ralph v2 and its authority model\n  version             Print the Ralph v2 version\n  help                Show this help\n\nOPTIONS\n  --format human|json|jsonl        Select the output contract\n  --json                           Alias for --format json\n  --workspace PATH                 Use an explicit workspace directory\n  --no-color                       Disable ANSI color in human output\n  --debug                          Include redacted debug details on failures\n  --force                          Authorize an audited override where supported; never bypass schema or child safety\n  --non-interactive                Never prompt or open a UI\n  --prd PATH                       Select the root PRD v2 file for execution\n  --executor-profile NAME          Select the configured executor profile\n  --executor-provider ID           Override only the executor provider\n  --executor-model ID              Override only the executor model\n  --executor-credential REF        Override only the executor credential ref\n  --executor-variant ID            Override only the executor model variant\n  --judge-profile NAME             Select the configured judge profile\n  --judge-provider ID              Override only the judge provider\n  --judge-model ID                 Override only the judge model\n  --judge-credential REF           Override only the judge credential ref\n  --judge-variant ID               Override only the judge model variant\n  --provider ID                    Select a provider for catalog, auth or smoke\n  --model ID                       Select a model where supported\n  --profile ID                     Select a role profile where supported\n  --credential REF                 Select a non-secret credential reference\n  --method METHOD                  Select a provider-advertised authentication method\n  --label TEXT                     Set a human-readable credential label\n  --environment NAME               Reference an environment variable without copying it\n  --secret-stdin                   Read a secret from stdin instead of prompting\n  --headless                       Use an actionable headless auth flow without opening a browser\n  --refresh                        Refresh remote metadata or renewable credential status\n  --timeout SEC                    Set a positive timeout for auth or smoke operations\n  --role executor|judge            Filter or configure a role profile\n  --backend embedded|external-cli  Configure a profile backend\n  --variant ID                     Select a provider-declared model variant\n  --parameter NAME=VALUE           Set a provider-declared primitive model parameter; repeat as needed\n  --scope global|workspace         Select the profile configuration scope\n  --fallback-profile ID            Add an ordered explicit fallback; repeat as needed\n  --fallback-on CLASS              Authorize a transient fallback class; repeat as needed\n  --require-tools                  Require model tool-calling capability\n  --require-structured-output      Require model structured-output capability\n  --allow-insecure-store           Explicitly allow a warned plaintext fallback when no secure store exists\n  --task ID                        Select one PRD task; once also accepts the ID positionally\n  --run-id ID                      Select a resumable or persisted run where supported\n  --wiggum                         Use the verified full-PRD context envelope with run\n  --dry-run                        Resolve execution without backend calls or marker changes\n  --fail-fast                      Stop run or loop after the first blocking task failure\n  --max-tasks N                    Limit run or loop to a positive number of tasks\n  --retry-delay SEC                Set a non-negative delay between retry opportunities\n  --max-iterations N               Limit positive Wiggum iterations; requires effective mode wiggum\n  --max-model-calls N              Limit model calls to a positive integer\n  --no-change-policy POLICY        Use require-change, allow-no-change, fail-on-no-change or retry-on-no-change; legacy aliases remain accepted\n  --no-change-max-retries N        Limit no-change retries to a non-negative integer\n  --skip-tests                     Request applicable test gates to be skipped by policy\n  --skip-lint                      Request applicable lint gates to be skipped by policy\n  --skip-gates ID                  Request a named gate skip; repeat for multiple gates\n  --fast                           Request every applicable allowed-to-skip verification skip\n  --no-commit                      Disable optional commit creation for this execution\n  --effective                      Request the effective merged config view\n  --mode once|loop|wiggum          Select generic run mode; also overrides mode in config explain/list\n  --ui MODE                        CLI config override used by config explain/list\n  --lang LOCALE                    CLI config override used by config explain/list\n  --recursive                      Compile every referenced Sub-PRD\n  --strict                         Treat noncanonical warnings as validation failure\n  --check                          Check formatting without writing\n  --output PATH                    Write PRD output to a separate path\n  --report PATH                    Select the migration report path\n  --in-place                       Explicitly replace the source where supported\n\nRalph selects work, authorizes tools, verifies evidence and persists completion.\nModels never control official task state.\n",
+          "normalized": "ralph-next 0.1.0-dev.1 — command-authoritative AI task runner\n\nUSAGE\n  ralph-next <command> [options]\n\nCOMMANDS\n  init                Initialize an isolated Ralph v2 workspace\n  once                Execute at most one selected or eligible PRD task\n  run                 Execute eligible PRD tasks with bounded orchestration\n  loop                Run the same bounded orchestration through the loop spelling\n  run --wiggum        Run with verified full-PRD context and bounded iterations\n  status              Show workspace and event-ledger status\n  status run          Show the status of a persisted execution run\n  events              Read persisted run events, including JSONL output\n  report last         Show the most recent run report\n  report show         Show a run report selected by run ID\n  doctor              Check runtime, Git, filesystem, TTY and workspace\n  config explain      Explain one effective config value and source\n  config list         List the effective configuration\n  prd validate        Validate a v2 or classic PRD deterministically\n  prd inspect         Print the typed document or recursive graph\n  prd format          Canonicalize v2 task grammar without losing context\n  prd migrate         Migrate a classic PRD with an explicit loss report\n  providers list      List embedded provider descriptors\n  providers inspect   Inspect one provider and its auth methods\n  models list         List models and filter required capabilities\n  models inspect      Inspect one model, limits, access and catalog source\n  auth connect        Connect a credential without putting secrets in argv\n  auth list           List non-secret credential references\n  auth status         Check credential availability and expiry metadata\n  auth revoke         Revoke and remove one credential reference\n  profiles list       List independent executor and judge profiles\n  profiles inspect    Inspect one resolved role profile\n  profiles configure  Configure a role profile through shared CLI/form metadata\n  model smoke         Make a read-only, no-tools model smoke call\n  about               Describe Ralph v2 and its authority model\n  version             Print the Ralph v2 version\n  help                Show this help\n\nOPTIONS\n  --format human|json|jsonl        Select the output contract\n  --json                           Alias for --format json\n  --workspace PATH                 Use an explicit workspace directory\n  --no-color                       Disable ANSI color in human output\n  --debug                          Include redacted debug details on failures\n  --force                          Authorize an audited override where supported; never bypass schema or child safety\n  --non-interactive                Never prompt or open a UI\n  --prd PATH                       Select the root PRD v2 file for execution\n  --executor-profile NAME          Select the configured executor profile\n  --executor-provider ID           Override only the executor provider\n  --executor-model ID              Override only the executor model\n  --executor-credential REF        Override only the executor credential ref\n  --executor-variant ID            Override only the executor model variant\n  --judge-profile NAME             Select the configured judge profile\n  --judge-provider ID              Override only the judge provider\n  --judge-model ID                 Override only the judge model\n  --judge-credential REF           Override only the judge credential ref\n  --judge-variant ID               Override only the judge model variant\n  --provider ID                    Select a provider for catalog, auth or smoke\n  --model ID                       Select a model where supported\n  --profile ID                     Select a role profile where supported\n  --credential REF                 Select a non-secret credential reference\n  --method METHOD                  Select a provider-advertised authentication method\n  --label TEXT                     Set a human-readable credential label\n  --environment NAME               Reference an environment variable without copying it\n  --secret-stdin                   Read a secret from stdin instead of prompting\n  --headless                       Use an actionable headless auth flow without opening a browser\n  --refresh                        Refresh remote metadata or renewable credential status\n  --timeout SEC                    Set a positive timeout for auth or smoke operations\n  --role executor|judge            Filter or configure a role profile\n  --backend embedded|external-cli  Configure a profile backend\n  --variant ID                     Select a provider-declared model variant\n  --parameter NAME=VALUE           Set a provider-declared primitive model parameter; repeat as needed\n  --scope global|workspace         Select the profile configuration scope\n  --fallback-profile ID            Add an ordered explicit fallback; repeat as needed\n  --fallback-on CLASS              Authorize a transient fallback class; repeat as needed\n  --require-tools                  Require model tool-calling capability\n  --require-structured-output      Require model structured-output capability\n  --allow-insecure-store           Explicitly allow a warned plaintext fallback when no secure store exists\n  --task ID                        Select one PRD task; once also accepts the ID positionally\n  --run-id ID                      Select a resumable or persisted run where supported\n  --wiggum                         Use the verified full-PRD context envelope with run\n  --dry-run                        Resolve execution without backend calls or marker changes\n  --fail-fast                      Stop run or loop after the first blocking task failure\n  --max-tasks N                    Limit run or loop to a positive number of tasks\n  --retry-delay SEC                Set a non-negative delay between retry opportunities\n  --max-iterations N               Limit positive Wiggum iterations; requires effective mode wiggum\n  --max-model-calls N              Limit model calls to a positive integer\n  --no-change-policy POLICY        Use require-change, allow-no-change, fail-on-no-change or retry-on-no-change; legacy aliases remain accepted\n  --no-change-max-retries N        Limit no-change retries to a non-negative integer\n  --skip-tests                     Request applicable test gates to be skipped by policy\n  --skip-lint                      Request applicable lint gates to be skipped by policy\n  --skip-gates ID                  Request a named gate skip; repeat for multiple gates\n  --fast                           Request every applicable allowed-to-skip verification skip\n  --no-commit                      Disable optional commit creation for this execution\n  --effective                      Request the effective merged config view\n  --mode once|loop|wiggum          Select generic run mode; also overrides mode in config explain/list\n  --ui MODE                        CLI config override used by config explain/list\n  --lang LOCALE                    CLI config override used by config explain/list\n  --recursive                      Compile every referenced Sub-PRD\n  --strict                         Treat noncanonical warnings as validation failure\n  --check                          Check formatting without writing\n  --output PATH                    Write PRD output to a separate path\n  --report PATH                    Select the migration report path\n  --in-place                       Explicitly replace the source where supported\n\nRalph selects work, authorizes tools, verifies evidence and persists completion.\nModels never control official task state.\n",
+          "lineEndings": "lf"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [],
+        "invariants": [
+          {
+            "id": "next.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "next.help.product-and-commands",
+            "passed": true,
+            "evidence": "V2 help identifies the product and every required command in this baseline."
+          },
+          {
+            "id": "next.help.non-mutating",
+            "passed": true,
+            "evidence": "Help left the fixture directory empty."
+          }
+        ]
+      },
+      "classification": "changed",
+      "assessment": "pass",
+      "rationale": "Both help probes are valid; v2 deliberately exposes its independently implemented command surface, including accepted slices beyond this S01 baseline.",
+      "differences": ["stdout differs", "stdout line endings differ"]
+    },
+    {
+      "id": "version",
+      "purpose": "Preserve a non-interactive version probe while the executable name changes.",
+      "legacy": {
+        "invocation": ["<LEGACY_BINARY_DIR>/ralph.exe", "--version"],
+        "cwd": "<FIXTURE_ROOT>\\version",
+        "snapshotRoot": "<FIXTURE_ROOT>\\version",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "ralph 0.2.0\r\n",
+          "normalized": "ralph 0.2.0\r\n",
+          "lineEndings": "crlf"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [],
+        "invariants": [
+          {
+            "id": "legacy.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "legacy.version.contract",
+            "passed": true,
+            "evidence": "Version output is exactly the ralph product name followed by semantic version text."
+          },
+          {
+            "id": "legacy.version.non-mutating",
+            "passed": true,
+            "evidence": "Version left the fixture directory empty."
+          }
+        ]
+      },
+      "next": {
+        "invocation": [
+          "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+          "version",
+          "--format",
+          "human",
+          "--no-color"
+        ],
+        "cwd": "<FIXTURE_ROOT>\\version",
+        "snapshotRoot": "<FIXTURE_ROOT>\\version",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "ralph-next 0.1.0-dev.1\n",
+          "normalized": "ralph-next 0.1.0-dev.1\n",
+          "lineEndings": "lf"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [],
+        "invariants": [
+          {
+            "id": "next.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "next.version.contract",
+            "passed": true,
+            "evidence": "Version output is exactly the ralph-next product name followed by semantic version text."
+          },
+          {
+            "id": "next.version.non-mutating",
+            "passed": true,
+            "evidence": "Version left the fixture directory empty."
+          }
+        ]
+      },
+      "classification": "changed",
+      "assessment": "pass",
+      "rationale": "Both version probes satisfy their contracts; the ralph-next name and independent v2 version are deliberate changes.",
+      "differences": ["stdout differs", "stdout line endings differ"]
+    },
+    {
+      "id": "status",
+      "purpose": "Compare successful, non-mutating status in an uninitialized workspace.",
+      "legacy": {
+        "invocation": ["<LEGACY_BINARY_DIR>/ralph.exe", "status"],
+        "cwd": "<FIXTURE_ROOT>\\status",
+        "snapshotRoot": "<FIXTURE_ROOT>\\status",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "Workspace: not initialized\r\nRun:       idle\r\nEngine:    -\r\nTask:      -\r\nProgress:  0/0 completed, 0 review\r\n",
+          "normalized": "Workspace: not initialized\r\nRun:       idle\r\nEngine:    -\r\nTask:      -\r\nProgress:  0/0 completed, 0 review\r\n",
+          "lineEndings": "crlf"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [],
+        "invariants": [
+          {
+            "id": "legacy.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "legacy.status.uninitialized-contract",
+            "passed": true,
+            "evidence": "Status reports the complete uninitialized baseline fields."
+          },
+          {
+            "id": "legacy.status.non-mutating",
+            "passed": true,
+            "evidence": "Uninitialized status left the fixture directory empty."
+          }
+        ]
+      },
+      "next": {
+        "invocation": [
+          "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+          "status",
+          "--format",
+          "human",
+          "--no-color"
+        ],
+        "cwd": "<FIXTURE_ROOT>\\status",
+        "snapshotRoot": "<FIXTURE_ROOT>\\status",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "Workspace: not initialized\nRoot:      <FIXTURE_ROOT>\\status\nState:     uninitialized\nEvents:    0\nRuns:      0\nLatest:    none\n",
+          "normalized": "Workspace: not initialized\nRoot:      <FIXTURE_ROOT>\\status\nState:     uninitialized\nEvents:    0\nRuns:      0\nLatest:    none\n",
+          "lineEndings": "lf"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [],
+        "invariants": [
+          {
+            "id": "next.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "next.status.uninitialized-contract",
+            "passed": true,
+            "evidence": "Status reports the complete uninitialized baseline fields."
+          },
+          {
+            "id": "next.status.non-mutating",
+            "passed": true,
+            "evidence": "Uninitialized status left the fixture directory empty."
+          }
+        ]
+      },
+      "classification": "compatible",
+      "assessment": "pass",
+      "rationale": "Both commands report a complete uninitialized status and leave the directory untouched.",
+      "differences": ["stdout differs", "stdout line endings differ"]
+    },
+    {
+      "id": "init",
+      "purpose": "Record the deliberate state-layout boundary between legacy and v2 workspaces.",
+      "legacy": {
+        "invocation": ["<LEGACY_BINARY_DIR>/ralph.exe", "init"],
+        "cwd": "<FIXTURE_ROOT>\\init",
+        "snapshotRoot": "<FIXTURE_ROOT>\\init",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "Workspace ralph inicializado em <FIXTURE_ROOT>\\init\\.ralph\r\n",
+          "normalized": "Workspace ralph inicializado em <FIXTURE_ROOT>\\init\\.ralph\r\n",
+          "lineEndings": "crlf"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [
+          {
+            "path": ".ralph",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/.iteration",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/activity.log",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/adapters",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/checkpoints",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/config.json",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/context",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/errors.log",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/events.jsonl",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/execution.log",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/guardrails.md",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/heartbeat.json",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/plugins",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/progress.md",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/recipes",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/reports",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/state.json",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/tui-debug.log",
+            "kind": "file"
+          },
+          {
+            "path": "PRD.md",
+            "kind": "file"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "legacy.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "legacy.init.output-contract",
+            "passed": true,
+            "evidence": "Init emitted its expected product-specific success and identity output."
+          },
+          {
+            "id": "legacy.init.layout",
+            "passed": true,
+            "evidence": "Legacy init created its required state/config/event files and PRD."
+          },
+          {
+            "id": "legacy.init.content",
+            "passed": true,
+            "evidence": "Legacy config/state are JSON objects and its generated PRD is non-empty."
+          }
+        ]
+      },
+      "next": {
+        "invocation": [
+          "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+          "init",
+          "--format",
+          "human",
+          "--no-color",
+          "--non-interactive"
+        ],
+        "cwd": "<FIXTURE_ROOT>\\init",
+        "snapshotRoot": "<FIXTURE_ROOT>\\init",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "Ralph v2 workspace initialized at <FIXTURE_ROOT>\\init\nWorkspace ID: <RAW_UUID_1>\n",
+          "normalized": "Ralph v2 workspace initialized at <FIXTURE_ROOT>\\init\nWorkspace ID: <UUID>\n",
+          "lineEndings": "lf"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [
+          {
+            "path": ".ralph",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/cache",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/checkpoints",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/config.yaml",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/events.jsonl",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/locks",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/runs",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/state",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/state/ledger.sqlite",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/state/migrations/0001-initial.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations/0002-orchestration.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations/0003-execution-hardening.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations/0004-attempt-effective-options.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations/0005-model-call-context.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/workspace.json",
+            "kind": "file"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "next.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "next.init.output-contract",
+            "passed": true,
+            "evidence": "Init emitted its expected product-specific success and identity output."
+          },
+          {
+            "id": "next.init.layout",
+            "passed": true,
+            "evidence": "V2 init created the required identified SQLite layout and did not create a PRD."
+          },
+          {
+            "id": "next.init.identity-schema",
+            "passed": true,
+            "evidence": "workspace.json satisfies WorkspaceIdentitySchema and records the canonical fixture root."
+          },
+          {
+            "id": "next.init.config-schema",
+            "passed": true,
+            "evidence": "config.yaml satisfies RalphConfigLayerSchema."
+          },
+          {
+            "id": "next.init.ledger",
+            "passed": true,
+            "evidence": "The read-only ledger parser found a workspace.initialized event for the persisted workspace ID."
+          },
+          {
+            "id": "next.init.event-projection",
+            "passed": true,
+            "evidence": "events.jsonl contains the same schema-valid events as the authoritative ledger."
+          }
+        ]
+      },
+      "classification": "changed",
+      "assessment": "pass",
+      "rationale": "Both init commands satisfy their schemas; v2 deliberately uses identified SQLite state and creates no PRD.",
+      "differences": ["stdout differs", "stdout line endings differ", "created file layout differs"]
+    },
+    {
+      "id": "status-descendant",
+      "purpose": "Prove that v2 deliberately discovers an identified workspace in an ancestor while legacy status remains rooted at the current directory.",
+      "legacy": {
+        "invocation": ["<LEGACY_BINARY_DIR>/ralph.exe", "status"],
+        "cwd": "<FIXTURE_ROOT>\\status-descendant\\nested space\\filho-ç",
+        "snapshotRoot": "<FIXTURE_ROOT>\\status-descendant",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "Workspace: not initialized\r\nRun:       idle\r\nEngine:    -\r\nTask:      -\r\nProgress:  0/0 completed, 0 review\r\n",
+          "normalized": "Workspace: not initialized\r\nRun:       idle\r\nEngine:    -\r\nTask:      -\r\nProgress:  0/0 completed, 0 review\r\n",
+          "lineEndings": "crlf"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [
+          {
+            "path": ".ralph",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/.iteration",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/activity.log",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/adapters",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/checkpoints",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/config.json",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/context",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/errors.log",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/events.jsonl",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/execution.log",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/guardrails.md",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/heartbeat.json",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/plugins",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/progress.md",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/recipes",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/reports",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/state.json",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/tui-debug.log",
+            "kind": "file"
+          },
+          {
+            "path": "nested space",
+            "kind": "directory"
+          },
+          {
+            "path": "nested space/filho-ç",
+            "kind": "directory"
+          },
+          {
+            "path": "PRD.md",
+            "kind": "file"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "legacy.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "legacy.status-descendant.setup",
+            "passed": true,
+            "evidence": "The parent workspace setup satisfied every init invariant before the descendant probe."
+          },
+          {
+            "id": "legacy.status-descendant.semantics",
+            "passed": true,
+            "evidence": "Legacy status remains uninitialized when invoked below its initialized parent."
+          },
+          {
+            "id": "legacy.status-descendant.non-mutating",
+            "passed": true,
+            "evidence": "Descendant status left the initialized tree byte-for-byte unchanged and created no nested state."
+          }
+        ]
+      },
+      "next": {
+        "invocation": [
+          "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+          "status",
+          "--format",
+          "human",
+          "--no-color"
+        ],
+        "cwd": "<FIXTURE_ROOT>\\status-descendant\\nested space\\filho-ç",
+        "snapshotRoot": "<FIXTURE_ROOT>\\status-descendant",
+        "exitCode": 0,
+        "timedOut": false,
+        "stdout": {
+          "raw": "Workspace: initialized\nRoot:      <FIXTURE_ROOT>\\status-descendant\nState:     ready\nID:        <RAW_UUID_1>\nEvents:    1 (cursor 1)\nRuns:      0\nLatest:    none\n",
+          "normalized": "Workspace: initialized\nRoot:      <FIXTURE_ROOT>\\status-descendant\nState:     ready\nID:        <UUID>\nEvents:    1 (cursor 1)\nRuns:      0\nLatest:    none\n",
+          "lineEndings": "lf"
+        },
+        "stderr": {
+          "raw": "",
+          "normalized": "",
+          "lineEndings": "none"
+        },
+        "files": [
+          {
+            "path": ".ralph",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/cache",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/checkpoints",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/config.yaml",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/events.jsonl",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/locks",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/runs",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/state",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/state/ledger.sqlite",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations",
+            "kind": "directory"
+          },
+          {
+            "path": ".ralph/state/migrations/0001-initial.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations/0002-orchestration.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations/0003-execution-hardening.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations/0004-attempt-effective-options.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/state/migrations/0005-model-call-context.sql",
+            "kind": "file"
+          },
+          {
+            "path": ".ralph/workspace.json",
+            "kind": "file"
+          },
+          {
+            "path": "nested space",
+            "kind": "directory"
+          },
+          {
+            "path": "nested space/filho-ç",
+            "kind": "directory"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "next.process.success",
+            "passed": true,
+            "evidence": "The command completed before timeout with exit code 0 and empty stderr."
+          },
+          {
+            "id": "next.status-descendant.setup",
+            "passed": true,
+            "evidence": "The parent workspace setup satisfied every init invariant before the descendant probe."
+          },
+          {
+            "id": "next.status-descendant.semantics",
+            "passed": true,
+            "evidence": "V2 status resolves the identified parent workspace and reports its canonical root and ID."
+          },
+          {
+            "id": "next.status-descendant.non-mutating",
+            "passed": true,
+            "evidence": "Descendant status left the initialized tree byte-for-byte unchanged and created no nested state."
+          }
+        ]
+      },
+      "classification": "changed",
+      "assessment": "pass",
+      "rationale": "Both parent workspaces are valid; v2 deliberately resolves its identified ancestor while legacy remains uninitialized in the descendant.",
+      "differences": ["stdout differs", "stdout line endings differ", "created file layout differs"]
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "compared": 5,
+    "compatible": 1,
+    "changed": 4,
+    "deprecated": 0,
+    "removed": 0,
+    "regressions": 0,
+    "notCompared": 0
+  }
+}

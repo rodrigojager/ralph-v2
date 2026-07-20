@@ -1,0 +1,29 @@
+# Template opt-in. Substitua apenas IDs por valores reais e use o fluxo `auth connect` para a
+# credencial. Nunca coloque API key, access token ou refresh token neste arquivo.
+schema_version: 1
+evaluation:
+  mode: external
+  threshold: 85
+  max_revision_attempts: 2
+  judge_call_retries: 1
+  on_judge_unavailable: pause
+  blocking_severities: [major, critical]
+  exhausted_policy: manual-review
+profiles:
+  sample-real-judge:
+    role: judge
+    backend: embedded
+    provider: replace-with-provider-id
+    model: replace-with-model-id
+    credential: replace-with-credential-reference
+    requirements:
+      input: [text]
+      tools: false
+      tool_streaming: false
+      reasoning: false
+      structured_output: true
+      usage: []
+      access: []
+    fallback_profiles: []
+    fallback_on: []
+    limits: {}

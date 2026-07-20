@@ -1,0 +1,14 @@
+{
+  "name": "@ralph-next/verification",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@ralph-next/domain": "workspace:*",
+    "@ralph-next/prd": "workspace:*",
+    "@ralph-next/supervisor": "workspace:*",
+    "@ralph-next/telemetry": "workspace:*",
+    "zod": "4.4.3"
+  }
+}

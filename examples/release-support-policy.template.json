@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "product": "ralph-next",
+  "version": "0.0.0-template",
+  "channel": "nightly",
+  "matrix": [
+    {
+      "target": "bun-windows-x64-baseline",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "unsupported-file-sync-only",
+          "guarantee": "reduced"
+        }
+      },
+      "reason": "Release owner decision required; replace this reason or change the entry to included with explicit limitations"
+    },
+    {
+      "target": "bun-windows-arm64",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "unsupported-file-sync-only",
+          "guarantee": "reduced"
+        }
+      },
+      "reason": "Release owner decision required; replace this reason or change the entry to included with explicit limitations"
+    },
+    {
+      "target": "bun-linux-x64-baseline",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "fsync-after-rename",
+          "guarantee": "full"
+        }
+      },
+      "reason": "Release owner decision required; replace this reason or change the entry to included with explicit limitations"
+    },
+    {
+      "target": "bun-linux-arm64",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "fsync-after-rename",
+          "guarantee": "full"
+        }
+      },
+      "reason": "Release owner decision required; replace this reason or change the entry to included with explicit limitations"
+    },
+    {
+      "target": "bun-darwin-x64",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "fsync-after-rename",
+          "guarantee": "full"
+        }
+      },
+      "reason": "Release owner decision required; replace this reason or change the entry to included with explicit limitations"
+    },
+    {
+      "target": "bun-darwin-arm64",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "fsync-after-rename",
+          "guarantee": "full"
+        }
+      },
+      "reason": "Release owner decision required; replace this reason or change the entry to included with explicit limitations"
+    }
+  ]
+}

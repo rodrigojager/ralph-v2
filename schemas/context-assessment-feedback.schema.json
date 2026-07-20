@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rodrigojager.github.io/ralph-v2/schemas/v2/context-assessment-feedback.schema.json",
+  "title": "Ralph bounded assessment feedback for executor revisions v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "sourceAssessmentRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceAssessmentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceEvidenceBundleId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceKind": {
+      "type": "string",
+      "enum": ["external", "self"]
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "threshold": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adequate": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "problems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": ["info", "minor", "major", "critical"]
+          },
+          "criterion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": ["severity", "message", "evidenceRefs"],
+        "additionalProperties": false
+      }
+    },
+    "missingEvidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "criterionScores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "criterion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["criterion", "score"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "sourceAssessmentRef",
+    "sourceAssessmentId",
+    "sourceEvidenceBundleId",
+    "sourceKind",
+    "score",
+    "threshold",
+    "summary",
+    "adequate",
+    "problems",
+    "missingEvidence",
+    "recommendations",
+    "criterionScores"
+  ],
+  "additionalProperties": false
+}

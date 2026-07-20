@@ -1,0 +1,260 @@
+ralph-next 9.8.7-test — command-authoritative AI task runner
+
+USAGE
+  ralph-next <command> [options]
+
+COMMANDS
+  init (aliases: setup)                            Initialize an isolated Ralph v2 workspace [compatible]
+  clean                                            Preview or remove only identified Ralph v2 managed state [changed]
+  once                                             Execute one ad-hoc description or one explicit/eligible PRD task [changed]
+  run                                              Execute eligible PRD tasks with bounded orchestration [compatible]
+  loop                                             Run the same bounded orchestration through the loop spelling [compatible]
+  parallel                                         Execute structurally independent PRD tasks in isolated workers [compatible]
+  verify                                           Re-run gates and persist fresh evidence without an executor or PRD marker mutation [changed]
+  judge                                            Evaluate one existing evidence bundle with a configured read-only self or external judge [changed]
+  status                                           Show workspace and event-ledger status [compatible]
+  status run                                       Show the status of a persisted execution run [changed]
+  resume                                           Require and continue one compatible non-terminal run [changed]
+  stop (aliases: cancel)                           Request a durable graceful stop for a persisted run [compatible]
+  attach (aliases: ui)                             Open the read-only live TUI for a persisted run [changed]
+  replay                                           Open a frozen read-only TUI projection for a persisted run [changed]
+  events                                           Read persisted run events, including JSONL output [compatible]
+  logs tail                                        Read or follow redacted human, audit, engine, tool, gate or diagnostic logs [compatible]
+  report last                                      Show the most recent run report [compatible]
+  report show                                      Show a run report selected by run ID [changed]
+  tasks list                                       List parsed PRD tasks and their stable references [compatible]
+  tasks next                                       Show the first dependency-eligible unfinished task [compatible]
+  tasks done                                       Record an audited evidence-backed manual completion override [changed]
+  tasks sync                                       Project GitHub issues into a deterministic human-readable PRD v2 [changed]
+  migrate inspect                                  Inspect a Ralph v1 workspace without writing either workspace [changed]
+  migrate apply                                    Create a separate Ralph v2 workspace and rollback manifest [changed]
+  migrate rollback                                 Preview or remove only unchanged files bound to a migration rollback manifest [changed]
+  doctor                                           Check runtime, Git, filesystem, TTY and workspace [compatible]
+  config explain                                   Explain one effective config value and source [changed]
+  config list                                      List the effective configuration [compatible]
+  config get                                       Read one effective config key without exposing secret material [compatible]
+  config preview                                   Validate one setting and preview its config and run equivalents [changed]
+  config set                                       Atomically save one validated workspace or global default [compatible]
+  config unset (aliases: config reset)             Atomically remove one schema-known non-profile default from an explicit scope [changed]
+  config edit                                      Edit one validated config layer through a composed editor or explicit input file [changed]
+  config import                                    Preview or merge a bounded typed YAML/JSON config without secret material [changed]
+  config export                                    Emit a redacted YAML/JSON layer or effective snapshot without resolving secrets [changed]
+  config validate                                  Validate global, workspace and effective configuration layers [changed]
+  prd validate                                     Validate a v2 or classic PRD deterministically [changed]
+  prd inspect                                      Print the typed document or recursive graph [changed]
+  prd format                                       Canonicalize v2 task grammar without losing context [changed]
+  prd migrate                                      Migrate a classic PRD with an explicit loss report [changed]
+  providers list                                   List embedded provider descriptors [changed]
+  providers inspect                                Inspect one provider and its auth methods [changed]
+  models list                                      List models and filter required capabilities [changed]
+  models inspect                                   Inspect one model, limits, access and catalog source [changed]
+  auth connect (aliases: connect)                  Connect a credential without putting secrets in argv [changed]
+  auth list                                        List non-secret credential references [changed]
+  auth status                                      Check credential availability and expiry metadata [changed]
+  auth revoke                                      Revoke and remove one credential reference [changed]
+  adapters list                                    List disabled workspace drafts and quarantined legacy adapter metadata [changed]
+  adapters new                                     Create a data-only disabled adapter draft without loading code [changed]
+  adapters inspect                                 Inspect bounded adapter metadata without activation or execution [changed]
+  recipes list                                     List workspace recipe drafts and quarantined legacy documents [changed]
+  recipes new                                      Create a language-neutral human-readable recipe draft [changed]
+  recipes show                                     Show one bounded non-executable recipe document [changed]
+  rules list                                       List explicit human-readable workspace rules [changed]
+  rules add                                        Append one bounded workspace rule atomically [changed]
+  rules clear                                      Clear workspace rules only after explicit --force [changed]
+  context inspect (aliases: context show)          Inspect persisted context metadata and integrity without exposing context bodies [changed]
+  context export                                   Export bounded metadata-only context inspection to a workspace file [changed]
+  context rotate (aliases: context refresh)        Request rotation through an explicitly composed supervisor control port [changed]
+  checkpoint create (aliases: checkpoints create)  Create an explicit immutable workspace checkpoint with Git, PRD and ledger bindings [changed]
+  checkpoint list (aliases: checkpoints list)      List compact persisted checkpoint metadata without restoring anything [changed]
+  checkpoint show (aliases: checkpoints show)      Inspect one checkpoint through a bounded file preview [changed]
+  rollback preview                                 Persist a non-mutating rollback plan bound to current files, Git, PRD and ledger state [changed]
+  rollback apply                                   Apply an exact rollback plan only with its explicit plan hash and a safety checkpoint [changed]
+  lang current                                     Show configured locale, source and effective presentation locale [changed]
+  lang list                                        List bundled human-facing locales [compatible]
+  lang set                                         Save a bundled locale for future runs in an explicit scope [changed]
+  lang update                                      Report release-managed language catalog update capability [changed]
+  install                                          Install one verified standalone release into an isolated versioned root [changed]
+  update                                           Stage and atomically activate a verified standalone engine without replacing the running launcher [changed]
+  rollback                                         Atomically reactivate a receipt-bound installed version without touching workspace state [changed]
+  uninstall                                        Remove only receipt-owned standalone files while preserving config, credentials and workspaces [changed]
+  alias ralph status                               Inspect the receipt-bound optional ralph alias without changing PATH or files [changed]
+  alias ralph install                              Create the stable-only receipt-owned ralph alias after exact preview plan-hash confirmation [changed]
+  alias ralph remove                               Remove only the receipt/hash-verified Ralph v2 alias after exact preview plan-hash confirmation [changed]
+  profiles list                                    List independent executor and judge profiles [changed]
+  profiles inspect                                 Inspect one resolved role profile [changed]
+  profiles configure                               Configure or inherit exact role-profile layer fields through shared CLI/form metadata [changed]
+  evidence inspect                                 Verify and inspect one attempt evidence bundle [changed]
+  review retry                                     Grant audited judge revisions to a task awaiting manual review [changed]
+  model smoke                                      Make a read-only, no-tools model smoke call [changed]
+  about                                            Describe Ralph v2 and its authority model [compatible]
+  version (aliases: --version, -V)                 Print the Ralph v2 version [compatible]
+  help (aliases: --help, -h)                       Show this help [compatible]
+
+OPTIONS
+  --format human|json|jsonl                      Select the output contract
+  --json                                         Alias for --format json
+  --workspace PATH                               Use an explicit workspace directory
+  --scope workspace|global|effective             Select an explicit config destination/view; effective is read-only export only
+  --no-color                                     Disable ANSI color in human output
+  --debug                                        Include redacted debug details on failures
+  --force                                        Authorize an audited override where supported; never bypass schema or child safety
+  --non-interactive                              Never prompt or open a UI
+  --prd PATH                                     Select the root PRD v2 file for execution
+  --executor-profile NAME                        Select the configured executor profile
+  --executor-provider ID                         Override only the executor provider
+  --executor-model ID                            Override only the executor model
+  --executor-credential REF                      Override only the executor credential ref
+  --executor-variant ID                          Override only the executor model variant
+  --executor-parameter NAME=VALUE                Replace the executor parameter map for this run; repeat as needed
+  --clear-executor-credential                    Clear the inherited executor credential
+  --clear-executor-variant                       Clear the inherited executor variant
+  --clear-executor-parameters                    Clear executor parameters for this run
+  --judge-profile NAME                           Select the configured judge profile
+  --judge-provider ID                            Override only the judge provider
+  --judge-model ID                               Override only the judge model
+  --judge-credential REF                         Override only the judge credential ref
+  --judge-variant ID                             Override only the judge model variant
+  --judge-parameter NAME=VALUE                   Replace the judge parameter map for this run; repeat as needed
+  --clear-judge-credential                       Clear the inherited judge credential
+  --clear-judge-variant                          Clear the inherited judge variant
+  --clear-judge-parameters                       Clear judge parameters for this run
+  --evaluation MODE                              Select run evaluation; standalone judge accepts only self or external
+  --judge [external]                             Enable the independent external judge
+  --no-judge                                     Alias for deterministic-only evaluation
+  --self-review                                  Use the judge contract with a fresh self-review call
+  --judge-threshold 0..100                       Set the minimum accepted judge score
+  --judge-max-revisions N                        Limit code revisions after valid rejected assessments
+  --max-revisions N                              Alias for --judge-max-revisions
+  --judge-call-retries N                         Limit judge transport/schema retries independently from revisions
+  --judge-unavailable POLICY                     Use deterministic, pause or fail when evaluation is unavailable
+  --judge-blocking-severity LEVEL                Make a judge finding severity blocking; repeat as needed
+  --judge-rubric JSON|derive                     Override the tool-agnostic judge rubric or derive it from task criteria
+  --judge-exhausted POLICY                       Use manual-review, fail or stop-run after revision exhaustion
+  --provider ID                                  Select a provider for catalog, auth or smoke
+  --model ID                                     Select a model where supported
+  --profile ID                                   Select a role profile where supported
+  --credential REF                               Select a non-secret credential reference
+  --clear-credential                             Remove a configured profile credential
+  --inherit-profile-field ID                     Remove one exact target-layer profile override; repeat for more fields
+  --method METHOD                                Select a provider-advertised authentication method
+  --label TEXT                                   Set a human-readable credential label
+  --environment NAME                             Reference an environment variable without copying it
+  --secret-stdin                                 Read a secret from stdin instead of prompting
+  --headless                                     Use an actionable headless auth flow without opening a browser
+  --refresh                                      Refresh remote metadata or renewable credential status
+  --timeout SEC                                  Set a positive timeout for auth or smoke operations
+  --role executor|judge                          Filter or configure a role profile
+  --backend embedded|external-cli                Configure a profile backend
+  --cli-executable PATH                          Set an external profile executable; never include credentials
+  --cli-arg VALUE                                Append an external CLI argument; repeat and use a JSON string for exact quoting
+  --cli-cwd PATH                                 Set a portable workspace-relative external CLI cwd
+  --cli-env TARGET=env:SOURCE                    Map an environment reference without storing its secret value; repeat as needed
+  --cli-adapter protocol|known-output|generic    Select external CLI input/output normalization
+  --cli-adapter-id ID                            Select the required known-output adapter ID
+  --cli-streaming true|false                     Declare external CLI streaming support
+  --cli-tool-calling ralph|internal|unavailable  Declare who owns external CLI tool calls
+  --cli-cancellation true|false                  Declare external CLI cancellation support
+  --cli-usage reported|estimated|unavailable     Declare external CLI usage accounting
+  --cli-mutation read-only|workspace             Bound external CLI workspace mutation
+  --cli-timeout-ms N                             Set a positive external process timeout
+  --cli-output-limit-bytes N                     Cap captured external process output
+  --variant ID                                   Select a provider-declared model variant
+  --clear-variant                                Remove a configured profile variant
+  --parameter NAME=VALUE                         Set a provider-declared primitive model parameter; repeat as needed
+  --clear-parameters                             Replace configured profile parameters with {}
+  --set-default                                  Atomically select the configured profile as the default for its role
+  --fallback-profile ID                          Add an ordered explicit fallback; repeat as needed
+  --fallback-on CLASS                            Authorize a transient fallback class; repeat as needed
+  --require-tools                                Require model tool-calling capability
+  --require-structured-output                    Require model structured-output capability
+  --allow-insecure-store                         Explicitly allow a warned plaintext fallback when no secure store exists
+  --task ID                                      Select one PRD task explicitly; positional once text is always ad-hoc
+  --evidence PATH                                Attach a regular workspace file to an audited manual task completion; repeat as needed
+  --pending                                      Show only pending PRD tasks
+  --completed                                    Show only completed PRD tasks
+  --review                                       Show only [~] tasks awaiting manual review
+  --repo OWNER/REPO                              Select the GitHub repository used by tasks sync
+  --state open|closed|all                        Filter GitHub issues used by tasks sync
+  --run-id ID                                    Select a resumable or persisted run where supported
+  --attempt-id ID                                Bind verify/judge to one exact persisted attempt
+  --evidence-bundle-id ID                        Bind verify/judge to one exact immutable evidence bundle
+  --verification-id ID                           Make judge consume the exact evidence emitted by a completed verify operation
+  --follow                                       Continue from the durable event cursor until completion or signal
+  --level LEVEL                                  Filter events/logs at or above trace|debug|info|warn|error
+  --source SOURCE                                Select audit|human|raw-engine|tool|gate|diagnostic log view
+  --since TIME                                   Filter events/logs from an ISO-8601 timestamp
+  --type EVENT                                   Filter one exact durable event type
+  --worker-id ID                                 Filter events/logs for one worker
+  --limit N                                      Bound the initial tail to the newest N matching records
+  --resume auto|never|required                   Control discovery of a compatible non-terminal run; bare --resume means auto
+  --no-resume                                    Compatibility alias for --resume never
+  --accept-workspace-changes                     On resume, accept only the exact pending expected/observed workspace hashes and record the decision
+  --new-run                                      Explicitly create a fresh run instead of discovering resumable work
+  --all                                          Include every persisted run in workspace status
+  --graceful                                     Request cooperative stop at a safe durable boundary
+  --grace SEC                                    Set a non-negative graceful-stop allowance
+  --additional-revisions N                       Grant a positive number of additional judge revision attempts
+  --reason TEXT                                  Record the mandatory audit reason for a manual-review action
+  --wiggum                                       Use the verified full-PRD context envelope with run
+  --dry-run                                      Resolve execution without backend calls or marker changes
+  --fail-fast                                    Stop run or loop after the first blocking task failure
+  --max-tasks N                                  Limit run or loop to a positive number of tasks
+  --max-parallel N                               Bound concurrent workers in this project
+  --max-global-parallel N                        Bound concurrent Ralph workers across projects
+  --parallel-auto                                Allow structurally eligible tasks outside named parallel groups
+  --parallel-group ID                            Allow one declared parallel group; repeat as needed
+  --retry-failed                                 Retry failed parallel tasks within the configured budget
+  --max-failure-retries N                        Bound parallel failure retries per task
+  --git-worktrees                                Require a managed Git worktree and branch per parallel task
+  --base-branch REF                              Select the verified base ref for task worktrees
+  --integration-branch REF                       Select the claimed integration target
+  --integration STRATEGY                         Use none, merge, rebase-merge, cherry-pick or create-pr
+  --sandbox                                      Enable the configured command-owned sandbox boundary
+  --sandbox-provider KIND                        Select process, docker or podman sandbox capability
+  --sandbox-image IMAGE                          Select the explicit container image for Docker or Podman
+  --path PATH                                    Add one workspace-relative file to an explicit checkpoint; repeat as needed
+  --inventory-root PATH                          Add one workspace-relative directory tree to an explicit checkpoint inventory
+  --install-root DIR                             Select the dedicated standalone installation root; never a workspace or checkout
+  --manifest PATH|HTTPS                          Select an explicit local or HTTPS release manifest for install/update
+  --channel nightly|beta|stable                  Require the release channel and explicitly authorize a channel change on update
+  --to-version VERSION                           Require a release version or select a receipt-bound version for install rollback
+  --allow-downgrade                              Explicitly authorize an older compatible release during standalone update
+  --expires-in SEC                               Bound the validity window of a persisted rollback preview
+  --confirm-plan-hash SHA256                     Confirm checkpoint/migration rollback or optional-alias mutation with the exact matching preview hash
+  --retry-delay SEC                              Set a non-negative delay between retry opportunities
+  --max-iterations N                             Limit positive Wiggum iterations; requires effective mode wiggum
+  --max-model-calls N                            Limit model calls to a positive integer
+  --no-change-policy POLICY                      Use require-change, allow-no-change, fail-on-no-change or retry-on-no-change; legacy aliases remain accepted
+  --no-change-max-retries N                      Limit no-change retries to a non-negative integer
+  --skip-tests                                   Request applicable test gates to be skipped by policy
+  --skip-lint                                    Request applicable lint gates to be skipped by policy
+  --skip-gates ID                                Request a named gate skip; repeat for multiple gates
+  --no-gates                                     Request audited gate suppression where the effective policy permits it
+  --fast                                         Request every applicable verification whose policy permits skipping
+  --no-commit                                    Disable optional commit creation for this execution
+  --security safe|auto|dangerous                 Override execution tool security mode
+  --headless-ask deny|allow                      Resolve ask rules when no interactive approver is available
+  --allow-tool NAME                              Allow a named tool; repeat as needed
+  --deny-tool NAME                               Deny a named tool; repeat as needed
+  --ask-tool NAME                                Require approval for a named tool; repeat as needed
+  --allow-command COMMAND                        Add an allowed command policy entry
+  --read-path SCOPE                              Add a portable workspace-relative read scope
+  --write-path SCOPE                             Add a portable workspace-relative write scope
+  --allow-shell                                  Allow shell tools within all remaining security bounds
+  --effective                                    Request the effective merged config view
+  --mode once|loop|wiggum|parallel               Select generic run mode; also overrides mode in config explain/list
+  --ui auto|tui|plain|none                       Select execution presentation; tui opens the pre-run command palette
+  --lang LOCALE                                  CLI config override used by config explain/list
+  --recursive                                    Compile every referenced Sub-PRD
+  --strict                                       Treat noncanonical warnings as validation failure
+  --check                                        Check formatting without writing
+  --output PATH                                  Write supported PRD/context/config output to a separate contained path
+  --serialization yaml|json                      Select the document encoding emitted by config export
+  --destination PATH                             Select a separate, existing destination directory for migrate apply
+  --import-adapters                              Copy safe legacy adapter manifests into inactive quarantine; never execute them
+  --import-recipes                               Copy safe legacy recipe documents into inactive quarantine
+  --report PATH                                  Select the migration report path
+  --in-place                                     Explicitly replace the source where supported
+
+Ralph selects work, authorizes tools, verifies evidence and persists completion.
+Models never control official task state.
