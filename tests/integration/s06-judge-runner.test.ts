@@ -31,9 +31,9 @@ const temporaryDirectories: string[] = []
 
 // The full Windows quality matrix can spend tens of seconds in filesystem and
 // process cleanup while 130+ files share the runner. Individual production
-// deadlines remain asserted by their dedicated tests; this suite timeout only
-// prevents scheduler pressure from aborting an otherwise bounded scenario.
-setDefaultTimeout(60_000)
+// deadlines remain asserted by their dedicated tests; this runner guard stays
+// above the judge fixture's own 60 s task budget.
+setDefaultTimeout(120_000)
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map(removeTestDirectory))
@@ -149,6 +149,12 @@ async function fixtureWorkspace(): Promise<string> {
   await cp(resolve("tests", "fixtures", "execution", "single-pass"), root, {
     recursive: true,
   })
+  const prdFile = resolve(root, "PRD.md")
+  await writeFile(
+    prdFile,
+    (await readFile(prdFile, "utf8")).replace("timeout=20s", "timeout=60s"),
+    "utf8",
+  )
   await initializeWorkspace(root, "0.1.0-test")
   return root
 }

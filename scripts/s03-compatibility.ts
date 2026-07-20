@@ -371,7 +371,9 @@ async function compileTestComposition(
       "build",
       "tests/support/fixture-cli.ts",
       "--compile",
-      `--target=${nativeTarget()}`,
+      // This composition is test-only and always executes on this host. Omitting
+      // an explicit native target makes Bun embed its current runtime instead of
+      // downloading the same version into the harness's intentionally empty cache.
       "--packages=bundle",
       "--allow-unresolved=",
       "--no-compile-autoload-dotenv",

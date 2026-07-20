@@ -65,7 +65,7 @@ const requiredBlockerRequirements = {
   "BLK-AUTH-REAL": ["R007", "R008"],
   "BLK-R015-REVIEW": ["R015"],
   "BLK-R063-FORGE": ["R063"],
-  "BLK-MULTIPLATFORM": ["R070"],
+  "BLK-MULTIPLATFORM": ["R044", "R055", "R070"],
   "BLK-SANDBOX-EXT": ["R064"],
   "BLK-RELEASE": ["R003", "R055", "R066", "R069", "R070"],
   "BLK-COMPAT-BINARIES": ["R017", "R036", "R068"],
@@ -1953,7 +1953,8 @@ async function validateGlobalTestEvidence(
     issues.push("JUnit classification is not hash/count bound to sanitized junit/global.xml")
   }
   const sentinelResults = requiredGlobalSentinels.map((file) => {
-    const fileAttribute = `\\bfile="(?:\\./)?${escapeRegExp(file)}"`
+    const portableFilePattern = file.split("/").map(escapeRegExp).join("(?:/|\\\\)")
+    const fileAttribute = `\\bfile="(?:\\.(?:/|\\\\))?${portableFilePattern}"`
     const selfClosing = new RegExp(`<testcase\\b(?=[^>]*${fileAttribute})[^>]*/>`, "u")
     const paired = new RegExp(
       `<testcase\\b(?=[^>]*${fileAttribute})[^>]*>([\\s\\S]*?)</testcase>`,
