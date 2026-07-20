@@ -614,7 +614,11 @@ describe("native PTY TUI matrix", () => {
         // explicit global-default mutation without relying on hidden state.
         await session.waitForOutput("EDIT Language> en", cursor)
         session.write("\r")
-        await session.waitForRenderedText("en · draft", cursor)
+        // The incremental renderer may preserve the complete `Language = en`
+        // cells and emit only the changed `draft` suffix. Revision 3 is the
+        // command-owned acknowledgement that this exact second edit settled;
+        // the final result marker still proves the persisted value is `en`.
+        await session.waitForRenderedText("draft revision 3", cursor)
         session.write("g")
         await session.waitForOutput("CONFIRM: save global", cursor)
         session.write("\r")
