@@ -34,6 +34,10 @@ const STEP_TIMEOUT_MS = 20_000
 const PTY_EXIT_OUTPUT_IDLE_MS = 75
 const PTY_EXIT_OUTPUT_LIMIT_MS = 750
 const temporaryDirectories: string[] = []
+// biome-ignore lint/complexity/useRegexLiterals: literals with terminal controls are rejected by noControlCharactersInRegex.
+const CSI_ESCAPE = new RegExp("\\x1b\\[[0-?]*[ -/]*[@-~]", "gu")
+// biome-ignore lint/complexity/useRegexLiterals: literals with terminal controls are rejected by noControlCharactersInRegex.
+const OSC_ESCAPE = new RegExp("\\x1b\\][^\\x07]*(?:\\x07|$)", "gu")
 
 interface OutputObserver {
   readonly needle: string
@@ -247,6 +251,25 @@ function openPty(
     })
   }
 
+  const waitForRenderedText = async (needle: string, after = 0): Promise<void> => {
+    const deadline = performance.now() + STEP_TIMEOUT_MS
+    while (performance.now() < deadline) {
+      const absoluteStart = Math.max(after, outputOffset)
+      const rendered = output
+        .slice(absoluteStart - outputOffset)
+        .replace(CSI_ESCAPE, "")
+        .replace(OSC_ESCAPE, "")
+      if (rendered.includes(needle)) return
+      if (child.exitCode !== null) {
+        throw new Error(
+          `PTY child exited with code ${child.exitCode} before rendered text: ${needle}`,
+        )
+      }
+      await pauseForInput(25)
+    }
+    throw new Error(`Timed out waiting for rendered text ${needle}`)
+  }
+
   const waitForExit = async (): Promise<number> => {
     return waitWithTimeout(childExited, STEP_TIMEOUT_MS, "the PTY child process to exit")
   }
@@ -281,6 +304,7 @@ function openPty(
     output: () => output,
     mark: () => outputOffset + output.length,
     waitForOutput,
+    waitForRenderedText,
     waitForExit,
     cleanup,
     write: writeInput,
@@ -297,14 +321,10 @@ function markerJson<T>(output: string, marker: string): T {
   // ConPTY renders stdout into its virtual screen and inserts hard wraps plus
   // terminal-control sequences. Normalize only the machine marker tail, then
   // extract one balanced JSON object without assuming it fits on one row.
-  // biome-ignore lint/complexity/useRegexLiterals: literals with terminal controls are rejected by noControlCharactersInRegex.
-  const csiEscape = new RegExp("\\x1b\\[[0-?]*[ -/]*[@-~]", "gu")
-  // biome-ignore lint/complexity/useRegexLiterals: literals with terminal controls are rejected by noControlCharactersInRegex.
-  const oscEscape = new RegExp("\\x1b\\][^\\x07]*(?:\\x07|$)", "gu")
   const tail = output
     .slice(markerStart + marker.length + 1)
-    .replace(csiEscape, "")
-    .replace(oscEscape, "")
+    .replace(CSI_ESCAPE, "")
+    .replace(OSC_ESCAPE, "")
     .replace(/[\r\n]/gu, "")
   const objectStart = tail.indexOf("{")
   if (objectStart < 0) throw new Error(`Missing ${marker} JSON object in PTY output`)
@@ -541,7 +561,7 @@ describe("native PTY TUI matrix", () => {
         session.write("w")
         await session.waitForOutput("CONFIRM: save workspace", cursor)
         session.write("\r")
-        await session.waitForOutput("Defaults saved for workspace", cursor)
+        await session.waitForRenderedText("Defaults saved for workspace", cursor)
 
         cursor = session.mark()
         session.write("\r")
@@ -554,7 +574,7 @@ describe("native PTY TUI matrix", () => {
         session.write("g")
         await session.waitForOutput("CONFIRM: save global", cursor)
         session.write("\r")
-        await session.waitForOutput("Defaults saved for global", cursor)
+        await session.waitForRenderedText("Defaults saved for global", cursor)
 
         cursor = session.mark()
         session.write("\r")
