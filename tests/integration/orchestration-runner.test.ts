@@ -77,7 +77,10 @@ function executeRun(input: TestExecuteRunInput) {
   })
 }
 
-setDefaultTimeout(20_000)
+// Gate evidence scenarios launch real child processes and perform durable
+// filesystem snapshots. Preserve their production deadlines while allowing
+// hosted Windows runner scheduling pressure around the test as a whole.
+setDefaultTimeout(60_000)
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map(removeTestDirectory))

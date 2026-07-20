@@ -27,7 +27,10 @@ import { createTestDirectory, removeTestDirectory } from "../helpers/temp-direct
 
 const temporaryDirectories: string[] = []
 
-setDefaultTimeout(20_000)
+// Recovery scenarios execute multiple durable runs and judge turns. This
+// envelope prevents hosted Windows scheduling pressure from aborting them;
+// command-owned production deadlines are asserted independently.
+setDefaultTimeout(60_000)
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map(removeTestDirectory))

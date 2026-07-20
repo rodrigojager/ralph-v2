@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite"
-import { afterEach, describe, expect, test } from "bun:test"
+import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { mkdir } from "node:fs/promises"
 import { dirname } from "node:path"
 
@@ -35,6 +35,11 @@ const HASH_C = "c".repeat(64)
 const CURRENT_LEDGER_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
 const temporaryDirectories: string[] = []
+
+// A complete legacy-ledger migration can cross Bun's five-second default on
+// a saturated hosted Windows runner. Production migration guards remain
+// unchanged; this is only the outer test-runner scheduling envelope.
+setDefaultTimeout(60_000)
 
 async function temporaryDirectory(): Promise<string> {
   const path = await createTestDirectory()
