@@ -4,6 +4,7 @@ import { basename, dirname, resolve } from "node:path"
 import {
   type DurableLeaseRecord,
   EXIT_CODES,
+  type LeaseProbeRecord,
   RalphError,
   WorkspaceIdentitySchema,
 } from "@ralph-next/domain"
@@ -54,6 +55,17 @@ export type DurableExecutionLock = ExecutionLock & {
   leaseId: string
   ownerInstanceId: string
   readonly lease: DurableLeaseRecord
+  /**
+   * Immutable proof that this ownership epoch displaced a stale writer only
+   * after its grace period and exact process identity were checked. Consumers
+   * may use it to terminalize work that could only have been owned by that
+   * dead writer; an ordinary clean acquisition deliberately has no evidence.
+   */
+  readonly takeover?: {
+    replacementLeaseId: string
+    displacedLease: DurableLeaseRecord
+    probes: readonly LeaseProbeRecord[]
+  }
   renew(): Promise<DurableLeaseRecord>
   bindRun(runId: string): Promise<DurableLeaseRecord>
   assertOwned(): DurableLeaseRecord
@@ -354,6 +366,13 @@ export async function acquireExecutionLock(
     },
     { probeOwner: options.probeOwner ?? probeProcessIdentity },
   )
+  const takeover = acquired.displacedLease
+    ? {
+        replacementLeaseId: acquired.lease.id,
+        displacedLease: acquired.displacedLease,
+        probes: acquired.probes,
+      }
+    : undefined
 
   const token = randomUUID()
   let currentLease = acquired.lease
@@ -405,6 +424,7 @@ export async function acquireExecutionLock(
     get lease(): DurableLeaseRecord {
       return currentLease
     },
+    ...(takeover ? { takeover } : {}),
     async renew(): Promise<DurableLeaseRecord> {
       if (renewalFailure) throw renewalFailure
       await renewOnce()

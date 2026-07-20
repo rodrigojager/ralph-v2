@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { createHash } from "node:crypto"
 import { appendFile, cp, mkdir, readFile, unlink, writeFile } from "node:fs/promises"
+import { hostname } from "node:os"
 import { resolve } from "node:path"
 import {
   type ExecuteRunInput,
@@ -12,6 +13,7 @@ import {
   resolveEffectiveRunOptions,
 } from "@ralph-next/orchestration"
 import {
+  acquireDurableLease,
   getEvidenceBundle,
   initializeWorkspace,
   listAttempts,
@@ -1660,6 +1662,133 @@ describe("S03 command-authoritative runner", () => {
       }),
     ).rejects.toMatchObject({ code: "RALPH_MODEL_CALL_UNSETTLED", exitCode: 8 })
     expect(replacementStarts).toBe(0)
+  })
+
+  test("a verified dead-writer takeover reconciles its abandoned call before resume", async () => {
+    const root = await fixtureWorkspace("deadline")
+    const prdPath = resolve(root, "PRD.md")
+    const prd = await readFile(prdPath, "utf8")
+    await writeFile(prdPath, prd.replace("timeout=2s", "timeout=8s"))
+    const options = await optionsFor(root, {
+      mode: "once",
+      noChangePolicy: "allow-no-change",
+    })
+    let signalBackendStarted = (): void => undefined
+    const backendStarted = new Promise<void>((resolveStarted) => {
+      signalBackendStarted = resolveStarted
+    })
+    const hangingStartBackend = {
+      id: "dead-writer-hanging-start",
+      capabilities: () => ({
+        streaming: false,
+        toolCalling: false,
+        cancellation: true,
+        usage: "unavailable" as const,
+      }),
+      start: () => {
+        signalBackendStarted()
+        return new Promise<never>(() => undefined)
+      },
+      cancel: async () => undefined,
+    }
+    const controller = new AbortController()
+    const firstExecution = executeRun({
+      workspaceRoot: root,
+      prdFile: "PRD.md",
+      effectiveOptions: options,
+      signal: controller.signal,
+      dependencies: { resolveBackend: () => hangingStartBackend },
+    })
+    await backendStarted
+    controller.abort(new Error("simulate command loss before backend start settles"))
+    await expect(firstExecution).rejects.toMatchObject({
+      code: "RALPH_EXECUTION_CANCELLED",
+      exitCode: 8,
+    })
+
+    const layout = workspaceLayout(root)
+    const run = listRuns(layout.ledger, { limit: 1 })[0]
+    if (!run) throw new Error("Expected the interrupted run before takeover")
+    const interruptedAttempt = listAttempts(layout.ledger, { runId: run.id })[0]
+    if (!interruptedAttempt) throw new Error("Expected the interrupted attempt before takeover")
+    expect(listModelCalls(layout.ledger, interruptedAttempt.id)[0]).toMatchObject({
+      status: "started",
+    })
+    const identity = JSON.parse(await readFile(layout.identity, "utf8")) as {
+      workspace_id: string
+    }
+    const expiredAt = new Date(Date.now() - 120_000)
+    await acquireDurableLease(
+      layout.ledger,
+      {
+        id: "lease-dead-writer-fixture",
+        kind: "workspace-supervisor",
+        resourceKey: "workspace-writer",
+        workspaceId: identity.workspace_id,
+        runId: run.id,
+        ownerInstanceId: "dead-writer-fixture",
+        pid: 2_147_483_647,
+        processStartToken: "dead-writer-process-start",
+        hostname: hostname(),
+        command: "fixture process killed without releasing its writer lease",
+        scope: ["run:supervise", "workspace:write"],
+        leaseDurationMs: 1_000,
+        staleGraceMs: 0,
+      },
+      { now: () => expiredAt },
+    )
+
+    const replacementBackend = {
+      id: "dead-writer-safe-replacement",
+      capabilities: hangingStartBackend.capabilities,
+      async start(
+        request: Parameters<ExecutionBackend["start"]>[0],
+        channel: Parameters<ExecutionBackend["start"]>[1],
+      ) {
+        const callId = `${request.modelCallId}-replacement-provider-call`
+        return {
+          id: callId,
+          outcome: (async () => {
+            await channel.reserveModelCall({ callId, turn: 1 })
+            return {
+              schemaVersion: 1 as const,
+              status: "work_submitted" as const,
+              summary: "Replacement resumed only after verified writer death.",
+              intendedFiles: [],
+              artifactRefs: [],
+              suggestedVerifications: [],
+              risks: [],
+              reportedAt: new Date().toISOString(),
+            }
+          })(),
+        }
+      },
+      cancel: async () => undefined,
+    }
+    const resumed = await executeRun({
+      workspaceRoot: root,
+      prdFile: "PRD.md",
+      effectiveOptions: options,
+      runId: run.id,
+      dependencies: { resolveBackend: () => replacementBackend },
+    })
+
+    expect(resumed).toMatchObject({ status: "completed", exitCode: 0, runId: run.id })
+    expect(listModelCalls(layout.ledger, interruptedAttempt.id)[0]).toMatchObject({
+      status: "interrupted",
+    })
+    const attempts = listAttempts(layout.ledger, { runId: run.id })
+    expect(attempts).toHaveLength(2)
+    expect(attempts.map((attempt) => attempt.status)).toEqual(["interrupted", "passed"])
+    const reconciliation = readEvents(layout.ledger).find(
+      (event) => event.type === "run.writer_takeover.calls_reconciled",
+    )
+    expect(reconciliation?.payload).toMatchObject({
+      displacedLeaseId: "lease-dead-writer-fixture",
+      modelCallsInterrupted: 1,
+      judgeCallsCancelled: 0,
+      probeIds: expect.any(Array),
+    })
   })
 
   test("task deadline shortens a slow gate and prevents its delayed write", async () => {

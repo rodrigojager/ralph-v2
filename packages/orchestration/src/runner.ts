@@ -263,7 +263,7 @@ import {
 } from "./recovery-acceptance"
 import { buildAndPersistRecoveryManifest } from "./recovery-manifest"
 import { effectiveJudgeRevisionMaximum } from "./revision-recovery"
-import { acquireExecutionLock } from "./run-lock"
+import { acquireExecutionLock, type DurableExecutionLock } from "./run-lock"
 import type {
   RunSupervisorControlPort,
   RunSupervisorControlSession,
@@ -486,6 +486,8 @@ type Runtime = {
   pendingRecoveryDecision: PendingRecoveryDecision | undefined
   recoveryAcceptance: PendingRecoveryDecision | undefined
   controlSession?: RunSupervisorControlSession
+  /** Verified stale-writer takeover for this command ownership epoch, if any. */
+  writerTakeover?: DurableExecutionLock["takeover"]
   assertWriterLease(): void
   signal?: AbortSignal
   dependencies: Required<Pick<ExecutionRuntimeDependencies, "now" | "id" | "sleep">> &
@@ -3429,6 +3431,103 @@ function observeLateModelCallSettlement(
   )
 }
 
+function verifiedWriterTakeoverForRun(
+  runtime: Runtime,
+): NonNullable<DurableExecutionLock["takeover"]> | undefined {
+  const takeover = runtime.writerTakeover
+  if (!takeover) return undefined
+  const displaced = takeover.displacedLease
+  const negativeStatuses = new Set(["dead", "identity-mismatch"])
+  const probes = takeover.probes.filter(
+    (probe) =>
+      probe.leaseId === displaced.id &&
+      probe.expectedProcessStartToken === displaced.processStartToken &&
+      negativeStatuses.has(probe.status),
+  )
+  if (
+    displaced.status !== "stolen" ||
+    displaced.kind !== "workspace-supervisor" ||
+    displaced.resourceKey !== "workspace-writer" ||
+    displaced.workspaceId !== runtime.workspaceId ||
+    displaced.runId !== runtime.run.id ||
+    displaced.replacedByLeaseId !== takeover.replacementLeaseId ||
+    probes.length < 2 ||
+    new Set(probes.map((probe) => probe.sequence)).size < 2
+  ) {
+    return undefined
+  }
+  runtime.assertWriterLease()
+  return takeover
+}
+
+/**
+ * A model/judge call may be retried only after the previous command owner is
+ * proven dead. Clean lock release, timeout, cancellation, or elapsed time alone
+ * intentionally provide no authority and keep the existing fail-closed guard.
+ */
+function reconcileCallsAbandonedByDeadWriter(runtime: Runtime, reference: TaskRef): void {
+  const takeover = verifiedWriterTakeoverForRun(runtime)
+  if (!takeover) return
+  const attempts = listAttempts(runtime.layout.ledger, {
+    runId: runtime.run.id,
+    documentId: reference.documentId,
+    taskId: reference.taskId,
+  })
+  const finishedAt = runtime.dependencies.now()
+  let modelCallsInterrupted = 0
+  let judgeCallsCancelled = 0
+  for (const attempt of attempts) {
+    for (const modelCall of listModelCalls(runtime.layout.ledger, attempt.id)) {
+      if (modelCall.status !== "started") continue
+      updateModelCall(runtime.layout.ledger, {
+        modelCallId: modelCall.id,
+        status: "interrupted",
+        finishedAt,
+        event: {
+          type: "model.call.owner_recovered_dead",
+          level: "warn",
+          payload: {
+            displacedLeaseId: takeover.displacedLease.id,
+            replacementLeaseId: takeover.replacementLeaseId,
+            probeIds: takeover.probes.map((probe) => probe.id),
+            outcomeAccepted: false,
+          },
+        },
+      })
+      modelCallsInterrupted += 1
+    }
+    for (const judgeCall of listJudgeCalls(runtime.layout.ledger, attempt.id)) {
+      if (judgeCall.status !== "started") continue
+      finishJudgeCall(runtime.layout.ledger, {
+        id: judgeCall.id,
+        status: "cancelled",
+        errorMessage: "Verified writer process died before the judge call settled",
+        finishedAt,
+      })
+      judgeCallsCancelled += 1
+    }
+  }
+  if (modelCallsInterrupted > 0 || judgeCallsCancelled > 0) {
+    appendEvent(runtime.layout.ledger, {
+      type: "run.writer_takeover.calls_reconciled",
+      scope: "run",
+      streamId: runtime.run.id,
+      workspaceId: runtime.workspaceId,
+      runId: runtime.run.id,
+      documentId: reference.documentId,
+      taskId: reference.taskId,
+      level: "warn",
+      payload: persistenceSafe(runtime, {
+        displacedLeaseId: takeover.displacedLease.id,
+        replacementLeaseId: takeover.replacementLeaseId,
+        probeIds: takeover.probes.map((probe) => probe.id),
+        modelCallsInterrupted,
+        judgeCallsCancelled,
+      }),
+    })
+  }
+}
+
 function reportBody(
   runtime: Runtime,
   status: RunStatus,
@@ -6091,6 +6190,7 @@ async function executeTask(
       return assessedAttempt?.completionDecision?.status === "revision_required"
     })
     await reconcileTaskToolCalls(runtime, reference)
+    reconcileCallsAbandonedByDeadWriter(runtime, reference)
     const unsettledCalls = existingAttempts.flatMap((attempt) =>
       listModelCalls(runtime.layout.ledger, attempt.id).filter((call) => call.status === "started"),
     )
@@ -6101,7 +6201,7 @@ async function executeTask(
         {
           exitCode: EXIT_CODES.interrupted,
           details: { modelCallIds: unsettledCalls.map((call) => call.id) },
-          hint: "Wait for late settlement before resuming. Hard-crash reconciliation is delivered with supervised workers in S07.",
+          hint: "Wait for late settlement before resuming. Ralph retries only after a stale writer lease is displaced using verified process-death probes.",
         },
       )
     }
@@ -11260,6 +11360,7 @@ export async function executeRun(input: ExecuteRunInput): Promise<RunExecutionRe
       interactive: input.interactive === true,
       pendingRecoveryDecision,
       recoveryAcceptance,
+      ...(lock.takeover ? { writerTakeover: lock.takeover } : {}),
       ...(input.dependencies.processSupervisor
         ? { processSupervisor: input.dependencies.processSupervisor }
         : {}),
