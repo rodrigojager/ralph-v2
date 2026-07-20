@@ -823,10 +823,14 @@ export async function acquireChildSupervisorLease(
       { linkId: options.link.id },
     )
   }
-  const leaseDurationMs = options.leaseDurationMs ?? 30_000
+  // A healthy child can cross one long native Git/filesystem phase without
+  // yielding the JS event loop on a slow host. The watchdog health guard still
+  // controls renewal; this window only prevents processing latency from being
+  // misclassified as lease loss before the next guarded renewal can run.
+  const leaseDurationMs = options.leaseDurationMs ?? 120_000
   const staleGraceMs = options.staleGraceMs ?? 20_000
   const renewalIntervalMs =
-    options.renewalIntervalMs ?? Math.max(1_000, Math.floor(leaseDurationMs / 3))
+    options.renewalIntervalMs ?? Math.min(10_000, Math.max(1_000, Math.floor(leaseDurationMs / 3)))
   if (
     !Number.isSafeInteger(renewalIntervalMs) ||
     renewalIntervalMs < 250 ||

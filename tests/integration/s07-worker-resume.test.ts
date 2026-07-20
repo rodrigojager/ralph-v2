@@ -247,6 +247,15 @@ async function recoveryWorkspace(): Promise<string> {
   await cp(resolve(REPOSITORY_ROOT, "tests/fixtures/execution/single-pass"), root, {
     recursive: true,
   })
+  const prdPath = resolve(root, "PRD.md")
+  const fixturePrd = await readFile(prdPath, "utf8")
+  const recoveryPrd = fixturePrd.replace("timeout=20s", "timeout=120s")
+  if (recoveryPrd === fixturePrd) {
+    throw new Error("Expected the single-pass task timeout in the S07 recovery fixture")
+  }
+  // This case validates recovery semantics, not the shared fixture's short
+  // deadline. Hosted Windows can spend tens of seconds in the Git boundaries.
+  await writeFile(prdPath, recoveryPrd, "utf8")
   await writeFile(resolve(root, ".gitignore"), ".ralph/\n", "utf8")
   await git(root, "init", "-b", "main")
   await git(root, "config", "core.autocrlf", "false")

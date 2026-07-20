@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from "bun:test"
+import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { join } from "node:path"
 import {
   AttemptCountersSchema,
@@ -32,6 +32,10 @@ const HASH_B = "b".repeat(64)
 const HASH_C = "c".repeat(64)
 const NOW = "2026-07-18T18:00:00.000Z"
 const temporaryDirectories: string[] = []
+
+// The first case crosses SQLite, journal and atomic filesystem boundaries;
+// five seconds is not a meaningful health budget on a contended Windows host.
+setDefaultTimeout(30_000)
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map(removeTestDirectory))

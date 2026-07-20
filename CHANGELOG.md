@@ -18,6 +18,10 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
 - Serialização somente das mutações de metadata compartilhada de `git worktree`, preservando a
   execução paralela dos workers, e lifecycle PTY com Ctrl+C convergindo pela mesma bridge de comando
   usada em produção e resultado estruturado durável fora do canal ConPTY desmontado.
+- Deadlines de fixtures e leases de child toleram fases nativas lentas em runners Windows
+  congestionados sem confundir atraso de processamento com travamento ou perda de ownership.
+- O baseline de coexistência reconhece as mensagens de inicialização em português e inglês
+  realmente emitidas pelo Ralph clássico, sem enfraquecer os invariantes de produto e layout.
 
 ## [0.1.0-beta.1] — candidato não publicado
 

@@ -118,7 +118,9 @@ ralph-next migrate rollback <rollback-manifest.json> --confirm-plan-hash <sha256
   gerais já registradas. A prova real de distribuição e publicação pertence à S12 e não reabre esta
   slice;
 - S10.09 e S10.10 foram fechadas por `docs/compatibility/s10-report.{json,md}`: execução de
-  `2026-07-20T12:56:28.813Z`, 91/91 checks, zero regressions e zero surface regressions, com
-  `ralph 0.2.0` e `ralph-next 0.1.0-beta.2` reais, source `2a0c7611...` e binários imutáveis, coexistência,
-  inspect/apply/rollback e suites vinculadas verdes. A matriz multiplataforma, provider/auth real e
-  install de release continuam em S11/S12 e não são inflados por essa prova local.
+  `2026-07-20T14:02:39.818Z`, 91/91 checks, zero regressions e zero surface regressions, com
+  `ralph 0.2.0` e `ralph-next 0.1.0-beta.2` reais, source `71980763...`, binário next
+  `8c7ef683...` e ambos os binários imutáveis. Coexistência, mensagens reais PT/EN do legado,
+  inspect/apply/rollback e suites vinculadas ficaram verdes. A matriz multiplataforma,
+  provider/auth real e install de release continuam em S11/S12 e não são inflados por essa prova
+  local.

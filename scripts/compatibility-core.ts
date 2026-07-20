@@ -772,11 +772,18 @@ async function collectScenarioInvariants(
   }
 
   if (id === "init") {
+    // Ralph v1 can emit either its bundled Portuguese message or the older
+    // English message depending on the persisted locale/config generation.
+    // Compatibility is the product-specific successful init contract, not a
+    // particular presentation language.
+    const legacyInitOutput =
+      /Workspace ralph inicializado/iu.test(output) ||
+      /Initialized ralph workspace(?:\s+at)?/iu.test(output)
     evidence.push(
       invariant(
         `${side}.init.output-contract`,
         side === "legacy"
-          ? /Workspace ralph inicializado/iu.test(output)
+          ? legacyInitOutput
           : /Ralph v2 workspace initialized/iu.test(output) &&
               /Workspace ID:\s+<UUID>/u.test(output),
         "Init emitted its expected product-specific success and identity output.",
