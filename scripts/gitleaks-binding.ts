@@ -136,7 +136,8 @@ export async function resolveGitleaksBinding(input: {
     JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(receiptBytes)),
   )
   const binaryPath = resolve(root, receipt.binaryPath)
-  if (!insideProject(root, binaryPath)) throw new Error("Pinned Gitleaks binary escaped the project")
+  if (!insideProject(root, binaryPath))
+    throw new Error("Pinned Gitleaks binary escaped the project")
   return {
     binary: await exactRegularFile(binaryPath, receipt.binarySha256, receipt.binaryBytes),
     sha256: receipt.binarySha256,

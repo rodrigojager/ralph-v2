@@ -33,6 +33,8 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
   copiáveis também no PowerShell.
 - Packagers standalone/npm fail-closed, SBOM CycloneDX, promotion record v3 R001–R079 e handoff gate
   que distinguem `built-not-tested`, `tested` e suporte real.
+- Curadoria offline do runtime Bun `1.3.14` presa ao commit exato, com licença/notice upstream,
+  provenance de tag/release/assets e receipts determinísticos usados pelo SBOM standalone.
 - Alias standalone `ralph` opt-in, receipt-bound e reversível, com preview confirmado, gate de
   receipt `stable`, colisão fail-closed e nenhuma alteração de `PATH` ou bin npm implícito.
 - Worksheet de drills/beta com diagnostics locais e retorno ao Ralph clássico, além do handoff
@@ -65,7 +67,7 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
   permanecem parciais, os gates externos/candidate-bound continuam abertos e nenhum release
   candidate foi promovido.
 - A identidade foi fixada em MIT, package/binário `ralph-next`, repositório
-  `rodrigojager/ralph-v2`, canal `beta` e schemas versionados publicados por GitHub Pages. O
+  `rodrigojager/ralph-v2`, canal `beta` e schemas versionados destinados ao workflow GitHub Pages. O
   candidato permanece não publicável até os gates multiplataforma, license inventory e closure.
 
 ## [0.1.0-dev.1] — não publicado

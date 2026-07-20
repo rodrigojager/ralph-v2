@@ -23,6 +23,12 @@ import { BundleBuildMetadataSchema, sha256File, validateBundleArtifact } from ".
 import { PUBLIC_SCHEMA_DEFINITIONS, publicSchemaMismatches } from "./generate-schemas"
 import { createDeterministicTar } from "./release-archive"
 import {
+  readStableJsonInput,
+  readStandaloneCandidateReceipt,
+  type StableJsonInput,
+  type StandaloneCandidateInput,
+} from "./release-candidate-input"
+import {
   assertRegularReleaseFile,
   copyRegularDirectoryVerified,
   copyRegularVerified,
@@ -34,12 +40,6 @@ import {
 import { createDeterministicGzip } from "./release-gzip"
 import { materializeReleaseLicenseInventory } from "./release-licenses"
 import { compareUtf8Bytes } from "./release-order"
-import {
-  readStableJsonInput,
-  readStandaloneCandidateReceipt,
-  type StableJsonInput,
-  type StandaloneCandidateInput,
-} from "./release-candidate-input"
 import { createReleaseSbom } from "./release-sbom"
 import {
   assertReleaseSignatureReceipt,

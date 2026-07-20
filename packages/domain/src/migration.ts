@@ -47,6 +47,4 @@ export const LegacyMigrationRollbackManifestSchema = z
       .strict(),
   })
   .strict()
-export type LegacyMigrationRollbackManifest = z.infer<
-  typeof LegacyMigrationRollbackManifestSchema
->
+export type LegacyMigrationRollbackManifest = z.infer<typeof LegacyMigrationRollbackManifestSchema>

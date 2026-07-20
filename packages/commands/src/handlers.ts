@@ -5877,8 +5877,7 @@ async function sandboxDoctorCheck(
         : `Configured sandbox provider ${sandbox.provider} is available (${isolation}), but it is not a complete container boundary${capability.reason ? `: ${capability.reason}` : ""}`,
       ...(!completeContainerBoundary
         ? {
-            hint:
-              "Use Docker, Podman or another audited OS sandbox when the workspace requires strong isolation.",
+            hint: "Use Docker, Podman or another audited OS sandbox when the workspace requires strong isolation.",
           }
         : {}),
       details: capabilityDetails,

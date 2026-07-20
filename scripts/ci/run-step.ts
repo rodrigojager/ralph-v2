@@ -8,6 +8,21 @@ const projectRoot = resolve(import.meta.dir, "../..")
 const MAX_ARGUMENTS = 256
 const MAX_ARGUMENT_BYTES = 16 * 1024
 
+function containsForbiddenArgumentControl(value: string): boolean {
+  for (const character of value) {
+    const codePoint = character.codePointAt(0)
+    if (
+      codePoint !== undefined &&
+      (codePoint === 0 ||
+        codePoint === 0x7f ||
+        (codePoint >= 1 && codePoint <= 0x1f && ![0x09, 0x0a, 0x0d].includes(codePoint)))
+    ) {
+      return true
+    }
+  }
+  return false
+}
+
 export interface CiStepOptions {
   readonly id: string
   readonly output: string
@@ -64,7 +79,7 @@ function safeArgument(value: string, label: string): string {
   if (value.length === 0 || Buffer.byteLength(value, "utf8") > MAX_ARGUMENT_BYTES) {
     throw new Error(`${label} must be non-empty and at most ${MAX_ARGUMENT_BYTES} UTF-8 bytes`)
   }
-  if (/\0|[\u0001-\u0008\u000b\u000c\u000e-\u001f\u007f]/u.test(value)) {
+  if (containsForbiddenArgumentControl(value)) {
     throw new Error(`${label} contains a forbidden control character`)
   }
   return value

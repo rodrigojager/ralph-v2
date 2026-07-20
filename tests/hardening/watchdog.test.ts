@@ -14,12 +14,12 @@ import {
 } from "@ralph-next/domain"
 import {
   evaluateWatchdog,
+  probePidLiveness,
   type WatchdogClock,
   WatchdogMonitor,
   type WatchdogProbeResult,
   type WatchdogScheduledTask,
   type WatchdogScheduler,
-  probePidLiveness,
 } from "@ralph-next/supervisor"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
@@ -432,10 +432,7 @@ describe("S11 watchdog hardening", () => {
     const child = spawnOwnedScript("setInterval(() => undefined, 1000)")
     const pid = child.pid
     if (!pid) throw new Error("Frozen worker fixture did not receive a PID")
-    await waitFor(
-      () => (probePidLiveness(pid).alive ? true : undefined),
-      "frozen worker liveness",
-    )
+    await waitFor(() => (probePidLiveness(pid).alive ? true : undefined), "frozen worker liveness")
 
     const clock = new ControlledClock()
     const scheduler = new ControlledScheduler()

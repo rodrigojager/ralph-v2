@@ -3,13 +3,13 @@ import { lstat, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 import { BunProcessSupervisor, type ProcessSettlement } from "@ralph-next/supervisor"
+import { sha256File } from "./build-artifact"
 import {
   gitleaksTrackedSourceScanArguments,
   resolveGitleaksBinding,
   validateEmptyGitleaksReport,
   validateGitleaksVersionOutput,
 } from "./gitleaks-binding"
-import { sha256File } from "./build-artifact"
 
 const ROOT = resolve(import.meta.dir, "..")
 const DEFAULT_TIMEOUT_MS = 10 * 60 * 1_000

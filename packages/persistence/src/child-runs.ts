@@ -1149,10 +1149,7 @@ export function projectChildEventToParent(
   return withLedger(path, (database) =>
     database.transaction(() => {
       const link = requireLink(database, input.linkId)
-      if (
-        source.runId !== link.childRunId ||
-        source.workspaceId !== link.workspaceId
-      ) {
+      if (source.runId !== link.childRunId || source.workspaceId !== link.workspaceId) {
         throw invalid(
           "RALPH_CHILD_EVENT_SCOPE_MISMATCH",
           "Only events from the linked child run can be projected to its parent",

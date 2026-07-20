@@ -7,6 +7,14 @@ const MAX_FILE_BYTES = 32 * 1024 * 1024
 const MAX_TOTAL_BYTES = 512 * 1024 * 1024
 const projectRoot = resolve(import.meta.dir, "../..")
 
+function containsC0OrDeleteControl(value: string): boolean {
+  for (const character of value) {
+    const codePoint = character.codePointAt(0)
+    if (codePoint !== undefined && (codePoint <= 0x1f || codePoint === 0x7f)) return true
+  }
+  return false
+}
+
 export interface WhitespaceIssue {
   readonly path: string
   readonly line: number
@@ -77,7 +85,7 @@ async function trackedPaths(): Promise<readonly string[]> {
     if (
       path.length === 0 ||
       path.includes("\\") ||
-      /[\u0000-\u001f\u007f]/u.test(path) ||
+      containsC0OrDeleteControl(path) ||
       isAbsolute(path) ||
       segments.some((segment) => segment.length === 0 || segment === "." || segment === "..") ||
       !insideProject(resolve(projectRoot, path)) ||

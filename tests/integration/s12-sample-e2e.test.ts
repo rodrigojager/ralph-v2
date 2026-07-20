@@ -1,10 +1,7 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { copyFile, cp, readFile } from "node:fs/promises"
 import { isAbsolute, relative, resolve, sep } from "node:path"
-import {
-  ExternalCliJudgeBackend,
-  JUDGE_OUTPUT_JSON_ADAPTER_ID,
-} from "@ralph-next/model-drivers"
+import { ExternalCliJudgeBackend, JUDGE_OUTPUT_JSON_ADAPTER_ID } from "@ralph-next/model-drivers"
 import {
   type ExecuteRunInput,
   type ExecutionRuntimeDependencies,
@@ -40,12 +37,7 @@ setDefaultTimeout(120_000)
 const VERSION = "0.1.0-s12-sample-e2e"
 const REPOSITORY_ROOT = resolve(import.meta.dir, "../..")
 const SAMPLE_SOURCE = resolve(REPOSITORY_ROOT, "examples", "vertical-notes")
-const DELIVERY_SOURCE = resolve(
-  REPOSITORY_ROOT,
-  "tests",
-  "fixtures",
-  "s12-vertical-notes-delivery",
-)
+const DELIVERY_SOURCE = resolve(REPOSITORY_ROOT, "tests", "fixtures", "s12-vertical-notes-delivery")
 const SENSITIVE_NOTE_TEXT = "S12 private note body must never appear in an operator log"
 const temporaryDirectories: string[] = []
 const liveProcesses: SupervisedProcessHandle[] = []
@@ -349,16 +341,10 @@ async function exerciseProduct(root: string): Promise<ProductProof> {
       created.note.text === SENSITIVE_NOTE_TEXT &&
       listedResponse.status === 200 &&
       Array.isArray(listed.notes) &&
-      listed.notes.some(
-        (note) => note.id === created.note?.id && note.text === SENSITIVE_NOTE_TEXT,
-      )
+      listed.notes.some((note) => note.id === created.note?.id && note.text === SENSITIVE_NOTE_TEXT)
 
     firstSettlement = await stopProduct(first.handle)
-    const second = await startProduct(
-      root,
-      dataFile,
-      resolve(root, ".ralph", "s12-ready-2.json"),
-    )
+    const second = await startProduct(root, dataFile, resolve(root, ".ralph", "s12-ready-2.json"))
     try {
       const resumedResponse = await fetch(`${second.baseUrl}/api/notes`)
       const resumed = (await resumedResponse.json()) as { notes?: Array<{ text?: unknown }> }
@@ -457,8 +443,7 @@ describe("S12.08 executable Vertical Notes sample", () => {
     })
     let crashInjected = false
     const dependencies: ExecutionRuntimeDependencies = {
-      resolveBackend: (profile) =>
-        profile === "sample-scripted-executor" ? executor : undefined,
+      resolveBackend: (profile) => (profile === "sample-scripted-executor" ? executor : undefined),
       resolveJudge: (profile, context) =>
         profile === "sample-fake-judge" && context.kind === "external" ? judge : undefined,
       sleep: async () => undefined,
@@ -485,9 +470,7 @@ describe("S12.08 executable Vertical Notes sample", () => {
     expect(listRunTasks(layout.ledger, interrupted.id)).toContainEqual(
       expect.objectContaining({ taskId: "health-surface", status: "completed" }),
     )
-    expect(await readFile(resolve(root, "PRD.md"), "utf8")).toContain(
-      "- [x] **health-surface",
-    )
+    expect(await readFile(resolve(root, "PRD.md"), "utf8")).toContain("- [x] **health-surface")
     expect(
       listJudgeAssessments(layout.ledger, {
         runId: interrupted.id,
@@ -637,9 +620,7 @@ describe("S12.08 executable Vertical Notes sample", () => {
     })
     expect(
       await Promise.all(
-        artifactExpectations.map((artifact) =>
-          Bun.file(resolve(root, artifact.path)).exists(),
-        ),
+        artifactExpectations.map((artifact) => Bun.file(resolve(root, artifact.path)).exists()),
       ),
     ).toEqual([true, true, true, true])
 
@@ -688,12 +669,12 @@ describe("S12.08 executable Vertical Notes sample", () => {
     expect(rootView.combinedUsage).toContain("unavailable")
     expect(childView.judgeUsage).toContain("unavailable")
     const scopes = rootSnapshot.scopes ?? []
-    expect(scopes.map((scope) => [scope.kind, scope.progress.completed, scope.progress.total])).toEqual(
-      [
-        ["root", 3, 3],
-        ["child", 2, 2],
-      ],
-    )
+    expect(
+      scopes.map((scope) => [scope.kind, scope.progress.completed, scope.progress.total]),
+    ).toEqual([
+      ["root", 3, 3],
+      ["child", 2, 2],
+    ])
 
     const product = await exerciseProduct(root)
     expect(product).toEqual({

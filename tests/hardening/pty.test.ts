@@ -208,7 +208,9 @@ function openPty(
       if (idleFor >= PTY_EXIT_OUTPUT_IDLE_MS) break
       await pauseForInput(Math.min(25, PTY_EXIT_OUTPUT_IDLE_MS - idleFor))
     }
-    childDiagnostics = await readFile(childDiagnosticPath, "utf8").catch(() => "(no child diagnostics)")
+    childDiagnostics = await readFile(childDiagnosticPath, "utf8").catch(
+      () => "(no child diagnostics)",
+    )
     if (!terminal.closed) terminal.close()
     for (const observer of observers) {
       if (observer.timer) clearTimeout(observer.timer)

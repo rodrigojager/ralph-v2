@@ -240,7 +240,11 @@ async function verifyCandidatePayload(
   ) {
     throw new Error(`Candidate payload is not the declared regular file: ${payload.path}`)
   }
-  if (excludedIdentity && before.dev === excludedIdentity.dev && before.ino === excludedIdentity.ino) {
+  if (
+    excludedIdentity &&
+    before.dev === excludedIdentity.dev &&
+    before.ino === excludedIdentity.ino
+  ) {
     throw new Error(`Candidate payload cannot alias its own metadata file: ${payload.path}`)
   }
   const canonical = await realpath(requested)
@@ -472,8 +476,7 @@ export async function readReleaseCandidateInput(
       subject: {
         repository: standalone.data.promotionCandidate.repository,
         commit: standalone.data.promotionCandidate.commit,
-        sourceFingerprintSha256:
-          standalone.data.promotionCandidate.sourceFingerprintSha256,
+        sourceFingerprintSha256: standalone.data.promotionCandidate.sourceFingerprintSha256,
         channel: standalone.data.promotionCandidate.channel,
       },
       payloads,

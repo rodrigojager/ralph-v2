@@ -18,10 +18,7 @@ import {
   InstallOriginSchema,
   serializeDistributionControlFile,
 } from "@ralph-next/distribution"
-import {
-  createSandboxProcessPort,
-  discoverSandboxCapability,
-} from "@ralph-next/orchestration"
+import { createSandboxProcessPort, discoverSandboxCapability } from "@ralph-next/orchestration"
 import packageJson from "../../../package.json" with { type: "json" }
 import { createCommandShutdownLifecycle } from "./command-shutdown"
 import { createConfigEditorCommandService } from "./config-editor"

@@ -102,7 +102,9 @@ class RecoveryBackend implements ExecutionBackend {
 
   async cancel(handle: CallHandle, reason: string): Promise<void> {
     const pending = this.#pending.get(handle.id)
-    this.trace.push(`cancel:${this.requests.find((request) => `recovery-${request.modelCallId}` === handle.id)?.taskId ?? "unknown"}`)
+    this.trace.push(
+      `cancel:${this.requests.find((request) => `recovery-${request.modelCallId}` === handle.id)?.taskId ?? "unknown"}`,
+    )
     if (pending?.settleOnCancel) {
       pending.reject(new Error(`Graceful watchdog cancellation: ${reason}`))
     }
@@ -146,7 +148,10 @@ ${tasks}
 `
 }
 
-function watchdogConfig(action: "notify" | "cancel" | "restart-attempt" | "stop-run", maxRestarts: number): string {
+function watchdogConfig(
+  action: "notify" | "cancel" | "restart-attempt" | "stop-run",
+  maxRestarts: number,
+): string {
   return `schema_version: 1
 watchdog:
   enabled: true
@@ -227,7 +232,11 @@ function actionDecision(event: ReturnType<typeof watchdogActions>[number]) {
 
 describe("S07.09 watchdog recovery actions", () => {
   test("notify records a stalled diagnostic without cancelling otherwise successful work", async () => {
-    const root = await prepareWorkspace({ taskIds: ["notify-slice"], action: "notify", maxRestarts: 1 })
+    const root = await prepareWorkspace({
+      taskIds: ["notify-slice"],
+      action: "notify",
+      maxRestarts: 1,
+    })
     const backend = new RecoveryBackend([
       {
         taskId: "notify-slice",
@@ -237,12 +246,12 @@ describe("S07.09 watchdog recovery actions", () => {
         content: "completed-after-notify",
       },
     ])
-    const result = await executeCli(
-      runArguments(root),
-      commandContext(root, backend),
-    )
+    const result = await executeCli(runArguments(root), commandContext(root, backend))
 
-    expect(result).toMatchObject({ exitCode: 0, execution: { result: { data: { status: "completed" } } } })
+    expect(result).toMatchObject({
+      exitCode: 0,
+      execution: { result: { data: { status: "completed" } } },
+    })
     expect(backend.trace).toEqual(["start:notify-slice", "settled:notify-slice"])
     const runId = result.execution.result.runId as string
     const decisions = watchdogActions(root, runId).map(actionDecision)
@@ -263,14 +272,27 @@ describe("S07.09 watchdog recovery actions", () => {
       maxRestarts: 1,
     })
     const backend = new RecoveryBackend([
-      { taskId: "restart-one", kind: "stall", path: "delivery/one.partial", content: "one-partial" },
+      {
+        taskId: "restart-one",
+        kind: "stall",
+        path: "delivery/one.partial",
+        content: "one-partial",
+      },
       { taskId: "restart-one", kind: "success", path: "delivery/one.final", content: "one-final" },
-      { taskId: "restart-two", kind: "stall", path: "delivery/two.partial", content: "two-partial" },
+      {
+        taskId: "restart-two",
+        kind: "stall",
+        path: "delivery/two.partial",
+        content: "two-partial",
+      },
       { taskId: "restart-two", kind: "success", path: "delivery/two.final", content: "two-final" },
     ])
     const result = await executeCli(runArguments(root), commandContext(root, backend))
 
-    expect(result).toMatchObject({ exitCode: 0, execution: { result: { data: { status: "completed" } } } })
+    expect(result).toMatchObject({
+      exitCode: 0,
+      execution: { result: { data: { status: "completed" } } },
+    })
     expect(backend.remaining()).toBe(0)
     expect(backend.trace).toEqual([
       "start:restart-one",
@@ -289,10 +311,14 @@ describe("S07.09 watchdog recovery actions", () => {
     for (const taskId of ["restart-one", "restart-two"]) {
       const taskAttempts = attempts.filter((attempt) => attempt.taskId === taskId)
       expect(taskAttempts).toHaveLength(2)
-      expect(taskAttempts.reduce((sum, attempt) => sum + attempt.counters.watchdogRestarts, 0)).toBe(1)
+      expect(
+        taskAttempts.reduce((sum, attempt) => sum + attempt.counters.watchdogRestarts, 0),
+      ).toBe(1)
       expect(taskAttempts.every((attempt) => attempt.counters.revisionAttempts === 0)).toBeTrue()
       const resumedRequest = backend.requests.filter((request) => request.taskId === taskId)[1]
-      expect(resumedRequest?.contextBundle.canonicalJson).toContain(`${taskId === "restart-one" ? "one" : "two"}.partial`)
+      expect(resumedRequest?.contextBundle.canonicalJson).toContain(
+        `${taskId === "restart-one" ? "one" : "two"}.partial`,
+      )
     }
     expect(
       watchdogActions(root, runId)
@@ -328,13 +354,14 @@ describe("S07.09 watchdog recovery actions", () => {
     expect(backend.trace).toEqual(["start:unsettled-slice", "cancel:unsettled-slice"])
     expect(backend.remaining()).toBe(1)
     const attempt = listAttempts(workspaceLayout(root).ledger, { runId })[0]
-    expect(attempt ? listModelCalls(workspaceLayout(root).ledger, attempt.id)[0] : undefined).toMatchObject({
+    expect(
+      attempt ? listModelCalls(workspaceLayout(root).ledger, attempt.id)[0] : undefined,
+    ).toMatchObject({
       status: "started",
     })
     expect(
       readEvents(workspaceLayout(root).ledger).some(
-        (event) =>
-          event.runId === runId && event.type === "attempt.watchdog_restart_deferred",
+        (event) => event.runId === runId && event.type === "attempt.watchdog_restart_deferred",
       ),
     ).toBeTrue()
     expect(await Bun.file(resolve(root, "delivery", "unsettled.final")).exists()).toBeFalse()
@@ -347,8 +374,18 @@ describe("S07.09 watchdog recovery actions", () => {
       maxRestarts: 1,
     })
     const firstBackend = new RecoveryBackend([
-      { taskId: "cancelled-slice", kind: "stall", path: "delivery/cancel.partial", content: "partial" },
-      { taskId: "independent-slice", kind: "success", path: "delivery/independent.txt", content: "independent" },
+      {
+        taskId: "cancelled-slice",
+        kind: "stall",
+        path: "delivery/cancel.partial",
+        content: "partial",
+      },
+      {
+        taskId: "independent-slice",
+        kind: "success",
+        path: "delivery/independent.txt",
+        content: "independent",
+      },
     ])
     const first = await executeCli(runArguments(root), commandContext(root, firstBackend))
     expect(first.exitCode).not.toBe(0)
@@ -369,12 +406,14 @@ describe("S07.09 watchdog recovery actions", () => {
     expect(await readFile(resolve(root, "delivery", "cancel.partial"), "utf8")).toBe("partial")
 
     const resumeBackend = new RecoveryBackend([
-      { taskId: "cancelled-slice", kind: "success", path: "delivery/cancel.final", content: "final" },
+      {
+        taskId: "cancelled-slice",
+        kind: "success",
+        path: "delivery/cancel.final",
+        content: "final",
+      },
     ])
-    const resumed = await executeCli(
-      runArguments(root, runId),
-      commandContext(root, resumeBackend),
-    )
+    const resumed = await executeCli(runArguments(root, runId), commandContext(root, resumeBackend))
     expect(resumed).toMatchObject({
       exitCode: 0,
       execution: { result: { runId, data: { status: "completed" } } },
@@ -390,7 +429,12 @@ describe("S07.09 watchdog recovery actions", () => {
       maxRestarts: 0,
     })
     const firstBackend = new RecoveryBackend([
-      { taskId: "exhausted-slice", kind: "stall", path: "delivery/exhausted.partial", content: "partial" },
+      {
+        taskId: "exhausted-slice",
+        kind: "stall",
+        path: "delivery/exhausted.partial",
+        content: "partial",
+      },
     ])
     const first = await executeCli(runArguments(root), commandContext(root, firstBackend))
     expect(first.exitCode).not.toBe(0)
@@ -415,16 +459,25 @@ describe("S07.09 watchdog recovery actions", () => {
     const firstAttempts = listAttempts(workspaceLayout(root).ledger, { runId })
     expect(firstAttempts).toHaveLength(1)
     expect(firstAttempts[0]?.counters).toMatchObject({ watchdogRestarts: 0, revisionAttempts: 0 })
-    expect(firstBackend.requests.some((request) => request.taskId === "not-started-slice")).toBeFalse()
+    expect(
+      firstBackend.requests.some((request) => request.taskId === "not-started-slice"),
+    ).toBeFalse()
 
     const resumeBackend = new RecoveryBackend([
-      { taskId: "exhausted-slice", kind: "success", path: "delivery/exhausted.final", content: "final" },
-      { taskId: "not-started-slice", kind: "success", path: "delivery/second.final", content: "second" },
+      {
+        taskId: "exhausted-slice",
+        kind: "success",
+        path: "delivery/exhausted.final",
+        content: "final",
+      },
+      {
+        taskId: "not-started-slice",
+        kind: "success",
+        path: "delivery/second.final",
+        content: "second",
+      },
     ])
-    const resumed = await executeCli(
-      runArguments(root, runId),
-      commandContext(root, resumeBackend),
-    )
+    const resumed = await executeCli(runArguments(root, runId), commandContext(root, resumeBackend))
     expect(resumed).toMatchObject({
       exitCode: 0,
       execution: { result: { runId, data: { status: "completed" } } },

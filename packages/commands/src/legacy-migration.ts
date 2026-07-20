@@ -1,6 +1,16 @@
 import { createHash } from "node:crypto"
 import { constants, type Stats } from "node:fs"
-import { copyFile, lstat, mkdir, open, readdir, readFile, realpath, rm, rmdir } from "node:fs/promises"
+import {
+  copyFile,
+  lstat,
+  mkdir,
+  open,
+  readdir,
+  readFile,
+  realpath,
+  rm,
+  rmdir,
+} from "node:fs/promises"
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path"
 import {
   EXIT_CODES,
@@ -394,10 +404,7 @@ function trustedIdentity(info: Stats): TrustedFileIdentity {
   }
 }
 
-function sameTrustedFileIdentity(
-  left: TrustedFileIdentity,
-  right: TrustedFileIdentity,
-): boolean {
+function sameTrustedFileIdentity(left: TrustedFileIdentity, right: TrustedFileIdentity): boolean {
   return (
     left.dev === right.dev &&
     left.ino === right.ino &&
@@ -1898,11 +1905,7 @@ export async function applyLegacyMigration(
         sourceWasModified: false,
       },
     })
-    await writeJsonAtomic(
-      rollbackPath,
-      rollbackManifest,
-      { overwrite: false },
-    )
+    await writeJsonAtomic(rollbackPath, rollbackManifest, { overwrite: false })
 
     return {
       schemaVersion: 1,
@@ -2074,6 +2077,7 @@ export async function applyLegacyMigrationRollback(input: {
   const removedFiles: string[] = []
   let confirmedPlan: PreparedRollbackPlan | undefined
   let operationFailure: unknown
+  let operationFailed = false
   try {
     await lease.assertOwned()
     confirmedPlan = await prepareRollbackPlan(initialPlan.manifestPath)
@@ -2113,25 +2117,27 @@ export async function applyLegacyMigrationRollback(input: {
     })
     removedFiles.push(confirmedPlan.manifest.manifestSelfExcluded)
   } catch (error) {
+    operationFailed = true
     operationFailure = error
-    throw error
-  } finally {
-    try {
-      await lease.release()
-    } catch (error) {
-      if (operationFailure === undefined) {
-        throw new RalphError(
-          "RALPH_MIGRATION_ROLLBACK_LEASE_RELEASE_FAILED",
-          "Migration rollback removed its confirmed files but could not release its ownership lease",
-          {
-            exitCode: EXIT_CODES.operationalError,
-            file: lease.path,
-            details: { removedFiles },
-            cause: error,
-          },
-        )
-      }
-    }
+  }
+  let releaseFailure: unknown
+  try {
+    await lease.release()
+  } catch (error) {
+    releaseFailure = error
+  }
+  if (operationFailed) throw operationFailure
+  if (releaseFailure !== undefined) {
+    throw new RalphError(
+      "RALPH_MIGRATION_ROLLBACK_LEASE_RELEASE_FAILED",
+      "Migration rollback removed its confirmed files but could not release its ownership lease",
+      {
+        exitCode: EXIT_CODES.operationalError,
+        file: lease.path,
+        details: { removedFiles },
+        cause: releaseFailure,
+      },
+    )
   }
 
   if (!confirmedPlan) {

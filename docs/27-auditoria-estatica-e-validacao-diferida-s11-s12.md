@@ -865,10 +865,10 @@ como contrato sintético. Continuam diferidos mismatch de targets, promotion bin
 content-addressed, target incluído/recusado, stable parcial e comportamento real de durabilidade por
 plataforma.
 
-### B09 — inventário de textos implementado; curação do runtime Bun ausente
+### B09 — inventário de textos e curação do runtime Bun materializados
 
-**Estado estático:** helper e integração dos packagers implementados; input de curação externo
-ausente.
+**Estado atual:** helper e integração dos packagers implementados; input de curação oficial exato
+presente para Bun `1.3.14`/`0d9b296af33f2b851fcbf4df3e9ec89751734ba4`.
 
 `scripts/release-licenses.ts` usa o SBOM serializado como fonte exata, exige igualdade entre a
 aresta runtime root e os componentes npm, resolve nome/versão no Bun store, confere manifest e copia
@@ -880,17 +880,16 @@ packager npm usa esse inventário sem exigir o runtime Bun, que não é distribu
 
 O standalone também vincula todos os engine/launcher metadata à mesma dupla `bunVersion` e
 `bunRevision` e exige um bundle totalmente manifestado em
-`third_party/bun/runtime/<version>/<revision>/CURATION.json`. O repositório ainda não possui esse
-bundle. Isso é intencionalmente fail-closed: nenhuma licença ou proveniência do Bun foi baixada,
-copiada de fonte não revisada ou inventada durante a auditoria. Os binaries históricos em `dist/`
-não são fonte de compliance nem autorizam escolher textos. Uma falha deixa apenas staging não
-promovido; o commit atômico do package/release não recebe inventário parcial.
+`third_party/bun/runtime/<version>/<revision>/CURATION.json`. A árvore atual registra o tag/release,
+commit/tree/blob oficiais, a matriz upstream de licença/linked libraries, os seis digests de asset
+relevantes e os receipts dos bytes curados. Os quatro contratos de licença/proveniência passaram
+26/26, incluindo tamper, arquivo extra/ausente, symlink e mismatch de versão/revisão. Os binaries
+históricos em `dist/` continuam fora da autoridade de compliance.
 
-**Desbloqueio:** o release owner obtém e revisa os materiais oficiais do runtime exato, registra
-repositório/revisão/responsável/data, inclui ao menos licença/copying e provenance, calcula receipts
-de tamanho/SHA-256 e adiciona somente a árvore declarada. Na validação do candidato, a composição precisa provar
-tamper, arquivo extra/ausente, symlink, peer divergence e mismatch de versão/revisão. O manifest
-entrega rastreabilidade dos bytes; não deve ser descrito como certificação jurídica automática.
+**Prova ainda pendente:** package do candidato precisa copiar exatamente essa árvore, comprovar a
+mesma dupla em todos os engine/launcher metadata, fechar peer divergence e inspecionar o inventário
+final. O manifest entrega rastreabilidade dos bytes; não deve ser descrito como certificação jurídica
+automática.
 
 ## Fila de evidência diferida
 

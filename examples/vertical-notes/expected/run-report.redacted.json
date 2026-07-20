@@ -37,10 +37,7 @@
     "threshold": 85,
     "intentionalRevision": {
       "taskId": "note-create-flow",
-      "scores": [
-        72,
-        96
-      ],
+      "scores": [72, 96],
       "revisionAttempts": 1
     },
     "finalRootLabel": "external · sample-fake-judge · 96/85 · revisions 0/1",

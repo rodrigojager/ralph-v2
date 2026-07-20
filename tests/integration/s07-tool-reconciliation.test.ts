@@ -2,13 +2,13 @@ import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { cp, mkdir, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import { type CommandContext, executeCli } from "@ralph-next/commands"
-import {
-  type BackendCapabilities,
-  type CallHandle,
-  type ExecutionBackend,
-  type ExecutionChannel,
-  type ExecutionRequest,
-  type ExecutionToolPort,
+import type {
+  BackendCapabilities,
+  CallHandle,
+  ExecutionBackend,
+  ExecutionChannel,
+  ExecutionRequest,
+  ExecutionToolPort,
 } from "@ralph-next/orchestration"
 import {
   getToolCallIntent,
@@ -18,13 +18,13 @@ import {
   listModelCalls,
   listRuns,
   listUnsettledToolCalls,
-  readEvents,
   type RecordToolCallIntentInput,
+  readEvents,
   recordToolCallIntent,
   workspaceLayout,
 } from "@ralph-next/persistence"
-import { hashCanonical, sha256 } from "@ralph-next/tool-host"
 import { ScriptedExecutionBackend } from "@ralph-next/test-kit"
+import { hashCanonical, sha256 } from "@ralph-next/tool-host"
 import { createRalphExecutionToolPort } from "../../apps/ralph-cli/src/tool-execution-port"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
@@ -184,8 +184,7 @@ function commandContext(input: {
     version: VERSION,
     cwd: input.root,
     environment: { RALPH_CONFIG_HOME: resolve(input.root, "isolated-global-config") },
-    resolveBackend: (profile) =>
-      profile === "fixture-executor" ? input.backend : undefined,
+    resolveBackend: (profile) => (profile === "fixture-executor" ? input.backend : undefined),
     ...(input.toolPort ? { toolPort: input.toolPort } : {}),
   }
 }
@@ -225,10 +224,7 @@ async function interruptAfterIntents(
 ): Promise<InterruptedFixture> {
   const ledger = workspaceLayout(root).ledger
   const backend = new JournalCrashBackend(ledger, intents)
-  const result = await executeCli(
-    runArguments(root),
-    commandContext({ root, backend }),
-  )
+  const result = await executeCli(runArguments(root), commandContext({ root, backend }))
   expect(result.exitCode).not.toBe(0)
   expect(backend.requests()).toHaveLength(1)
 
@@ -260,9 +256,7 @@ function taskQuery(fixture: InterruptedFixture) {
   }
 }
 
-function backendThatMustObserveSettledJournal(
-  fixture: InterruptedFixture,
-): GuardedBackend {
+function backendThatMustObserveSettledJournal(fixture: InterruptedFixture): GuardedBackend {
   return new GuardedBackend(
     new ScriptedExecutionBackend([
       {
@@ -304,8 +298,7 @@ function reconcileTwice(
 
 function reconciliationEvents(fixture: InterruptedFixture) {
   return readEvents(fixture.ledger).filter(
-    (event) =>
-      event.runId === fixture.runId && event.type.startsWith("tool.reconciliation."),
+    (event) => event.runId === fixture.runId && event.type.startsWith("tool.reconciliation."),
   )
 }
 
@@ -326,10 +319,7 @@ describe("S07.07 crash-safe tool-call reconciliation", () => {
       precondition: { kind: "absent" as const },
       createParents: true,
     }
-    const readOnlyOriginal = await readFile(
-      resolve(root, "product", "capability.txt"),
-      "utf8",
-    )
+    const readOnlyOriginal = await readFile(resolve(root, "product", "capability.txt"), "utf8")
     await mkdir(resolve(root, "recovered"), { recursive: true })
     await writeFile(resolve(root, "recovered", "present.txt"), presentContent, "utf8")
 
@@ -390,12 +380,8 @@ describe("S07.07 crash-safe tool-call reconciliation", () => {
     expect(await readFile(resolve(root, "product", "capability.txt"), "utf8")).toBe(
       readOnlyOriginal,
     )
-    expect(await readFile(resolve(root, "recovered", "present.txt"), "utf8")).toBe(
-      presentContent,
-    )
-    expect(await readFile(resolve(root, "recovered", "replayed.txt"), "utf8")).toBe(
-      replayedContent,
-    )
+    expect(await readFile(resolve(root, "recovered", "present.txt"), "utf8")).toBe(presentContent)
+    expect(await readFile(resolve(root, "recovered", "replayed.txt"), "utf8")).toBe(replayedContent)
     expect(
       ["intent-safe-read", "intent-present-write", "intent-absent-write"].map(
         (intentId) => getToolCallSettlement(fixture.ledger, intentId)?.outcome,
@@ -524,18 +510,14 @@ describe("S07.07 crash-safe tool-call reconciliation", () => {
     expect(backend.starts).toBe(0)
     expect(await Bun.file(processMarker).exists()).toBeFalse()
     expect(getToolCallSettlement(fixture.ledger, "intent-external-effect")).toBeUndefined()
-    expect(
-      getToolCallSettlement(fixture.ledger, "intent-process-without-owner"),
-    ).toBeUndefined()
+    expect(getToolCallSettlement(fixture.ledger, "intent-process-without-owner")).toBeUndefined()
     expect(listUnsettledToolCalls(fixture.ledger, taskQuery(fixture))).toHaveLength(2)
 
     const paused = reconciliationEvents(fixture).filter(
       (event) => event.type === "tool.reconciliation.paused",
     )
     expect(paused).toHaveLength(2)
-    const external = paused.find(
-      (event) => event.payload.intentId === "intent-external-effect",
-    )
+    const external = paused.find((event) => event.payload.intentId === "intent-external-effect")
     const processProbe = paused.find(
       (event) => event.payload.intentId === "intent-process-without-owner",
     )

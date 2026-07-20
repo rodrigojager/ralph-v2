@@ -177,14 +177,9 @@ describe("documentation structure checker", () => {
     const root = await createFixture([])
     await writeText(
       resolve(root, "README.md"),
-      [
-        "# Fixture",
-        "",
-        "[Missing by reference][guide]",
-        "",
-        "[guide]: docs/missing.md",
-        "",
-      ].join("\n"),
+      ["# Fixture", "", "[Missing by reference][guide]", "", "[guide]: docs/missing.md", ""].join(
+        "\n",
+      ),
     )
 
     const result = await checkDocumentation({ root })

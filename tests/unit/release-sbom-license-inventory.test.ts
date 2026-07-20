@@ -103,11 +103,21 @@ async function copyOpenCodeFixture(root: string): Promise<void> {
     "packages/commands/src/settings-command.ts",
     ...manifest.destinations.map((destination) => destination.path),
   ]
-  await Promise.all(
-    [...new Set(paths)].map((path) =>
+  const provenanceWorkspaces = paths.flatMap((path) => {
+    const match = /^(apps|packages)\/([^/]+)\//u.exec(path)
+    return match ? [`${match[1]}/${match[2]}`] : []
+  })
+  await Promise.all([
+    ...[...new Set(paths)].map((path) =>
       copyRegular(resolve(PROJECT_ROOT, path), resolve(root, path)),
     ),
-  )
+    ...[...new Set(provenanceWorkspaces)].map((workspace) =>
+      writeJson(resolve(root, workspace, "package.json"), {
+        name: `@fixture/${workspace.replace("/", "-")}`,
+        version: APPLICATION_VERSION,
+      }),
+    ),
+  ])
 }
 
 function curationFile(path: string, kind: CurationFile["kind"], contents: string): CurationFile {

@@ -671,13 +671,7 @@ const ALLOWED_OPTIONS: Record<CliCommand, ReadonlySet<keyof CliOptions>> = {
     "importAdapters",
     "importRecipes",
   ),
-  "migrate.rollback": options(
-    "format",
-    "noColor",
-    "debug",
-    "dryRun",
-    "confirmationPlanHash",
-  ),
+  "migrate.rollback": options("format", "noColor", "debug", "dryRun", "confirmationPlanHash"),
   verify: options(
     "format",
     "workspace",

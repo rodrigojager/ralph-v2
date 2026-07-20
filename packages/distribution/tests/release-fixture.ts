@@ -93,11 +93,7 @@ export async function createReleaseFixture(
 
   const launcherBytes = bytes(options.launcherText ?? `launcher:${options.version}`)
   const engineBytes = bytes(options.engineText ?? `engine:${options.version}`)
-  const launcher = await writePayload(
-    launcherPath,
-    launcherBytes,
-    "application/octet-stream",
-  )
+  const launcher = await writePayload(launcherPath, launcherBytes, "application/octet-stream")
   const executable = await writePayload(enginePath, engineBytes, "application/octet-stream")
 
   const buildMetadata = await writePayload(
@@ -220,7 +216,9 @@ export async function createReleaseFixture(
   ]
   const checksums = await writePayload(
     "support/SHA256SUMS",
-    bytes(checksumSubjects.map((payload) => `${payload.sha256} *${payload.path}`).join("\n") + "\n"),
+    bytes(
+      checksumSubjects.map((payload) => `${payload.sha256} *${payload.path}`).join("\n") + "\n",
+    ),
     "text/plain",
   )
 

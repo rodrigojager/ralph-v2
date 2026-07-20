@@ -66,15 +66,11 @@ describe("CI evidence structure", () => {
     expect(workflow).toContain("branches:\n      - main")
     expect(workflow).toContain("mkdir -p _site/schemas/v2")
     expect(workflow).toContain("cp schemas/*.schema.json _site/schemas/v2/")
-    expect(workflow).toContain(
-      "actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d",
-    )
+    expect(workflow).toContain("actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d")
     expect(workflow).toContain(
       "actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9",
     )
-    expect(workflow).toContain(
-      "actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128",
-    )
+    expect(workflow).toContain("actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128")
     expect(workflow).not.toMatch(/uses:\s+[^\s@]+@(v|main|master)(?:\d|\b)/u)
   })
 })

@@ -296,9 +296,10 @@ A fila operacional restante deve ser executada nesta ordem, sempre pelo wrapper 
    binários/candidato/digests explícitos e qualquer waiver externo aprovado. Exit `2` continua sendo
    `local-pass/release-blocked`, não conclusão.
 
-No início desta edição nenhum comando da fila havia sido executado. A licença e identidade já foram
-decididas; ainda faltam curadoria do runtime Bun, Git HEAD/origin, Gitleaks pinado local e release
-candidate até que as etapas seguintes produzam esses inputs.
+Nesta edição a licença/identidade foram decididas, existe HEAD local e a curadoria exata do runtime
+Bun foi materializada. O Gitleaks oficial Windows foi preso por SHA-256 e já deixou audit/scan
+verdes; ainda faltam confirmar o gate completo no novo HEAD, criar/confirmar origin, obter as
+execuções remotas e produzir o release candidate até que as etapas seguintes fechem esses inputs.
 
 ```text
 ralph-next prd validate <skill-generated-root> --recursive --strict

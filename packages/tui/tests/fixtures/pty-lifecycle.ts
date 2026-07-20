@@ -1,15 +1,15 @@
 import { readFile, writeFile } from "node:fs/promises"
 import {
+  installPtyChildDiagnostics,
+  markPtyChildStage,
+  writePtyChildOutput,
+} from "../../../../tests/fixtures/pty/child-diagnostics"
+import {
   createEmptyRunUiSnapshot,
   RunUiEventStore,
   type RunUiSnapshot,
   renderRunDashboard,
 } from "../../src"
-import {
-  installPtyChildDiagnostics,
-  markPtyChildStage,
-  writePtyChildOutput,
-} from "../../../../tests/fixtures/pty/child-diagnostics"
 
 installPtyChildDiagnostics()
 

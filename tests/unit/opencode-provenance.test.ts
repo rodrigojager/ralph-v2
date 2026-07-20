@@ -13,7 +13,7 @@ import { createTestDirectory, removeTestDirectory } from "../helpers/temp-direct
 const PROJECT_ROOT = resolve(import.meta.dir, "../..")
 const MANIFEST_PATH = resolve(PROJECT_ROOT, "third_party/opencode/PROVENANCE.json")
 const PINNED_COMMIT = "45cd8d76920839e4a7b6b931c4e26b52e1495636"
-const MANIFEST_SHA256 = "94217bef8ecd2f4b375e13eac0c7831578d70d7ca9d0e022ebb199456183b97f"
+const MANIFEST_SHA256 = "cd99039cd6c896980690c167e57a249058fca2f7fc5912d98c4aa77fcc99d2d8"
 const LICENSE_LF_SHA256 = "625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
 const SOURCE_PATHS = [
   "LICENSE",
@@ -99,9 +99,9 @@ describe("OpenCode structured provenance gate", () => {
       snapshotVerifiedDate: "2026-07-18",
     })
     expect(verified.manifest.sources.map((source) => source.path)).toEqual([...SOURCE_PATHS])
-    expect(verified.manifest.destinations.map((destination) => destination.path)).toEqual(
-      [...DESTINATION_PATHS],
-    )
+    expect(verified.manifest.destinations.map((destination) => destination.path)).toEqual([
+      ...DESTINATION_PATHS,
+    ])
     expect(verified.manifest.patches.map((patch) => patch.id)).toEqual(["P0001", "P0002", "P0003"])
     expect(verified.manifest.brandingPolicy).toMatchObject({
       productIdentityCopied: false,

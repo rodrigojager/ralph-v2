@@ -9,9 +9,7 @@
       "artifact": "artifacts/health-runbook.md",
       "artifactStatus": "passed",
       "filePresent": true,
-      "attemptStatuses": [
-        "passed"
-      ]
+      "attemptStatuses": ["passed"]
     },
     {
       "ref": "vertical-notes-lifecycle/note-create-flow",
@@ -19,14 +17,8 @@
       "artifact": "artifacts/note-contract.md",
       "artifactStatus": "passed",
       "filePresent": true,
-      "attemptStatuses": [
-        "rejected",
-        "passed"
-      ],
-      "judgeSequence": [
-        72,
-        96
-      ]
+      "attemptStatuses": ["rejected", "passed"],
+      "judgeSequence": [72, 96]
     },
     {
       "ref": "vertical-notes-lifecycle/note-resume-flow",
@@ -34,9 +26,7 @@
       "artifact": "artifacts/resume-checkpoint.md",
       "artifactStatus": "passed",
       "filePresent": true,
-      "attemptStatuses": [
-        "passed"
-      ]
+      "attemptStatuses": ["passed"]
     },
     {
       "ref": "vertical-notes/operator-diagnostics",
@@ -44,9 +34,7 @@
       "artifact": "artifacts/operator-runbook.md",
       "artifactStatus": "passed",
       "filePresent": true,
-      "attemptStatuses": [
-        "passed"
-      ]
+      "attemptStatuses": ["passed"]
     }
   ],
   "parentReconciliation": {

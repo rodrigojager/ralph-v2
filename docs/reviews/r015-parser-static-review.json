@@ -19,9 +19,7 @@
     {
       "id": "safe-yaml-frontmatter",
       "status": "confirmed",
-      "evidence": [
-        "packages/prd/src/parser.ts:410-432"
-      ],
+      "evidence": ["packages/prd/src/parser.ts:410-432"],
       "description": "PRD v2 frontmatter is decoded by the YAML document parser with strict mode, unique keys, the core schema and aliases disabled during conversion."
     },
     {
@@ -37,27 +35,19 @@
     {
       "id": "regex-bounded-to-leaf-values",
       "status": "confirmed",
-      "evidence": [
-        "packages/prd/src/parser.ts:654-668",
-        "packages/prd/src/parser.ts:709-768"
-      ],
+      "evidence": ["packages/prd/src/parser.ts:654-668", "packages/prd/src/parser.ts:709-768"],
       "description": "Regular expressions in the PRD v2 task-header path operate on scalar text already selected from AST leaf nodes; leaf coercion and diagnostics remain inside the leaf parser boundary."
     },
     {
       "id": "marker-edit-is-position-bound",
       "status": "confirmed",
-      "evidence": [
-        "packages/prd/src/parser.ts:1016-1041"
-      ],
+      "evidence": ["packages/prd/src/parser.ts:1016-1041"],
       "description": "The mutable three-character task marker is located from the AST source position and revalidated against the exact source slice before its location is exposed."
     },
     {
       "id": "classic-regex-isolation",
       "status": "confirmed",
-      "evidence": [
-        "packages/prd/src/classic.ts:72-75",
-        "packages/prd/src/parser.ts:1-33"
-      ],
+      "evidence": ["packages/prd/src/classic.ts:72-75", "packages/prd/src/parser.ts:1-33"],
       "description": "Broad line-oriented regular expressions belong to the separate classic compatibility adapter and are not imported into the PRD v2 parser."
     }
   ],

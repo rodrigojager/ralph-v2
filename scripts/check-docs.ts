@@ -17,6 +17,14 @@ const excludedDirectories = new Set([
   "node_modules",
 ])
 
+function containsC0OrDeleteControl(value: string): boolean {
+  for (const character of value) {
+    const codePoint = character.codePointAt(0)
+    if (codePoint !== undefined && (codePoint <= 0x1f || codePoint === 0x7f)) return true
+  }
+  return false
+}
+
 interface DocumentationIssue {
   readonly kind:
     | "invalid-link"
@@ -89,11 +97,7 @@ function portable(path: string, root = projectRoot): string {
 
 function insideRoot(root: string, path: string): boolean {
   const rootRelative = relative(root, path)
-  return (
-    rootRelative !== ".." &&
-    !rootRelative.startsWith(".." + sep) &&
-    !isAbsolute(rootRelative)
-  )
+  return rootRelative !== ".." && !rootRelative.startsWith(".." + sep) && !isAbsolute(rootRelative)
 }
 
 function comparisonPath(path: string): string {
@@ -332,9 +336,7 @@ async function collectMarkdownFiles(root: string, directory = root): Promise<rea
       if (extname(entry.name).toLowerCase() !== ".md") continue
       const inspected = await inspectSecurePath(root, path)
       if (!inspected.exists || !inspected.information?.isFile()) {
-        throw new UnsafeDocumentationPathError(
-          "Documentation scan file changed identity: " + path,
-        )
+        throw new UnsafeDocumentationPathError("Documentation scan file changed identity: " + path)
       }
       files.push(path)
       continue
@@ -466,7 +468,7 @@ function decodeLocalTarget(value: string): DecodedLocalTarget | null {
   try {
     const path = decodeURIComponent(encodedPath).replaceAll("\\", "/")
     const anchor = decodeURIComponent(encodedAnchor)
-    if (/[\u0000-\u001f\u007f]/u.test(path) || /[\u0000-\u001f\u007f]/u.test(anchor)) {
+    if (containsC0OrDeleteControl(path) || containsC0OrDeleteControl(anchor)) {
       return null
     }
     return { path, anchor }
@@ -493,7 +495,8 @@ async function destinationAvailability(
     if (error instanceof UnsafeDocumentationPathError) {
       return {
         kind: "unsafe",
-        message: "Local link traverses a symbolic link, junction, reparse point, or canonical escape.",
+        message:
+          "Local link traverses a symbolic link, junction, reparse point, or canonical escape.",
       }
     }
     throw error
@@ -531,9 +534,7 @@ export async function checkDocumentation(
       "Documentation root must be an existing regular directory: " + root,
     )
   }
-  const packageManifest = JSON.parse(
-    await readSecureText(root, resolve(root, "package.json")),
-  ) as {
+  const packageManifest = JSON.parse(await readSecureText(root, resolve(root, "package.json"))) as {
     readonly scripts?: Readonly<Record<string, unknown>>
   }
   const scripts = new Set(
@@ -726,10 +727,7 @@ export async function writeDocumentationReport(
   }
   await ensureSecureDirectory(root, dirname(absoluteOutput))
   const initial = await inspectSecurePath(root, absoluteOutput)
-  if (
-    initial.exists &&
-    (!initial.information?.isFile() || initial.information.isSymbolicLink())
-  ) {
+  if (initial.exists && (!initial.information?.isFile() || initial.information.isSymbolicLink())) {
     throw new UnsafeDocumentationPathError(
       "Documentation report destination must be a regular non-link file: " + absoluteOutput,
     )
@@ -739,11 +737,7 @@ export async function writeDocumentationReport(
     initial.information === undefined
       ? constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | noFollow
       : constants.O_WRONLY | noFollow
-  const handle = await open(
-    absoluteOutput,
-    createFlags,
-    0o600,
-  )
+  const handle = await open(absoluteOutput, createFlags, 0o600)
   let opened: Stats | undefined
   try {
     opened = await handle.stat()

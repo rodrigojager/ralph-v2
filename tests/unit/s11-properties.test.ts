@@ -199,9 +199,9 @@ describe("S11.03 deterministic property and fuzz matrix", () => {
         const originalGraph = original.graph
         if (!originalGraph) throw new Error("Generated DAG did not produce a graph")
         expect(originalGraph.rootDocumentId).toBe(generated.documentId)
-        expect(originalGraph.topologicalOrder.map((reference) => reference.taskId)).toEqual(
-          [...generated.taskIds],
-        )
+        expect(originalGraph.topologicalOrder.map((reference) => reference.taskId)).toEqual([
+          ...generated.taskIds,
+        ])
         const order = new Map(
           originalGraph.topologicalOrder.map((reference, index) => [reference.taskId, index]),
         )

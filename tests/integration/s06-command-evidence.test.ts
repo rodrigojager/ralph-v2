@@ -6,9 +6,9 @@ import { resolve } from "node:path"
 import { type CommandContext, executeCli, runCli } from "@ralph-next/commands"
 import {
   commandOperationReportHash,
+  type JudgeOutput,
   type JudgmentCommandReport,
   JudgmentCommandReportSchema,
-  type JudgeOutput,
   type VerificationCommandReport,
 } from "@ralph-next/domain"
 import type { JudgeBackend, JudgeEventSink, JudgeRequest } from "@ralph-next/evaluation"
@@ -107,7 +107,9 @@ async function fixtureWorkspace(name: "single-pass" | "two-task-order"): Promise
 }
 
 async function backendFor(root: string): Promise<ScriptedExecutionBackend> {
-  const steps = JSON.parse(await readFile(resolve(root, "backend.json"), "utf8")) as ScriptedExecution[]
+  const steps = JSON.parse(
+    await readFile(resolve(root, "backend.json"), "utf8"),
+  ) as ScriptedExecution[]
   return new ScriptedExecutionBackend(steps)
 }
 
@@ -130,7 +132,7 @@ async function replaceCommandGatesWithFiles(root: string): Promise<void> {
   let ordinal = 0
   const paths = ["delivery/contract.txt", "delivery/result.txt"]
   const source = await readFile(prdPath, "utf8")
-  const rewritten = source.replace(/^    - command: .*$/gm, () => {
+  const rewritten = source.replace(/^ {4}- command: .*$/gm, () => {
     const path = paths[ordinal]
     ordinal += 1
     if (!path) throw new Error("Unexpected command gate in two-task fixture")
@@ -366,15 +368,7 @@ describe("S06.12 standalone verify and judge commands", () => {
     let verifyHuman = ""
     let verifyHumanError = ""
     const verifyHumanExit = await runCli(
-      [
-        "verify",
-        `attempt:${publish.id}`,
-        "--workspace",
-        root,
-        "--format",
-        "human",
-        "--no-color",
-      ],
+      ["verify", `attempt:${publish.id}`, "--workspace", root, "--format", "human", "--no-color"],
       context,
       {
         stdout: (text) => {
@@ -644,9 +638,9 @@ describe("S06.12 standalone verify and judge commands", () => {
       contextFor(root, backend, () => unsafe),
     )
     expect(diagnosticCodes(unsafeResult)).toContain("RALPH_JUDGE_CAPABILITY_UNSAFE")
-    expect(listCommandOperations(layout.ledger, { command: "judge", status: "failed" })).toHaveLength(
-      1,
-    )
+    expect(
+      listCommandOperations(layout.ledger, { command: "judge", status: "failed" }),
+    ).toHaveLength(1)
     expect(await stateSnapshot(root, runId)).toEqual(before)
   })
 

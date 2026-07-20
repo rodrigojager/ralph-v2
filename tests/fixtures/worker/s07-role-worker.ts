@@ -1,7 +1,7 @@
 import {
   type RalphWorkerRoleAdapter,
-  type WorkerRole,
   runWorkerEntrypoint,
+  type WorkerRole,
 } from "@ralph-next/supervisor"
 
 async function observableDelay(signal: AbortSignal): Promise<void> {

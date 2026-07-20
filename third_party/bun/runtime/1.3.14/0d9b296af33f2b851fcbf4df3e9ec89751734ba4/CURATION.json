@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "runtime": "bun",
+  "version": "1.3.14",
+  "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+  "sourceRepository": "https://github.com/oven-sh/bun",
+  "sourceRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+  "completeScope": "license-notice-provenance-for-pinned-runtime",
+  "curatedAt": "2026-07-20T04:27:07.803Z",
+  "curatedBy": "Codex acting under explicit release-owner delegation from Rodrigo Jager",
+  "files": [
+    {
+      "path": "LICENSE.md",
+      "kind": "license",
+      "sizeBytes": 5377,
+      "sha256": "2cb858b2db8fc793bca2093489c5bc8eee615d002cc4924254904044c27a0afa"
+    },
+    {
+      "path": "PROVENANCE.md",
+      "kind": "provenance",
+      "sizeBytes": 3317,
+      "sha256": "eee38c7f71b02aaa13cf173f431d068214088e89506f55f1ea6368aca0074115"
+    }
+  ]
+}

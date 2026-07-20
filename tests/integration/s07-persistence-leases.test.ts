@@ -569,9 +569,7 @@ describe("S07.03 durable supervisor leases", () => {
         reason: "pid 4242 was reused with a different start token",
       },
     ])
-    expect([...readLeaseProbes(layout.ledger, "lease-original")]).toEqual([
-      ...replacement.probes,
-    ])
+    expect([...readLeaseProbes(layout.ledger, "lease-original")]).toEqual([...replacement.probes])
     expect(
       readEvents(layout.ledger)
         .filter((event) => event.payload.leaseId === "lease-original")

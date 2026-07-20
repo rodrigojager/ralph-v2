@@ -38,6 +38,25 @@ The `2026-07-18` response-safety, deadline, catalog-provenance and credential
 atomicity hardening modifies only Ralph-owned adaptation code. It does not add
 another OpenCode source file, package, runtime component or product identity.
 
+## Bun embedded runtime
+
+- Project: Bun
+- Source: <https://github.com/oven-sh/bun>
+- Release: <https://github.com/oven-sh/bun/releases/tag/bun-v1.3.14>
+- Exact version: `1.3.14`
+- Exact revision: `0d9b296af33f2b851fcbf4df3e9ec89751734ba4`
+- Official license/linked-library notice matrix:
+  [`third_party/bun/runtime/1.3.14/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/LICENSE.md`](third_party/bun/runtime/1.3.14/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/LICENSE.md)
+- Release, tag, commit, blob and target-asset receipts:
+  [`third_party/bun/runtime/1.3.14/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/PROVENANCE.md`](third_party/bun/runtime/1.3.14/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/PROVENANCE.md)
+- Deterministic curation manifest:
+  [`third_party/bun/runtime/1.3.14/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/CURATION.json`](third_party/bun/runtime/1.3.14/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/CURATION.json)
+
+Standalone Ralph artifacts embed the Bun runtime. Bun's official notice identifies Bun's own MIT
+license together with JavaScriptCore/WebKit, linked-library, embedded-polyfill and credit material;
+the copied upstream matrix must accompany the runtime. The local manifest binds the exact bytes
+used for packaging and does not replace the upstream obligations or constitute a legal opinion.
+
 ## Complete artifact inventory
 
 The source notice above is not a substitute for the texts required by every

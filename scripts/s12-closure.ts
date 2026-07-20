@@ -1,16 +1,16 @@
 import { createHash } from "node:crypto"
 import {
   lstat,
-  mkdtemp,
   mkdir,
-  readFile,
+  mkdtemp,
   readdir,
+  readFile,
   realpath,
   rmdir,
   unlink,
   writeFile,
 } from "node:fs/promises"
-import { arch, hostname, platform, release as osRelease, tmpdir } from "node:os"
+import { arch, hostname, release as osRelease, platform, tmpdir } from "node:os"
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path"
 import {
   BunProcessSupervisor,
@@ -25,7 +25,7 @@ import {
   validateBundleArtifact,
   validateStandaloneArtifact,
 } from "./build-artifact"
-import { createCheckPlan, type CheckStep } from "./check-plan"
+import { type CheckStep, createCheckPlan } from "./check-plan"
 import {
   GITLEAKS_VERSION,
   gitleaksTrackedSourceScanArguments,
@@ -35,9 +35,9 @@ import {
 } from "./gitleaks-binding"
 import {
   effectiveReleaseCandidateDigest,
+  type ReleaseCandidateInput,
   readReleaseCandidateInput,
   readStableJsonInput,
-  type ReleaseCandidateInput,
 } from "./release-candidate-input"
 import { compareUtf8Bytes } from "./release-order"
 import { canonicalReleaseRepository } from "./release-source"
@@ -84,6 +84,14 @@ const structuredSecretPattern = new RegExp(
     String.raw`client[_-]?secret|password)\s*["']?\s*[:=]\s*["']?)[^\s,"']+`,
   "giu",
 )
+
+function containsC0OrDeleteControl(value: string): boolean {
+  for (const character of value) {
+    const codePoint = character.codePointAt(0)
+    if (codePoint !== undefined && (codePoint <= 0x1f || codePoint === 0x7f)) return true
+  }
+  return false
+}
 const excludedSourceDirectories = new Set([
   ".git",
   ".ralph",
@@ -459,8 +467,14 @@ async function writeEvidenceFile(path: string, value: string): Promise<void> {
   }
   await writeFile(absolute, value, { encoding: "utf8", flag: "wx" })
   const written = await lstat(absolute)
-  if (!written.isFile() || written.isSymbolicLink() || !samePath(await realpath(absolute), absolute)) {
-    throw new Error(`Evidence output is not a canonical regular file: ${portableProjectPath(absolute)}`)
+  if (
+    !written.isFile() ||
+    written.isSymbolicLink() ||
+    !samePath(await realpath(absolute), absolute)
+  ) {
+    throw new Error(
+      `Evidence output is not a canonical regular file: ${portableProjectPath(absolute)}`,
+    )
   }
   const bytes = Buffer.byteLength(value)
   intendedEvidenceFiles.set(comparablePath(absolute), {
@@ -641,20 +655,14 @@ async function runStep(
     treeTerminated = settlement.treeTerminated
     observeRawOutput?.(settlement.rawStdout, settlement.rawStderr)
     const isRemoteProbe = step.id === "git-remotes" || step.id.startsWith("git-remote-")
-    const archivalStdout =
-      isRemoteProbe ? redactGitRemoteOutput(settlement.rawStdout) : settlement.rawStdout
-    const archivalStderr =
-      isRemoteProbe ? redactGitRemoteOutput(settlement.rawStderr) : settlement.rawStderr
-    stdout = capturedText(
-      archivalStdout,
-      settlement.stdoutBytes,
-      settlement.rawOutputTruncated,
-    )
-    stderr = capturedText(
-      archivalStderr,
-      settlement.stderrBytes,
-      settlement.rawOutputTruncated,
-    )
+    const archivalStdout = isRemoteProbe
+      ? redactGitRemoteOutput(settlement.rawStdout)
+      : settlement.rawStdout
+    const archivalStderr = isRemoteProbe
+      ? redactGitRemoteOutput(settlement.rawStderr)
+      : settlement.rawStderr
+    stdout = capturedText(archivalStdout, settlement.stdoutBytes, settlement.rawOutputTruncated)
+    stderr = capturedText(archivalStderr, settlement.stderrBytes, settlement.rawOutputTruncated)
     exitCode = settlement.exitCode ?? 127
     if (timedOut) {
       exitCode = 124
@@ -696,9 +704,7 @@ async function runStep(
   return {
     id: step.id,
     label: step.label,
-    command: step.command.map((argument) =>
-      redactClosureText(portableCommandArgument(argument)),
-    ),
+    command: step.command.map((argument) => redactClosureText(portableCommandArgument(argument))),
     startedAt,
     finishedAt: new Date().toISOString(),
     durationMs: Math.round(performance.now() - started),
@@ -768,9 +774,7 @@ async function observeGitSource(evidenceRoot: string, phase: "before" | "after")
   )
   const head = /^[a-f\d]{40}$/iu.test(rawHead.trim()) ? rawHead.trim().toLowerCase() : null
   const clean = statusStep.status === "pass" && rawStatus.trim().length === 0
-  const repositorySha256 = repository
-    ? createHash("sha256").update(repository).digest("hex")
-    : null
+  const repositorySha256 = repository ? createHash("sha256").update(repository).digest("hex") : null
   return {
     steps: [headStep, statusStep, remoteStep] as const,
     probes: {
@@ -884,15 +888,17 @@ const ClosureCompletionReceiptSchema = z
       .object({
         evaluatedAt: z.iso.datetime({ offset: true }),
         approvedBlockerIds: z.array(z.string().regex(/^BLK-[A-Z0-9-]+$/u)).max(7),
-        earliestExpiry: z.string().regex(/^\d{4}-\d{2}-\d{2}$/u).nullable(),
+        earliestExpiry: z
+          .string()
+          .regex(/^\d{4}-\d{2}-\d{2}$/u)
+          .nullable(),
       })
       .strict(),
     authority: z.literal(completionAuthority),
   })
   .strict()
   .superRefine((receipt, context) => {
-    const expectedEligible =
-      receipt.localStatus === "pass" && receipt.releaseStatus === "ready"
+    const expectedEligible = receipt.localStatus === "pass" && receipt.releaseStatus === "ready"
     const expectedStatus =
       receipt.localStatus === "fail"
         ? "local-fail/release-blocked"
@@ -908,8 +914,7 @@ const ClosureCompletionReceiptSchema = z
     }
     if (
       receipt.sourceBinding.resolved !== (receipt.sourceBinding.finalGit.status === "matched") ||
-      receipt.sourceBinding.resolved !==
-        (receipt.sourceBinding.boundSourceSubjectSha256 !== null)
+      receipt.sourceBinding.resolved !== (receipt.sourceBinding.boundSourceSubjectSha256 !== null)
     ) {
       context.addIssue({
         code: "custom",
@@ -1030,7 +1035,11 @@ async function finalGitObservation(input: {
   if (!/^[a-f0-9]{40}$/u.test(head)) {
     throw new Error("Final Git HEAD observation is invalid")
   }
-  if (head !== input.expectedHead || status.length !== 0 || repository !== input.expectedRepository) {
+  if (
+    head !== input.expectedHead ||
+    status.length !== 0 ||
+    repository !== input.expectedRepository
+  ) {
     throw new Error("Git source identity or cleanliness changed before closure completion")
   }
   return {
@@ -1084,7 +1093,7 @@ function assertPortableInventoryPath(path: string): void {
     path.normalize("NFC") !== path ||
     path.startsWith("/") ||
     path.includes("\\") ||
-    /[\u0000-\u001f\u007f]/u.test(path) ||
+    containsC0OrDeleteControl(path) ||
     segments.some(
       (segment) =>
         !segment ||
@@ -1107,12 +1116,17 @@ async function collectInventory(
 ): Promise<readonly FileReceipt[]> {
   const canonicalRoot = await realpath(root)
   const canonicalDirectory = await realpath(directory)
-  if (!insideDirectory(canonicalRoot, canonicalDirectory) && !samePath(canonicalRoot, canonicalDirectory)) {
+  if (
+    !insideDirectory(canonicalRoot, canonicalDirectory) &&
+    !samePath(canonicalRoot, canonicalDirectory)
+  ) {
     throw new Error(`Inventory directory escaped its root: ${portableProjectPath(directory)}`)
   }
   const directoryInfo = await lstat(directory)
   if (!directoryInfo.isDirectory() || directoryInfo.isSymbolicLink()) {
-    throw new Error(`Inventory root contains a reparse directory: ${portableProjectPath(directory)}`)
+    throw new Error(
+      `Inventory root contains a reparse directory: ${portableProjectPath(directory)}`,
+    )
   }
   const entries = (await readdir(directory, { withFileTypes: true })).sort((left, right) =>
     compareUtf8Bytes(left.name, right.name),
@@ -1177,10 +1191,7 @@ function inventoryAddress(files: readonly FileReceipt[]): string {
   return createHash("sha256").update(canonical, "utf8").digest("hex")
 }
 
-function sameCandidateInput(
-  left: ReleaseCandidateInput,
-  right: ReleaseCandidateInput,
-): boolean {
+function sameCandidateInput(left: ReleaseCandidateInput, right: ReleaseCandidateInput): boolean {
   return (
     samePath(left.path, right.path) &&
     left.sha256 === right.sha256 &&
@@ -1314,7 +1325,8 @@ function validateRequirements(
         blocker.id === "BLK-COMPAT-BINARIES"
           ? "block-release-when-inputs-absent-or-mismatched"
           : "block-release"
-      if (blocker.status !== expectedStatus) issues.push(`${blocker.id} has an invalid policy status`)
+      if (blocker.status !== expectedStatus)
+        issues.push(`${blocker.id} has an invalid policy status`)
       if (blocker.disposition !== expectedDisposition) {
         issues.push(`${blocker.id} has an invalid policy disposition`)
       }
@@ -1346,7 +1358,9 @@ function parseEvidenceCatalogIds(markdown: string): ReadonlySet<string> {
     throw new Error("Evidence catalogue is missing or appears after the requirement ledger")
   }
   const ids = new Set<string>()
-  for (const match of markdown.slice(start, ledgerStart).matchAll(/^\|\s*`?(EV-[A-Z0-9-]+)`?\s*\|/gmu)) {
+  for (const match of markdown
+    .slice(start, ledgerStart)
+    .matchAll(/^\|\s*`?(EV-[A-Z0-9-]+)`?\s*\|/gmu)) {
     const id = match[1]
     if (!id) continue
     if (ids.has(id)) throw new Error(`Duplicate evidence catalogue ID ${id}`)
@@ -1512,7 +1526,9 @@ async function compatibilityReceipt(
   const safeReportJsonText = redactClosureText(reportJsonText)
   const safeReportMarkdownText = redactClosureText(reportMarkdownText)
   if (safeReportJsonText !== reportJsonText || safeReportMarkdownText !== reportMarkdownText) {
-    inputIssues.push("S10 report required redaction and cannot be treated as exact archival evidence")
+    inputIssues.push(
+      "S10 report required redaction and cannot be treated as exact archival evidence",
+    )
   }
   await writeEvidenceFile(copiedJson, safeReportJsonText)
   await writeEvidenceFile(copiedMarkdown, safeReportMarkdownText)
@@ -1592,11 +1608,7 @@ async function compatibilityReceipt(
     nextReceipt?.sha256 === report.binaries?.next?.sha256Before
   const inputsSupplied = Boolean(options.legacyBinary && options.nextBinary)
   const resolved =
-    reportValid &&
-    reportSourceFresh &&
-    inputsSupplied &&
-    inputIssues.length === 0 &&
-    hashesMatch
+    reportValid && reportSourceFresh && inputsSupplied && inputIssues.length === 0 && hashesMatch
   return {
     value: {
       schemaVersion: 1,
@@ -1607,11 +1619,11 @@ async function compatibilityReceipt(
           ? "invalid-report"
           : !reportSourceFresh
             ? "stale-source"
-        : inputIssues.length > 0
-          ? "invalid-input"
-          : inputsSupplied
-            ? "binary-hash-mismatch"
-            : "historical-local-pass-inputs-absent",
+            : inputIssues.length > 0
+              ? "invalid-input"
+              : inputsSupplied
+                ? "binary-hash-mismatch"
+                : "historical-local-pass-inputs-absent",
       report: {
         valid: reportValid,
         sourceFresh: reportSourceFresh,
@@ -1743,7 +1755,9 @@ async function readStableBoundedFile(path: string, maximumBytes: number): Promis
     throw new Error(`Expected a bounded regular non-symlink file: ${portableProjectPath(path)}`)
   }
   if (!samePath(await realpath(path), path)) {
-    throw new Error(`Bounded file resolves through a link or junction: ${portableProjectPath(path)}`)
+    throw new Error(
+      `Bounded file resolves through a link or junction: ${portableProjectPath(path)}`,
+    )
   }
   const bytes = await readFile(path)
   const after = await lstat(path)
@@ -1776,10 +1790,7 @@ async function sanitizeJunitReport(rawPath: string, outputPath: string): Promise
       const variants = xmlSecretVariants(secret).sort((left, right) => right.length - left.length)
       for (const variant of variants) sanitized = sanitized.split(variant).join("[REDACTED]")
     }
-    sanitized = redactClosureText(sanitized).replace(
-      /<(REDACTED(?:_[A-Z0-9]+)*)>/gu,
-      "[$1]",
-    )
+    sanitized = redactClosureText(sanitized).replace(/<(REDACTED(?:_[A-Z0-9]+)*)>/gu, "[$1]")
     for (const secret of environmentSecrets) {
       if (secret.length >= 4 && containsLiteralOrXmlEncodedSecret(sanitized, secret)) {
         throw new Error(
@@ -1951,8 +1962,7 @@ async function validateGlobalTestEvidence(
     const selfClosingMatch = selfClosing.exec(junit)
     const pairedMatch = paired.exec(junit)
     const selfClosingPassed =
-      selfClosingMatch !== null &&
-      !/\bstatus="(?:skipped|failed|error)"/u.test(selfClosingMatch[0])
+      selfClosingMatch !== null && !/\bstatus="(?:skipped|failed|error)"/u.test(selfClosingMatch[0])
     const pairedPassed =
       pairedMatch !== null &&
       !/\bstatus="(?:skipped|failed|error)"/u.test(pairedMatch[0]) &&
@@ -1982,7 +1992,12 @@ async function validateGlobalTestEvidence(
 async function validateDependencyAudit(path: string): Promise<FileReceipt> {
   const bytes = await readStableBoundedFile(path, maximumLogBytes)
   const value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)) as unknown
-  if (!value || typeof value !== "object" || Array.isArray(value) || Object.keys(value).length !== 0) {
+  if (
+    !value ||
+    typeof value !== "object" ||
+    Array.isArray(value) ||
+    Object.keys(value).length !== 0
+  ) {
     throw new Error("Dependency audit JSON must be an empty top-level object")
   }
   return {
@@ -2109,17 +2124,21 @@ async function main(): Promise<number> {
   const securitySteps: (StepResult & { readonly localGate: boolean })[] = []
   const dependencyAuditPath = resolve(evidenceRoot, "dependency-audit.json")
   securitySteps.push(
-    await runStep(evidenceRoot, {
-      id: "dependency-audit",
-      label: "Structured Bun dependency audit",
-      command: [
-        process.execPath,
-        "run",
-        "scripts/ci/dependency-audit.ts",
-        "--output",
-        dependencyAuditPath,
-      ],
-    }, true),
+    await runStep(
+      evidenceRoot,
+      {
+        id: "dependency-audit",
+        label: "Structured Bun dependency audit",
+        command: [
+          process.execPath,
+          "run",
+          "scripts/ci/dependency-audit.ts",
+          "--output",
+          dependencyAuditPath,
+        ],
+      },
+      true,
+    ),
   )
   const securityIssues: string[] = []
   let dependencyAuditReceipt: FileReceipt | null = null
@@ -2463,8 +2482,7 @@ async function main(): Promise<number> {
         gitRepositoryStable && canonicalCandidateRepository === gitAfter.repository
       candidateCommitMatches = gitHeadStable && candidateInput.subject.commit === gitAfter.head
       candidateFingerprintMatches =
-        sourceStable &&
-        candidateInput.subject.sourceFingerprintSha256 === sourceFingerprintAfter
+        sourceStable && candidateInput.subject.sourceFingerprintSha256 === sourceFingerprintAfter
     } catch (error) {
       candidateIssues.push(error instanceof Error ? error.message : String(error))
       candidateContentVerified = false
@@ -2474,7 +2492,9 @@ async function main(): Promise<number> {
   }
   if (candidateContentVerified) {
     if (gitStable && !candidateRepositoryMatches) {
-      candidateSourceIssues.push("Candidate repository identity differs from the observed Git origin")
+      candidateSourceIssues.push(
+        "Candidate repository identity differs from the observed Git origin",
+      )
     }
     if (gitStable && !candidateCommitMatches) {
       candidateSourceIssues.push("Candidate commit differs from the stable observed Git HEAD")
@@ -2521,7 +2541,8 @@ async function main(): Promise<number> {
             selfContained: false,
             retrievalLocatorArchived: false,
             rawMetadataArchived: false,
-            reason: "Raw candidate metadata can contain repository or payload URLs; the closure stores only its observed exact digest and typed URL-free projection. Independent recomputation requires the separately retained external candidate input.",
+            reason:
+              "Raw candidate metadata can contain repository or payload URLs; the closure stores only its observed exact digest and typed URL-free projection. Independent recomputation requires the separately retained external candidate input.",
           }
         : null,
     kind: candidateInput?.kind ?? null,
@@ -2546,9 +2567,7 @@ async function main(): Promise<number> {
       comparable: candidateSourceComparable,
       matched: candidateSourceMatched,
     },
-    issues: [...candidateIssues, ...candidateSourceIssues].map((issue) =>
-      redactClosureText(issue),
-    ),
+    issues: [...candidateIssues, ...candidateSourceIssues].map((issue) => redactClosureText(issue)),
   })
 
   const waiverIssues: string[] = []
@@ -2587,7 +2606,9 @@ async function main(): Promise<number> {
       for (const approval of parsed.approvals) {
         const blocker = blockersForObservation.find((item) => item.id === approval.blockerId)
         if (!blocker || blocker.owner !== approval.owner) {
-          throw new Error(`External waiver owner differs from blocker policy: ${approval.blockerId}`)
+          throw new Error(
+            `External waiver owner differs from blocker policy: ${approval.blockerId}`,
+          )
         }
       }
       externalWaiverArtifact = parsed
@@ -2734,7 +2755,8 @@ async function main(): Promise<number> {
       manifest: "evidence-manifest.json",
       checksums: "SHA256SUMS",
       completionReceipt: "closure-complete.json",
-      policy: "The manifest and checksums must validate and closure-complete.json must commit their exact hashes before this binding is effective.",
+      policy:
+        "The manifest and checksums must validate and closure-complete.json must commit their exact hashes before this binding is effective.",
     },
   })
 
@@ -2752,13 +2774,13 @@ async function main(): Promise<number> {
         ? { approvedForRun: false, reason: "source-binding-is-non-waivable" }
         : dynamicResolved
           ? { approvedForRun: false, reason: "waiver-not-needed-dynamic-evidence" }
-        : waiverObservation(
-            blocker.waiver,
-            externalApproval,
-            externalWaiverArtifact?.subject.effectiveCandidateDigest,
-            sourceBound ? (effectiveCandidateDigest ?? undefined) : undefined,
-            waiverEvaluatedAt,
-          )
+          : waiverObservation(
+              blocker.waiver,
+              externalApproval,
+              externalWaiverArtifact?.subject.effectiveCandidateDigest,
+              sourceBound ? (effectiveCandidateDigest ?? undefined) : undefined,
+              waiverEvaluatedAt,
+            )
     const resolvedForRun = dynamicResolved || waiver.approvedForRun
     return {
       ...blocker,
@@ -2789,7 +2811,7 @@ async function main(): Promise<number> {
             ? { compatibilityReceipt: "compatibility-receipt.json" }
             : blocker.id === "BLK-R015-REVIEW"
               ? { reviewBinding: "r015-review-binding.json" }
-            : null,
+              : null,
     }
   })
   const approvedWaiverBlockerIds = observedBlockers
@@ -2814,19 +2836,21 @@ async function main(): Promise<number> {
     ),
     blockers: observedBlockers,
   })
-  const localFailures = [...new Set([
-    ...steps.filter((step) => step.localGate && step.status === "fail").map((step) => step.id),
-    ...(junitSanitizationIssues.length > 0 ? ["junit-sanitization"] : []),
-    ...(!globalTests.valid ? ["global-test-evidence"] : []),
-    ...(securityIssues.length > 0 ? ["security-evidence"] : []),
-    ...(!distribution.valid ? ["distribution-evidence"] : []),
-    ...(candidateIssues.length > 0 ? ["candidate-binding-input"] : []),
-    ...(candidateSourceIssues.length > 0 ? ["candidate-source-mismatch"] : []),
-    ...(waiverIssues.length > 0 ? ["waiver-binding-input"] : []),
-    ...(compatibility.localInputError ? ["compatibility-input"] : []),
-    ...(requirementIssues.length > 0 ? ["requirements-ledger"] : []),
-    ...(!sourceStable ? ["source-changed-during-closure"] : []),
-  ])].sort(compareUtf8Bytes)
+  const localFailures = [
+    ...new Set([
+      ...steps.filter((step) => step.localGate && step.status === "fail").map((step) => step.id),
+      ...(junitSanitizationIssues.length > 0 ? ["junit-sanitization"] : []),
+      ...(!globalTests.valid ? ["global-test-evidence"] : []),
+      ...(securityIssues.length > 0 ? ["security-evidence"] : []),
+      ...(!distribution.valid ? ["distribution-evidence"] : []),
+      ...(candidateIssues.length > 0 ? ["candidate-binding-input"] : []),
+      ...(candidateSourceIssues.length > 0 ? ["candidate-source-mismatch"] : []),
+      ...(waiverIssues.length > 0 ? ["waiver-binding-input"] : []),
+      ...(compatibility.localInputError ? ["compatibility-input"] : []),
+      ...(requirementIssues.length > 0 ? ["requirements-ledger"] : []),
+      ...(!sourceStable ? ["source-changed-during-closure"] : []),
+    ]),
+  ].sort(compareUtf8Bytes)
   const localStatus = localFailures.length === 0 ? "pass" : "fail"
   const releaseBlocked = observedBlockers.some(
     (blocker) => blocker.observedDisposition === "blocking-this-run",

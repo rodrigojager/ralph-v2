@@ -45,7 +45,7 @@ fail-closed antes de produzir um artifact publicável.
 - [ ] `third_party/licenses/manifest.json` contém textos e SHA-256 de todo componente runtime exato;
 - [ ] variantes peer de um mesmo nome/versão possuem inventário de licença idêntico;
 - [ ] curação Bun local corresponde à versão/revisão exata de todos os standalone engine/launchers;
-- [ ] `CURATION.json` do Bun declara escopo completo, licença/copying, provenance e nenhum arquivo
+- [x] `CURATION.json` do Bun declara escopo completo, licença/copying, provenance e nenhum arquivo
   extra ou ausente;
 - [ ] cada workspace runtime alcançável é idêntico no `package.json` e no `bun.lock`;
 - [ ] `THIRD_PARTY_NOTICES.md` dentro do artifact;
@@ -58,9 +58,12 @@ omitir componentes. O gate ainda exige repetir esse vínculo no checkout/commit 
 
 Metadata de licença no SBOM não fecha este gate sozinha. O packager deriva o inventário do SBOM
 serializado, exige textos reais no Bun store e grava hashes no artifact. Para standalone, também
-exige a curação offline em `third_party/bun/runtime/<version>/<revision>/CURATION.json`; essa árvore
-não existe atualmente e precisa ser produzida/revisada pelo release owner. O packager não acessa a
-rede e não inventa o material, portanto a ausência continua sendo blocker explícito.
+exige a curação offline em `third_party/bun/runtime/<version>/<revision>/CURATION.json`. A árvore
+exata do Bun `1.3.14`/`0d9b296af33f2b851fcbf4df3e9ec89751734ba4` foi materializada a partir da
+fonte oficial com licença, provenance e receipts; os contratos de tamper/arquivo extra/ausente/
+symlink/revision passaram na seleção focada. O vínculo com todos os engines/launchers e o inventário
+final do candidato continuam pendentes até package e matriz reais. O packager permanece offline e
+fail-closed.
 
 ## Gate C — build por target
 

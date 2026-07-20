@@ -32,9 +32,9 @@ describe("release candidate input", () => {
     expect(input.kind).toBe("release-manifest")
     if (input.kind !== "release-manifest") throw new Error("Expected a release manifest fixture")
     expect(input.payloads.length).toBeGreaterThan(5)
-    expect(input.payloads.every((payload) => payload.verification === "declared-size-and-hash")).toBe(
-      true,
-    )
+    expect(
+      input.payloads.every((payload) => payload.verification === "declared-size-and-hash"),
+    ).toBe(true)
     expect(effectiveReleaseCandidateDigest(input)).toMatch(/^sha256:[a-f0-9]{64}$/u)
 
     const changedAddress = effectiveReleaseCandidateDigest({
@@ -125,9 +125,9 @@ describe("release candidate input", () => {
     const fixture = await releaseFixture()
     const controller = new AbortController()
     controller.abort()
-    await expect(readReleaseCandidateInput(fixture.manifestPath, controller.signal)).rejects.toThrow(
-      "Candidate verification was cancelled",
-    )
+    await expect(
+      readReleaseCandidateInput(fixture.manifestPath, controller.signal),
+    ).rejects.toThrow("Candidate verification was cancelled")
 
     const missing = resolve(fixture.directory, "private-host-segment", "missing.json")
     try {

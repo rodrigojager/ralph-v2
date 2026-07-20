@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto"
-import { lstat, mkdir, readFile, readdir, realpath, writeFile } from "node:fs/promises"
+import { lstat, mkdir, readdir, readFile, realpath, writeFile } from "node:fs/promises"
 import { hostname, release as osRelease, version as osVersion } from "node:os"
 import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path"
 
@@ -75,8 +75,7 @@ const MAX_JSON_SNAPSHOT_BYTES = 16 * 1024 * 1024
 const EXPECTED_BUN_VERSION = "1.3.14"
 const EXPECTED_BUN_REVISION = "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
 const GITLEAKS_VERSION = "8.30.1"
-const GITLEAKS_ARCHIVE_SHA256 =
-  "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+const GITLEAKS_ARCHIVE_SHA256 = "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
 const GITLEAKS_LINUX_X64_BINARY_SHA256 =
   "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
 const GITLEAKS_LINUX_X64_BINARY_BYTES = 21_958_840
@@ -85,6 +84,14 @@ const GITLEAKS_SOURCE =
   "gitleaks_8.30.1_linux_x64.tar.gz"
 
 const projectRoot = resolve(import.meta.dir, "../..")
+
+function containsC0OrDeleteControl(value: string): boolean {
+  for (const character of value) {
+    const codePoint = character.codePointAt(0)
+    if (codePoint !== undefined && (codePoint <= 0x1f || codePoint === 0x7f)) return true
+  }
+  return false
+}
 
 function requiredValue(argv: readonly string[], index: number, flag: string): string {
   const value = argv[index + 1]
@@ -176,7 +183,7 @@ function portableProjectPath(path: string): string {
         segment === ".." ||
         segment.includes("/") ||
         segment.includes("\\") ||
-        /[\u0000-\u001f\u007f]/u.test(segment),
+        containsC0OrDeleteControl(segment),
     )
   ) {
     throw new Error(`Evidence path is not portable: ${JSON.stringify(projectRelative)}`)
@@ -291,9 +298,7 @@ async function parseSelectedJsonEvidence(
       }
       parsed.push({
         path: match.path,
-        value: JSON.parse(
-          new TextDecoder("utf-8", { fatal: true }).decode(match.jsonSnapshot),
-        ),
+        value: JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(match.jsonSnapshot)),
         parseError: null,
       })
     } catch (error) {
@@ -422,18 +427,12 @@ function commandContracts(
     }
   }
   if (kind === "native-platform") {
-    const binary =
-      `dist/standalone/${target}/ralph-next${os === "windows" ? ".exe" : ""}`
+    const binary = `dist/standalone/${target}/ralph-next${os === "windows" ? ".exe" : ""}`
     return {
       install: { executable: "bun", arguments: ["install", "--frozen-lockfile"] },
       architecture: {
         executable: "bun",
-        arguments: [
-          "run",
-          "scripts/ci/assert-architecture.ts",
-          "--expected",
-          architecture,
-        ],
+        arguments: ["run", "scripts/ci/assert-architecture.ts", "--expected", architecture],
       },
       "matrix-tests": {
         executable: "bun",
@@ -559,10 +558,7 @@ function commandContracts(
 }
 
 function sameArguments(left: readonly unknown[], right: readonly string[]): boolean {
-  return (
-    left.length === right.length &&
-    left.every((argument, index) => argument === right[index])
-  )
+  return left.length === right.length && left.every((argument, index) => argument === right[index])
 }
 
 async function resolvedExecutableName(requested: string): Promise<string | null> {
@@ -595,10 +591,7 @@ async function validateStepReceipts(
   const executableNames = new Map<string, string | null>()
   for (const contract of Object.values(contracts)) {
     if (!executableNames.has(contract.executable)) {
-      executableNames.set(
-        contract.executable,
-        await resolvedExecutableName(contract.executable),
-      )
+      executableNames.set(contract.executable, await resolvedExecutableName(contract.executable))
     }
   }
   const executableIdentities = new Map<
@@ -665,10 +658,7 @@ async function validateStepReceipts(
       issues.push(`CI step receipt executable does not match the resolved ${kind}/${id} command`)
     } else {
       const previous = executableIdentities.get(contract.executable)
-      if (
-        previous &&
-        (previous.bytes !== command.bytes || previous.sha256 !== command.sha256)
-      ) {
+      if (previous && (previous.bytes !== command.bytes || previous.sha256 !== command.sha256)) {
         issues.push(
           `CI executable identity changed between ${kind} step receipts: ${contract.executable}`,
         )
@@ -785,8 +775,7 @@ function validateGitleaksInstall(
     const binaryPath = value?.binaryPath
     const binaryBytes = value?.binaryBytes
     const binarySha256 = value?.binarySha256
-    const binaryEvidence =
-      typeof binaryPath === "string" ? filesByPath.get(binaryPath) : undefined
+    const binaryEvidence = typeof binaryPath === "string" ? filesByPath.get(binaryPath) : undefined
     if (
       value?.schemaVersion !== 1 ||
       value?.artifactClass !== "pinned-ci-tool-install" ||
@@ -907,8 +896,7 @@ const packageManifest = JSON.parse(
   readonly packageManager?: unknown
   readonly version?: unknown
 }
-const packageVersion =
-  typeof packageManifest.version === "string" ? packageManifest.version : null
+const packageVersion = typeof packageManifest.version === "string" ? packageManifest.version : null
 if (packageManifest.name !== "ralph-v2") {
   issues.push("package.json name must remain ralph-v2 for CI evidence")
 }
@@ -919,7 +907,7 @@ if (
   typeof packageManifest.version !== "string" ||
   packageManifest.version.length === 0 ||
   packageManifest.version.length > 128 ||
-  /[\u0000-\u001f\u007f]/u.test(packageManifest.version)
+  containsC0OrDeleteControl(packageManifest.version)
 ) {
   issues.push("package.json version must be a non-empty bounded control-safe string")
 }
@@ -1054,8 +1042,7 @@ for (const contract of evidenceContracts) {
 const stepReceipts = await parseSelectedJsonEvidence(
   snapshotFiles.filter(
     (file) =>
-      file.path.startsWith("artifacts/ci/steps/") &&
-      file.path.toLowerCase().endsWith(".json"),
+      file.path.startsWith("artifacts/ci/steps/") && file.path.toLowerCase().endsWith(".json"),
   ),
 )
 const receiptsById = await validateStepReceipts(
@@ -1103,10 +1090,7 @@ if (options.kind === "security-gates") {
   issues.push("security reports are unexpected outside the security-gates evidence kind")
 }
 
-const bundleMetadata = await parseJsonEvidencePath(
-  snapshotFiles,
-  "dist/bundle-build-metadata.json",
-)
+const bundleMetadata = await parseJsonEvidencePath(snapshotFiles, "dist/bundle-build-metadata.json")
 const standaloneMetadata = await parseJsonEvidencePath(
   snapshotFiles,
   `dist/standalone/${actualTarget}/build-metadata.json`,

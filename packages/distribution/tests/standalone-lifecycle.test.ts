@@ -1,15 +1,6 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { createHash, randomUUID } from "node:crypto"
-import {
-  mkdir,
-  mkdtemp,
-  readFile,
-  readdir,
-  realpath,
-  rm,
-  stat,
-  writeFile,
-} from "node:fs/promises"
+import { mkdir, mkdtemp, readdir, readFile, realpath, rm, stat, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { basename, dirname, join, resolve } from "node:path"
 import { type CommandContext, executeCli } from "@ralph-next/commands"
@@ -78,7 +69,12 @@ async function exists(path: string): Promise<boolean> {
   return stat(path)
     .then(() => true)
     .catch((error: unknown) => {
-      if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        error.code === "ENOENT"
+      ) {
         return false
       }
       throw error
@@ -111,7 +107,9 @@ async function installFixture(installRoot: string, fixture: ReleaseFixture): Pro
 
 async function readPointer(installRoot: string) {
   const layout = resolveStandaloneInstallLayout(installRoot)
-  return CurrentInstallPointerSchema.parse(JSON.parse(await readFile(layout.currentPointer, "utf8")))
+  return CurrentInstallPointerSchema.parse(
+    JSON.parse(await readFile(layout.currentPointer, "utf8")),
+  )
 }
 
 describe("S12.02 standalone distribution local contract", () => {
@@ -495,12 +493,7 @@ describe("S12.02 standalone distribution local contract", () => {
 
   test("journal recovery reconciles planned, staged, verified and activated update crashes", async () => {
     const root = await temporaryDirectory()
-    const points: readonly DistributionFaultPoint[] = [
-      "planned",
-      "staged",
-      "verified",
-      "activated",
-    ]
+    const points: readonly DistributionFaultPoint[] = ["planned", "staged", "verified", "activated"]
 
     for (const [index, point] of points.entries()) {
       const caseRoot = resolve(root, `case-${point}`)
@@ -660,9 +653,7 @@ describe("S12.02 standalone distribution local contract", () => {
       preserved: ["workspace-state", "global-config", "credentials"],
     })
     await expectMissing(installRoot)
-    expect(await readFile(resolve(workspace, ".ralph", "state.db"), "utf8")).toBe(
-      "workspace-state",
-    )
+    expect(await readFile(resolve(workspace, ".ralph", "state.db"), "utf8")).toBe("workspace-state")
     expect(await readFile(globalConfig, "utf8")).toBe("language: pt-BR\n")
     expect(await readFile(credentials, "utf8")).toBe("credential-reference-only")
     expect(await readFile(classicRalph, "utf8")).toBe("classic-ralph")

@@ -242,17 +242,19 @@ absoluto; o audit só roda na versão/revisão exatas de Bun 1.3.14 e aceita ape
 vazio observado. Os quatro contratos de licença/proveniência precisam gerar JUnit não vazio, sem
 failure/error/skip e com ao menos um caso aprovado por arquivo. O SBOM npm declara Bun
 somente como runtime do host; o standalone só pode declarar o Bun embutido depois de validar uma
-curadoria local exata por versão+commit e copiar seu conjunto completo de licença/notices/proveniência.
-S11.10 permanece aberta porque essas mudanças ainda exigem execução do gate atualizado, a curadoria
-real do Bun não existe no checkout, o SBOM/inventário final exige a licença raiz que o owner ainda não
-escolheu e os artifacts finais precisam ser inspecionados depois do package real.
+  curadoria local exata por versão+commit e copiar seu conjunto completo de licença/notices/proveniência.
+Nesta edição, a licença raiz MIT foi decidida e a curadoria oficial do Bun `1.3.14` no commit
+`0d9b296af33f2b851fcbf4df3e9ec89751734ba4` foi materializada com licença, provenance e receipts
+de tamanho/SHA-256; os quatro contratos focados passaram 26/26, sem falhas. S11.10 permanece aberta
+até o gate hash-bound atualizado passar novamente sobre HEAD limpo e os artifacts finais vinculados
+serem inspecionados depois do package real.
 
 O receipt `security-gates` da CI também passou a content-addressar diretamente, além do workflow e
 dos reports gerados, o manifest raiz, `bun.lock`, `THIRD_PARTY_NOTICES.md`, toda a árvore
 `third_party`, os implementadores de audit/provenance/SBOM/inventário e os quatro arquivos de teste
 que constituem o gate. Assim, o artifact arquivado permite conferir os bytes exatos das autoridades
 de compliance sem depender apenas do nome do commit. O contrato estrutural correspondente está em
-`tests/unit/ci-evidence-structure.test.ts`; ele ainda não foi executado nesta edição.
+`tests/unit/ci-evidence-structure.test.ts`; a seleção de estrutura CI/closure passou 7/7 nesta edição.
 
 S11.11 foi fechada pelo harness integral `bun run compat:s10`, executado exclusivamente pelo wrapper
 Windows oculto/`BelowNormal` depois de validação mínima 11/11 com 161 assertions, typecheck e build
