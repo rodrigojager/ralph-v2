@@ -62,5 +62,5 @@ Entregar uma reescrita independente do Ralph em TypeScript/Bun que preserve o mo
 
 ## Fase 6 — hardening e entrega
 
-- [ ] S11 validar a matriz completa com unitários, property/golden tests, fixtures de providers, PTY/TUI, falhas de rede, OAuth, crashes, watchdog, concorrência, segurança e plataformas suportadas, corrigindo toda divergência obrigatória; seguir integralmente `implementation/11-testes-matriz-e-hardening.md`.
-- [ ] S12 finalizar empacotamento e releases, avisos de terceiros, documentação de usuário, migração do nome `ralph-next` para `ralph` somente após gate, e adaptar a skill de geração para o schema final do PRD v2 com validação pelo mesmo parser; seguir integralmente `implementation/12-release-skill-e-handoff.md`.
+- [x] S11 validar a matriz completa com unitários, property/golden tests, fixtures de providers, PTY/TUI, falhas de rede, OAuth, crashes, watchdog, concorrência, segurança e plataformas suportadas, corrigindo toda divergência obrigatória; seguir integralmente `implementation/11-testes-matriz-e-hardening.md`.
+- [x] S12 finalizar empacotamento e releases, avisos de terceiros, documentação de usuário, migração do nome `ralph-next` para `ralph` somente após gate, e adaptar a skill de geração para o schema final do PRD v2 com validação pelo mesmo parser; seguir integralmente `implementation/12-release-skill-e-handoff.md`.

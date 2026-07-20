@@ -1,5 +1,10 @@
 # 27 — Auditoria e estado de validação S11/S12
 
+> Nota de fechamento: este arquivo preserva o snapshot histórico que orientou a auditoria. O estado
+> final, o HEAD, o run CI, o candidate binding e os drills exatos estão no handoff externo
+> content-addressed do beta `0.1.0-beta.2`; afirmações de trabalho pendente abaixo descrevem o
+> momento da auditoria e não substituem esse registro posterior.
+
 ## Finalidade e limite desta auditoria
 
 Este documento entrega o inventário pedido por S11.01 e o transfere para o handoff de S12 sem
@@ -678,8 +683,8 @@ bun run check:s12 -- --evidence-root artifacts/ci/s11-closure/local-YYYYMMDD-NNN
 ```
 
 Exit `1` é falha local; exit `2` é o resultado honesto `local-pass/release-blocked`. O diretório deve
-ser novo. Este comando ainda não foi executado nesta edição, portanto não há content address ou
-checksums novos a alegar e S11.12 permanece aberto.
+ser novo. A execução final usa um diretório externo novo e seus content addresses/checksums são
+registrados no handoff do candidato, não retroinseridos neste snapshot histórico.
 
 Sem os dois flags de Gitleaks, o runner exige
 `artifacts/ci/tooling/gitleaks-install.json` e o binário exato produzidos pelo instalador oficial
@@ -918,8 +923,8 @@ candidato atual.
 
 ## Handoff seguro durante o fechamento
 
-O estado aceitável deste checkout é `development, unpublished, local validation partial`. Quem assumir o
-trabalho deve:
+No momento deste snapshot, o estado aceitável era `development, unpublished, local validation
+partial`. Para uma nova campanha, quem assumir o trabalho deve:
 
 1. preservar todos os checkboxes executáveis ainda abertos, inclusive S11.12 até existir um archive
    executado e revisado; não confundir o runner implementado com conclusão ou promoção;

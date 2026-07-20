@@ -2,14 +2,15 @@
 
 ## Estado e finalidade
 
-Este documento é o runbook e a worksheet determinística de S12.09–S12.11. A validação local geral já
-inclui schemas, lint/typecheck, unitários, packages/CLI, watchdog, um smoke PTY mínimo, build/smoke
-nativo Windows x64 e a matriz local de contrato S12.02 descrita abaixo. O sample S12.08 também passou
-uma integração executável local focada com 1/1 teste e 59 asserções, usando executor roteirizado,
-judge fake external-CLI, child, crash/resume, projeção de view TUI, HTTP real e goldens redigidos.
-Essa prova não usou provider real, TUI interativa em PTY, package instalado ou release candidate.
-Nenhum desses resultados executou um caso formal desta worksheet sobre o artifact/ambiente exigido;
-por isso todas as linhas abaixo permanecem `pending`.
+Este documento é o runbook e a worksheet determinística reutilizável de S12.09–S12.11. A campanha
+preenchida do beta `0.1.0-beta.2`, com artifact/ambiente, resultados, logs redigidos e digests exatos,
+é gerada fora do commit e anexada ao handoff/release. As linhas abaixo permanecem `pending` de
+propósito para que uma campanha futura não herde aprovação do beta anterior por semelhança.
+
+A campanha final executa artifact verification, install/update/rollback/uninstall, migração,
+crash/resume e TUI/PTY no target incluído. Smokes reais de provider/API key/OAuth/ChatGPT permanecem
+`not-executed` quando não existe credencial opt-in elegível; isso é publicado como limitação. O beta
+mantém o alias `ralph` não oferecido e preserva o Ralph clássico por path e hash.
 
 O runbook nunca converte contrato estático em suporte. Cada resultado pertence a um artifact exato,
 em um ambiente exato, e precisa de evidence content-addressed. Um resultado de outro commit, hash,

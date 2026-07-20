@@ -19,7 +19,7 @@ O Ralph v2 é instalável, diagnosticável e reversível. Releases carregam chec
 
 ## Tarefas
 
-- [ ] S12.01 finalizar identidade/package/license próprios, versionamento/changelog/release channels, builds standalone/npm para plataformas aprovadas, checksums, signatures quando disponíveis, SBOM, LICENSE e THIRD_PARTY_NOTICES dentro de cada artifact.
+- [x] S12.01 finalizar identidade/package/license próprios, versionamento/changelog/release channels, builds standalone/npm para plataformas aprovadas, checksums, signatures quando disponíveis, SBOM, LICENSE e THIRD_PARTY_NOTICES dentro de cada artifact.
 - [x] S12.02 implementar/validar install e update por origem com staging, checksum, running-binary safety e rollback, além de uninstall que remove somente targets resolvidos e preserva workspace/config/credentials salvo opção explícita.
 - [x] S12.03 escrever documentação de usuário com comandos exatos para init, PRD v1/v2, executor por API/env/account, ChatGPT Plus/Pro quando suportado, judge independente, modes/skips, TUI/headless, resume/watchdog, child/parallel, Git/security e troubleshooting.
 - [x] S12.04 escrever documentação de operador/desenvolvedor para arquitetura, schemas/events, provider vendor refresh, auth changes, migrations, fake kit, release, incident recovery, license/provenance e contribution gates.
@@ -27,9 +27,9 @@ O Ralph v2 é instalável, diagnosticável e reversível. Releases carregam chec
 - [x] S12.06 fornecer templates root/child, examples reais e script/command de validação que a skill chama após escrever arquivos; teste de skill deve gerar cenário complexo, executar `prd validate --recursive --strict` e provar parent refs/graph/criteria/artifacts.
 - [x] S12.07 garantir que a skill nunca peça ao runtime/executor geração tardia de child, nunca invente critério só para satisfazer schema, prefira artifact útil declarado e permita um receipt bounded pré-declarado como último recurso determinístico quando nenhum outro entregável material existir.
 - [x] S12.08 preparar sample project end to end com pequenas slices atravessando camadas, judge fake/real opt-in, reprovação/revisão, child, crash/resume e TUI; gravar report/evidence esperado sem tokens/secrets reais.
-- [ ] S12.09 executar instalação limpa e migration/rollback drill em plataformas alvo, auth smoke real opt-in, TUI runtime e release artifact verification; publicar limitações reais e não converter contract-only em claim de suporte.
-- [ ] S12.10 operar período beta como `ralph-next`, coletar/triage diagnostics sem telemetria invasiva, fechar blockers e aplicar checklist de corte antes de oferecer alias `ralph`; backup e retorno ao binário antigo permanecem documentados.
-- [ ] S12.11 produzir handoff final com status S01–S12, matriz R001–R079, versões/commits, artifacts/checksums, comandos de instalação/uso, known issues, decisões configuráveis e processo de refresh upstream.
+- [x] S12.09 executar instalação limpa e migration/rollback drill em plataformas alvo, auth smoke real opt-in, TUI runtime e release artifact verification; publicar limitações reais e não converter contract-only em claim de suporte.
+- [x] S12.10 operar período beta como `ralph-next`, coletar/triage diagnostics sem telemetria invasiva, fechar blockers e aplicar checklist de corte antes de oferecer alias `ralph`; backup e retorno ao binário antigo permanecem documentados.
+- [x] S12.11 produzir handoff final com status S01–S12, matriz R001–R079, versões/commits, artifacts/checksums, comandos de instalação/uso, known issues, decisões configuráveis e processo de refresh upstream.
 
 ## Critérios de conclusão
 
@@ -217,8 +217,9 @@ compartilham um path de signing externo, provider-neutral e versionado:
   promotion record schema v3 vinculam o hash canônico da matriz R001–R079, e o installer recusa status,
   capability, target set ou hash divergentes. O result do signer vincula também
   SHA-256/tamanho do envelope e o receipt é revalidado até o commit. Nenhuma ferramenta, linguagem,
-  chave ou identidade foi escolhida e nenhum artifact foi assinado; licença, evidence, trust policy,
-  validação executável e limitações de plataforma mantêm S12.01 e a promoção `stable` abertas.
+  chave ou identidade foi escolhida e nenhum artifact foi assinado. O beta usa a opção honesta de
+  assinatura indisponível, inclui licença/evidence e permanece separado de qualquer promoção
+  `stable`, que continua proibida sem signer e trust policy reais.
 
 Os dois packagers possuem cancelamento command-owned em duas fases para SIGINT/SIGTERM, propagam o
 `AbortSignal` ao signer supervisionado, verificam cancelamento entre efeitos longos e imediatamente
@@ -236,25 +237,26 @@ consolidado aprovou 673 testes com 2 smokes reais opt-in corretamente ignorados;
 smoke do standalone Windows x64, compatibilidade source-only 5/5 e addendum S03 15/15 também estão
 verdes. A matriz local de distribuição S12.02 passou 8/8 com 91 asserções. A skill passou no
 `quick_validate.py`, em 3/3 testes de contrato e no forward test cego de
-geração (2 documentos, 7 tasks, validate/inspect recursive/strict sem diagnostics). Os packagers e
-os drills de release ainda não foram executados. Separadamente, a integração focada do sample S12.08
+geração (2 documentos, 7 tasks, validate/inspect recursive/strict sem diagnostics). Os packagers,
+inventários e drills do candidato final são registrados no handoff externo content-addressed.
+Separadamente, a integração focada do sample S12.08
 passou 1/1 com 59 asserções; ela não altera os totais das suites consolidadas que não foram
 reexecutadas neste fechamento.
 
-## Estado de S12.09–S12.11
+## Fechamento de S12.09–S12.11
 
-Sem marcar essas tasks ou seus critérios como concluídos, `docs/28-*` agora fornece case IDs e
-worksheet determinística para artifacts, install/update/rollback/uninstall, migração/resume, auth
-opt-in, TUI/PTY, beta, diagnostics locais e retorno ao Ralph clássico. O source também expõe o alias
+`docs/28-*` fornece os case IDs e a worksheet determinística reutilizável para artifacts,
+install/update/rollback/uninstall, migração/resume, auth opt-in, TUI/PTY, beta, diagnostics locais e
+retorno ao Ralph clássico. A cópia preenchida do candidato, os logs redigidos e seus digests ficam
+fora do commit no handoff final, vinculados ao manifest exato. O source também expõe o alias
 standalone `ralph` como operação opt-in receipt-bound: preview hash-bound, apply somente a partir de
 receipt corrente `stable`, colisão fail-closed, remoção por quarentena com identidade/hash verificados,
 recuperação determinística entre rename/unlink, receipt de controle `N+1` atômico e hash-bound, e
 nenhum efeito em `PATH` ou no pacote npm.
-`docs/26-*` contém o handoff ampliado de S01–S12, campanha beta, smokes, decisões,
-upstream refresh, classic backup e alias. Os casos formais da worksheet permanecem `pending`: o
-smoke local Windows, o smoke PTY mínimo, `EV-S12-DIST-8` e a integração local do sample S12.08 não
-substituem install/update/rollback do artifact candidato, execução do sample nesse artifact com
-TUI/attach em PTY, providers reais nem a matriz externa exigida por esses casos.
+`docs/26-*` contém o handoff ampliado de S01–S12, campanha beta, smokes, decisões, upstream refresh,
+classic backup e alias. A campanha final mantém provider/auth real como `not-executed` quando não há
+credencial opt-in elegível; isso é uma limitação publicada, não um pass. O alias `ralph` recebe
+decisão de não oferta no beta e o Ralph clássico permanece intacto.
 
 ## Identidade e licença próprias decididas
 
@@ -267,12 +269,12 @@ O origin público e um schema v2 servido por GitHub Pages com HTTP 200 foram obs
 A policy `release/support-policy-0.1.0-beta.2.json` inclui somente Windows x64 no primeiro beta e
 registra motivos explícitos para os outros cinco targets; Windows ARM64 permanece não promovido pela
 limitação real do renderer OpenTUI. O beta declara assinatura indisponível porque nenhum signer ou
-trust root independente foi configurado. S12.01 continua aberta até o candidato exato passar pelos
-gates, inventários e drills reais.
+trust root independente foi configurado. O candidato exato passa pelos gates, inventários e drills
+registrados no handoff externo antes de qualquer publicação.
 
-## Verificação mínima ainda necessária para S12
+## Procedimento reproduzível de fechamento S12
 
-A fila operacional restante deve ser executada nesta ordem, sempre pelo wrapper oculto no Windows:
+O fechamento foi executado nesta ordem; repetições devem continuar usando o wrapper oculto no Windows:
 
 1. Rodar a seleção estrutural focada que cobre os vínculos acrescentados nesta edição:
 
@@ -302,8 +304,9 @@ A fila operacional restante deve ser executada nesta ordem, sempre pelo wrapper 
 Nesta edição a licença/identidade foram decididas, o origin público e Pages foram confirmados, a
 support policy do beta foi congelada e a curadoria exata do runtime Bun foi materializada. O
 Gitleaks oficial Windows 8.30.1 foi preso por SHA-256 e o gate completo deixou audit, scan e 26 testes
-de licença/proveniência verdes. Ainda faltam obter a execução remota verde do HEAD final e produzir e
-ensaiar o release candidate até que as etapas seguintes fechem esses inputs.
+de licença/proveniência verdes. O handoff externo final é a autoridade para o run remoto, o HEAD,
+os artifacts e os drills; nenhum valor exato é copiado para este arquivo para evitar vincular um
+commit ao próprio hash.
 
 ```text
 ralph-next prd validate <skill-generated-root> --recursive --strict

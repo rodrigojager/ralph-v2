@@ -15,6 +15,9 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
 - Flush determinístico de evidence grande em Unix, heartbeat de encerramento tolerante a mensagens
   autenticadas em trânsito, normalização C1 do ConPTY e fallback PowerShell 7 para identidade de
   processo em Windows ARM64.
+- Serialização somente das mutações de metadata compartilhada de `git worktree`, preservando a
+  execução paralela dos workers, e lifecycle PTY com Ctrl+C convergindo pela mesma bridge de comando
+  usada em produção e resultado estruturado durável fora do canal ConPTY desmontado.
 
 ## [0.1.0-beta.1] — candidato não publicado
 
@@ -69,15 +72,16 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
 
 ### Known limitations
 
-- A validação executável local não está suspensa: gate 673/673, integração 149/149,
-  `EV-S12-DIST-8` 8/8 (91 asserções) e sample S12.08 1/1 (59 asserções) foram observados no checkout
-  Windows x64; isso não é evidence de release candidate.
-- O runner de archive estrutural S11.12 está implementado, mas ainda não foi executado. R015 e R063
-  permanecem parciais, os gates externos/candidate-bound continuam abertos e nenhum release
-  candidate foi promovido.
-- A identidade foi fixada em MIT, package/binário `ralph-next`, repositório
-  `rodrigojager/ralph-v2`, canal `beta` e schemas versionados destinados ao workflow GitHub Pages. O
-  candidato permanece não publicável até os gates multiplataforma, license inventory e closure.
+- O primeiro beta promove somente `bun-windows-x64-baseline`; os outros cinco targets permanecem
+  `not-promoted` na support policy. Windows ARM64 executa o caminho headless na CI, mas a TUI OpenTUI
+  não é suportada pelo runtime Bun 1.3.14 desse target.
+- Nenhum signer/trust root foi configurado para este beta. Manifest e package declaram assinatura
+  indisponível de forma explícita; checksums e source binding não constituem assinatura.
+- Smokes de provider/API key/OAuth/ChatGPT reais são opt-in e não foram inferidos a partir da sessão
+  do operador. A ausência de credenciais elegíveis permanece `not-executed` no handoff.
+- A campanha beta mantém `ralph-next`; o alias `ralph` não é oferecido e o Ralph clássico permanece
+  intacto. O pacote npm é produzido e verificado localmente, mas publicação no registry exige
+  credencial explícita do proprietário.
 
 ## [0.1.0-dev.1] — não publicado
 

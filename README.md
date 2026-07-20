@@ -1,8 +1,10 @@
 # Ralph v2
 
-Reescrita independente do Ralph CLI em TypeScript/Bun. O projeto está em desenvolvimento e o executável continua se chamando `ralph-next` para coexistir com o Ralph clássico sem substituir instalação, configuração ou estado existentes.
+Reescrita independente do Ralph CLI em TypeScript/Bun. O primeiro release é o beta
+`0.1.0-beta.2`; o executável continua se chamando `ralph-next` para coexistir com o Ralph clássico
+sem substituir instalação, configuração ou estado existentes.
 
-O source contém as superfícies estáticas integradas de S01–S10 e as fundações de entrega de S12:
+O source contém as superfícies integradas de S01–S12:
 fundação headless, compilador de planos, execução autoritativa, providers/modelos/credenciais
 independentes, ToolHost, evidências/judge, persistência e retomada, watchdog, TUI, children,
 paralelismo, Git, sandbox, comandos operacionais, migração, distribuição e skill. Isso inclui workspace
@@ -10,16 +12,24 @@ v2 isolado, configuração versionada, ledger/eventos locais, PRD v2 legível po
 CommonMark e schemas fortes, modos once, loop e Wiggum governados por evidence/gates, catálogo
 cacheado, perfis separados de executor/judge, backends embutidos OpenAI e OpenRouter, backend CLI
 externo, deterministic-only, self-review e judge externo com score, parecer, threshold e revisões
-limitadas. O checklist mestre mantém S06–S12 abertos enquanto a matriz executável e os gates de
-release ainda não estiverem integralmente fechados.
+limitadas. O beta publica somente o target Windows x64 definido pela support policy; os demais
+targets continuam visíveis como `not-promoted`, sem transformar build ou teste de contrato em claim
+de suporte.
 
-A implementação das slices posteriores já acrescenta supervisor e workers com leases/watchdog/cancelamento, telemetria e raw streams, TUI live/attach/replay, paleta de configuração pré-run, barra de progresso responsiva, agregação de usage, sub-PRDs supervisionados, paralelismo, fronteiras Git/checkpoints/sandbox e comandos de operação/migração. A antiga restrição a execuções foi removida. No ciclo local atual, com Bun `1.3.14`, os 60 schemas foram gerados e conferidos, lint e typecheck passaram, o gate consolidado aprovou 673 testes, a integração aprovou 149/149, watchdog passou com 8 e o smoke PTY passou três vezes. O build e o smoke do standalone nativo Windows x64 também passaram. Separadamente, o sample `vertical-notes` de S12.08 passou sua integração executável local focada: 1/1 teste e 59 asserções cobrindo executor roteirizado, judge external-CLI fake, revisão, child, crash/resume, projeção TUI, aplicação HTTP real e goldens redigidos. Esses resultados não concluem S11/S12 nem substituem smokes de provider real, matriz multiplataforma, artifact candidato, assinatura ou release.
+A implementação das slices posteriores acrescenta supervisor e workers com
+leases/watchdog/cancelamento, telemetria e raw streams, TUI live/attach/replay, paleta de
+configuração pré-run, barra de progresso responsiva, agregação de usage, sub-PRDs supervisionados,
+paralelismo, fronteiras Git/checkpoints/sandbox e comandos de operação/migração. A matriz CI executa
+quality em Windows/Linux/macOS x64 e uma seleção nativa bloqueante nos seis pares declarados de
+OS/arquitetura, com skips classificados. O release handoff content-addressed registra o run, o
+commit, os artifacts e os drills exatos do beta. Smokes reais de provider/auth continuam opt-in e
+qualquer ausência permanece publicada como limitação, nunca como aprovação implícita.
 
 A matriz focada de distribuição S12.02 também passou localmente: `bun run test:s12:distribution`
 executou 8/8 testes e 91 asserções sobre fixtures `nightly`/`*-dev.1` unsigned, cobrindo install,
 HTTPS fake sem rede, tamper, check/update, rollback, crash recovery e uninstall receipt-bound. Essa é
-evidência `local-contract-only`; não substitui instalação do artifact candidato, licença, assinatura,
-support policy real ou release. No host atual, use TEMP fora de `C:` para esse teste: o marcador
+evidência `local-contract-only`; os drills do artifact candidato são registrados separadamente no
+handoff de release. No host atual, use TEMP fora de `C:` para esse teste: o marcador
 `C:\.git` faz o instalador recusar corretamente roots temporários daquele drive como checkout.
 
 A composição legada de teste da S03 continua usando um backend programável injetado explicitamente. O binário normal não registra o perfil `fake` nem outro executor oculto. A S05 acrescenta execução real por OpenAI/OpenRouter embutidos ou processo CLI externo, sempre sob tools, permissões, budgets, eventos e cancelamento comandados pelo Ralph. A S06 acrescenta evidence bundle imutável, gates honestos, judge/self-review e recuperação auditada do budget de revisões. A S07 endurece a execução supervisionada; a S08 conecta observabilidade e configuração à TUI; S09 e S10 fecham sub-PRDs, paralelismo, Git, segurança e operação/migração sem transferir autoridade para modelos ou renderers.

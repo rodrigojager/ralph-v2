@@ -2,17 +2,18 @@
 
 ## Finalidade
 
-Este é o registro único de promoção. Ele não converte implementação ou validação local em release e
-não deve ser preenchido com “pass” sem artifact/prova correspondente. O estado atual é
-**development, unpublished, local validation partial**.
+Este é o contrato reutilizável de promoção. Ele não converte implementação ou validação local em
+release e não deve ser preenchido com “pass” sem artifact/prova correspondente. A campanha preenchida
+do beta `0.1.0-beta.2` é gerada fora do commit e anexada ao release com hashes exatos; isso evita que
+o documento tente incluir o hash do commit que o contém.
 
 Evidência local disponível no checkout de desenvolvimento: Bun `1.3.14`; 60 schemas gerados e
 conferidos; lint/typecheck verdes; gate 673/673; integração 149/149; watchdog 8/8; smoke PTY 3/3 e
 matriz Windows ConPTY S08.12 5/5 (34 verificações); build/smoke Windows x64 verdes;
 `EV-S12-DIST-8` 8/8 com 91 asserções; sample S12.08 focado 1/1 com 59 asserções. O contrato de
-fechamento estrutural/local de S11.12 cataloga essas provas, mas ainda não foi executado para criar
-um novo archive. Nenhuma prova está vinculada a um release candidate promovível ou preenche
-automaticamente os gates abaixo.
+fechamento estrutural/local de S11.12 cataloga essas provas. O archive final, candidate binding,
+waivers beta e handoff content-addressed permanecem autoridades externas; nenhuma linha deste
+template preenche automaticamente os gates abaixo.
 
 ## Gate A — identidade e licença própria
 

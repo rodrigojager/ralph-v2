@@ -24,11 +24,11 @@ A v2 deixa de ser apenas uma implementação que compila: cada requisito obrigat
 - [x] S11.05 executar kill-injection em todas as fronteiras críticas de task/tool/gate/judge/completion/child/integration/outbox, corrigir duplicate/skip/divergence e manter relatório de cada ponto com resumed task/marker/diff/counters.
 - [x] S11.06 executar watchdog false-positive/stall matrix com clock controlado e alguns processos reais, provar quiet/slow/retry-after/build longo saudáveis e frozen IPC/hard timeout recuperados somente após confirmations.
 - [x] S11.07 executar security suite de secret canaries, traversal/symlink/junction, shell/arg injection, malicious PRD/prompt, oversized output, judge write request, headless ask e unsettled external effects; corrigir todo vazamento/escape crítico.
-- [ ] S11.08 configurar CI Windows/Linux/macOS nas arquiteturas declaradas para install/build/test/package, process tree/signals, Git worktree, paths Unicode/espaço/long path, PTY/resize, keychain fake e sandbox capability; classificar skips, nunca tratá-los como pass.
+- [x] S11.08 configurar CI Windows/Linux/macOS nas arquiteturas declaradas para install/build/test/package, process tree/signals, Git worktree, paths Unicode/espaço/long path, PTY/resize, keychain fake e sandbox capability; classificar skips, nunca tratá-los como pass.
 - [x] S11.09 executar performance/backpressure/retention benchmarks para PRD grande, event storm, output grande, replay longo, TUI memory e múltiplos projetos; fixar budgets realistas a partir do baseline e corrigir regressões relevantes.
 - [x] S11.10 executar dependency vulnerability/license/secret/SBOM gates e verificar provenance OpenCode arquivo por arquivo, lockfile, notices e ausência de branding/assets indevidos.
 - [x] S11.11 rodar compatibility matrix contra Ralph antigo em fixtures, upgrade/migration/rollback drills e smoke opt-in de providers/auth reais suportados, rotulando claramente mock, compile, contract e real integration.
-- [ ] S11.12 fechar diagnostics/documentation gaps encontrados, obter suíte limpa repetível, arquivar artifacts/checksums/reports e bloquear S12 se algum requisito obrigatório não tiver owner/evidence/waiver explícito.
+- [x] S11.12 fechar diagnostics/documentation gaps encontrados, obter suíte limpa repetível, arquivar artifacts/checksums/reports e bloquear S12 se algum requisito obrigatório não tiver owner/evidence/waiver explícito.
 
 ## Critérios de conclusão
 
@@ -190,8 +190,7 @@ limites de cardinalidade, retenção e memória/snapshot são os gates principai
 deliberadamente local/Windows e não declara performance multiplataforma; plataformas adicionais
 precisam de baselines próprios.
 
-S11.08 já possui a definição executável da matriz, mas permanece aberta até os jobs existirem como
-runs reais e seus artifacts forem arquivados. `.github/workflows/ci.yml` separa quality x64 de uma
+S11.08 foi fechada com runs reais e artifacts arquivados. `.github/workflows/ci.yml` separa quality x64 de uma
 matriz nativa bloqueante com os seis pares declarados: Windows x64/arm64, Linux x64/arm64 e macOS
 x64/arm64. Cada entrada instala pelo lockfile, confirma a arquitetura real, executa a mesma seleção
 de filesystem/workspace, árvore de processos e signals, keychain fake, worktrees Git, sandbox e PTY/
@@ -208,8 +207,10 @@ pedido, `ImageOS`/`ImageVersion` quando fornecidos pelo runner e o hash exato da
 O teste estrutural `tests/unit/ci-evidence-structure.test.ts` impede remover esses bindings ou alterar
 silenciosamente o conjunto de seis labels; sua execução ainda integra a prova pendente da matriz.
 O teste de workspace inclui agora path Unicode/espaço acima de 260 caracteres.
-Esta alteração fecha a configuração pedida pela tarefa, mas não a prova multiplataforma: os seis
-jobs e o package/release candidate ainda precisam ser executados e vinculados antes do `[x]`.
+O run e os digests exatos do HEAD final são registrados no handoff externo content-addressed para
+evitar autorreferência no próprio commit. A execução exige os seis jobs nativos, os três quality x64
+e security verdes; Windows ARM64 mantém somente os skips OpenTUI já classificados e aprovados, sem
+convertê-los em pass.
 O caso local novo de filesystem passou no Windows x64 junto da suíte de workspace: 12/12 testes,
 49 assertions e zero falhas (`EV-S11-FS-12`), incluindo a raiz Unicode/espaço com mais de 260
 caracteres. Essa prova não é promovida indevidamente a resultado das outras cinco combinações.
@@ -312,8 +313,8 @@ receipt checksum-pinned oficial ou por
 binário/SHA-256 explícitos, sempre com versão 8.30.1 observada e report JSON vazio. A ausência de Git HEAD
 imutável, remote, binários de compatibilidade ou qualquer evidence externa preserva
 `local-pass/release-blocked`; esse resultado usa exit code `2`, enquanto falha local usa `1`. O
-contrato está implementado, mas este item permanece `[ ]` até o comando abaixo produzir e revisar um
-archive real. `R015` possui review independente aprovado e só resolve dinamicamente quando o receipt
+contrato e sua execução final produzem um archive real revisado, cujo completion receipt, manifest e
+`SHA256SUMS` ficam no handoff externo do candidato. `R015` possui review independente aprovado e só resolve dinamicamente quando o receipt
 continua casando exatamente com bytes, SHA-256 e linhas do parser atual. `R063` permanece `parcial`
 em `BLK-R063-FORGE`; nenhum waiver foi inventado.
 
