@@ -11,7 +11,7 @@
 - Copyright notice: `Copyright (c) 2025 opencode`
 - License copy: [`LICENSE`](LICENSE)
 - Structured provenance manifest: [`PROVENANCE.json`](PROVENANCE.json)
-- Structured provenance SHA-256: `cd99039cd6c896980690c167e57a249058fca2f7fc5912d98c4aa77fcc99d2d8`
+- Structured provenance SHA-256: `cd3ab404ad44b48d4e77fc01f80f8a34ff73ede0fa95c9b85ca3026ce4bb3521`
 - Snapshot verified: 2026-07-18
 
 The Ralph-side S04 adaptation was security-hardened again on `2026-07-18`

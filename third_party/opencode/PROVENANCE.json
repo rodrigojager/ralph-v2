@@ -109,8 +109,8 @@
       "classification": "derived",
       "sourcePaths": ["packages/opencode/src/plugin/openai/codex.ts"],
       "patchIds": ["P0002"],
-      "sha256": "0e284e40088149bf48ec32bd6dc38e59f0768297d87e58e16376fda991441d3a",
-      "sha256Lf": "0e284e40088149bf48ec32bd6dc38e59f0768297d87e58e16376fda991441d3a"
+      "sha256": "5787fd1fb5b5789f1ad55f90282fe1b16f6735ffcb19b0db92e05ce8867b607f",
+      "sha256Lf": "5787fd1fb5b5789f1ad55f90282fe1b16f6735ffcb19b0db92e05ce8867b607f"
     },
     {
       "path": "packages/openai-driver/src/driver.ts",

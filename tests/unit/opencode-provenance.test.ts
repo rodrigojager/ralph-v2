@@ -13,7 +13,7 @@ import { createTestDirectory, removeTestDirectory } from "../helpers/temp-direct
 const PROJECT_ROOT = resolve(import.meta.dir, "../..")
 const MANIFEST_PATH = resolve(PROJECT_ROOT, "third_party/opencode/PROVENANCE.json")
 const PINNED_COMMIT = "45cd8d76920839e4a7b6b931c4e26b52e1495636"
-const MANIFEST_SHA256 = "cd99039cd6c896980690c167e57a249058fca2f7fc5912d98c4aa77fcc99d2d8"
+const MANIFEST_SHA256 = "cd3ab404ad44b48d4e77fc01f80f8a34ff73ede0fa95c9b85ca3026ce4bb3521"
 const LICENSE_LF_SHA256 = "625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
 const SOURCE_PATHS = [
   "LICENSE",
