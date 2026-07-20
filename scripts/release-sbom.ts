@@ -224,7 +224,10 @@ async function installedManifest(
   throw new Error(`Cannot resolve installed package metadata for ${name}@${version}`)
 }
 
-function dependencyNames(metadata: LockPackageMetadata | undefined): readonly string[] {
+function dependencyNames(metadata: LockPackageMetadata | undefined): {
+  readonly required: readonly string[]
+  readonly optional: readonly string[]
+} {
   const peerDependencies = metadata?.peerDependencies ?? {}
   const rawOptionalPeers: unknown = metadata?.optionalPeers
   if (
@@ -240,11 +243,25 @@ function dependencyNames(metadata: LockPackageMetadata | undefined): readonly st
       throw new Error(`bun.lock optional peer is absent from peerDependencies: ${name}`)
     }
   }
-  return [
-    ...Object.keys(metadata?.dependencies ?? {}),
-    ...Object.keys(metadata?.optionalDependencies ?? {}),
-    ...Object.keys(peerDependencies).filter((name) => !optionalPeers.has(name)),
-  ]
+  return {
+    required: [
+      ...Object.keys(metadata?.dependencies ?? {}),
+      ...Object.keys(peerDependencies).filter((name) => !optionalPeers.has(name)),
+    ],
+    optional: [
+      ...Object.keys(metadata?.optionalDependencies ?? {}),
+      ...Object.keys(peerDependencies).filter((name) => optionalPeers.has(name)),
+    ],
+  }
+}
+
+function hasInstalledStoreEntry(
+  bunStoreDirectories: readonly string[],
+  name: string,
+  version: string,
+): boolean {
+  const prefix = `${name.replaceAll("/", "+")}@${version}`
+  return bunStoreDirectories.some((entry) => entry === prefix || entry.startsWith(`${prefix}+`))
 }
 
 function deterministicUuid(seed: string): string {
@@ -309,6 +326,7 @@ export async function createReleaseSbom(input: {
   const workspaceQueue = ["ralph-next", "@ralph-next/launcher"]
   const visitedWorkspaces = new Set<string>()
   const requiredExternalNames = new Set<string>()
+  const optionalExternalNames = new Set<string>()
   while (workspaceQueue.length > 0) {
     const name = workspaceQueue.shift()
     if (!name || visitedWorkspaces.has(name)) continue
@@ -328,9 +346,14 @@ export async function createReleaseSbom(input: {
       )
     }
     visitedWorkspaces.add(name)
+    const requiredSourceNames = new Set([
+      ...Object.keys(sourceWorkspace.dependencies ?? {}),
+      ...Object.keys(sourceWorkspace.peerDependencies ?? {}),
+    ])
     for (const [dependency, specifier] of Object.entries(sourceDependencies)) {
       if (specifier.startsWith("workspace:")) workspaceQueue.push(dependency)
-      else requiredExternalNames.add(dependency)
+      else if (requiredSourceNames.has(dependency)) requiredExternalNames.add(dependency)
+      else optionalExternalNames.add(dependency)
     }
   }
 
@@ -346,23 +369,6 @@ export async function createReleaseSbom(input: {
     const current = packagesByName.get(entry.locator.name) ?? []
     current.push(entry)
     packagesByName.set(entry.locator.name, current)
-  }
-
-  const selected = new Map<string, (typeof packages)[number]>()
-  const externalQueue = [...requiredExternalNames]
-  while (externalQueue.length > 0) {
-    const name = externalQueue.shift()
-    if (!name) continue
-    const candidates = packagesByName.get(name)
-    if (!candidates || candidates.length === 0) {
-      throw new Error(`Runtime dependency is absent from bun.lock packages: ${name}`)
-    }
-    for (const candidate of candidates) {
-      const identity = `${candidate.locator.name}@${candidate.locator.version}`
-      if (selected.has(identity)) continue
-      selected.set(identity, candidate)
-      externalQueue.push(...dependencyNames(candidate.metadata))
-    }
   }
 
   const bunStore = resolve(projectRoot, "node_modules", ".bun")
@@ -385,17 +391,57 @@ export async function createReleaseSbom(input: {
     .map((entry) => entry.name)
     .sort(compareUtf8Bytes)
 
+  const selected = new Map<string, (typeof packages)[number]>()
+  const selectedManifests = new Map<string, PackageManifest>()
+  const externalQueue = [
+    ...[...requiredExternalNames].map((name) => ({ name, optional: false })),
+    ...[...optionalExternalNames].map((name) => ({ name, optional: true })),
+  ]
+  while (externalQueue.length > 0) {
+    const queued = externalQueue.shift()
+    if (!queued) continue
+    const candidates = packagesByName.get(queued.name)
+    if (!candidates || candidates.length === 0) {
+      if (queued.optional) continue
+      throw new Error(`Runtime dependency is absent from bun.lock packages: ${queued.name}`)
+    }
+    for (const candidate of candidates) {
+      const identity = `${candidate.locator.name}@${candidate.locator.version}`
+      if (selected.has(identity)) continue
+      if (
+        queued.optional &&
+        !hasInstalledStoreEntry(
+          bunStoreDirectories,
+          candidate.locator.name,
+          candidate.locator.version,
+        )
+      ) {
+        continue
+      }
+      const manifest = await installedManifest(
+        canonicalBunStore,
+        bunStoreDirectories,
+        candidate.locator.name,
+        candidate.locator.version,
+      )
+      selected.set(identity, candidate)
+      selectedManifests.set(identity, manifest)
+      const names = dependencyNames(candidate.metadata)
+      externalQueue.push(
+        ...names.required.map((name) => ({ name, optional: false })),
+        ...names.optional.map((name) => ({ name, optional: true })),
+      )
+    }
+  }
+
   const components: CycloneDxComponent[] = []
   for (const entry of [...selected.values()].sort((left, right) => {
     const name = compareUtf8Bytes(left.locator.name, right.locator.name)
     return name !== 0 ? name : compareUtf8Bytes(left.locator.version, right.locator.version)
   })) {
-    const manifest = await installedManifest(
-      canonicalBunStore,
-      bunStoreDirectories,
-      entry.locator.name,
-      entry.locator.version,
-    )
+    const identity = `${entry.locator.name}@${entry.locator.version}`
+    const manifest = selectedManifests.get(identity)
+    if (!manifest) throw new Error(`Selected runtime dependency lost its manifest: ${identity}`)
     if (!manifest.license?.trim()) {
       throw new Error(
         `Dependency has no explicit installed license metadata: ${entry.locator.name}@${entry.locator.version}`,

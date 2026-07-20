@@ -296,6 +296,34 @@ describe("release SBOM and license inventory boundary", () => {
     expect(sbom.components.some((component) => component.name === DEPENDENCY_NAME)).toBe(true)
   })
 
+  test("does not require a platform optional dependency absent from the installed Bun store", async () => {
+    const fixture = await createReleaseFixture()
+    const lockPath = resolve(fixture.root, "bun.lock")
+    const lock = JSON.parse(await readFile(lockPath, "utf8")) as {
+      packages: Record<string, [string, string, Record<string, unknown>, string]>
+    }
+    const dependency = lock.packages[DEPENDENCY_NAME]
+    if (!dependency) throw new Error("Synthetic dependency lock record is missing")
+    dependency[2] = {
+      ...dependency[2],
+      optionalDependencies: { "fixture-other-platform": "9.8.7" },
+    }
+    lock.packages["fixture-other-platform"] = [
+      "fixture-other-platform@9.8.7",
+      "",
+      {},
+      `sha512-${Buffer.alloc(64, 1).toString("base64")}`,
+    ]
+    await writeJson(lockPath, lock)
+
+    const sbom = await createFixtureSbom(fixture)
+
+    expect(sbom.components.some((component) => component.name === "fixture-other-platform")).toBe(
+      false,
+    )
+    expect(sbom.components.some((component) => component.name === DEPENDENCY_NAME)).toBe(true)
+  })
+
   test("is deterministic and content-addresses every copied license/provenance file", async () => {
     const fixture = await createReleaseFixture()
     const firstSbom = await createFixtureSbom(fixture)
