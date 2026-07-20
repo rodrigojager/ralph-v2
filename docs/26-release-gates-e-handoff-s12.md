@@ -37,10 +37,10 @@ fail-closed antes de produzir um artifact publicável.
 
 ## Gate B — source e provenance
 
-- [ ] checkout versionado em commit completo de 40 caracteres;
+- [x] checkout versionado em commit completo de 40 caracteres;
 - [ ] source fingerprint confere com todos os build metadata;
-- [ ] positive inventory OpenCode revisada;
-- [ ] licenças OpenCode/OpenTUI/SolidJS presentes;
+- [x] positive inventory OpenCode revisada;
+- [x] licenças OpenCode/OpenTUI/SolidJS presentes;
 - [ ] lockfile fixo e SBOM sem componente sem licença;
 - [ ] `third_party/licenses/manifest.json` contém textos e SHA-256 de todo componente runtime exato;
 - [ ] variantes peer de um mesmo nome/versão possuem inventário de licença idêntico;
@@ -49,7 +49,7 @@ fail-closed antes de produzir um artifact publicável.
   extra ou ausente;
 - [ ] cada workspace runtime alcançável é idêntico no `package.json` e no `bun.lock`;
 - [ ] `THIRD_PARTY_NOTICES.md` dentro do artifact;
-- [ ] ausência de agent/session runner, branding e private packages confirmada.
+- [x] ausência de agent/session runner, branding e private packages confirmada.
 
 As entradas conhecidas do launcher e da dependência CLI→TUI estão no lockfile, e `bun install
 --frozen-lockfile` passou com Bun `1.3.14` no checkout local. O gerador de SBOM continua comparando

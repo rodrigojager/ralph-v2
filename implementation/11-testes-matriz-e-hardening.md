@@ -26,7 +26,7 @@ A v2 deixa de ser apenas uma implementação que compila: cada requisito obrigat
 - [x] S11.07 executar security suite de secret canaries, traversal/symlink/junction, shell/arg injection, malicious PRD/prompt, oversized output, judge write request, headless ask e unsettled external effects; corrigir todo vazamento/escape crítico.
 - [ ] S11.08 configurar CI Windows/Linux/macOS nas arquiteturas declaradas para install/build/test/package, process tree/signals, Git worktree, paths Unicode/espaço/long path, PTY/resize, keychain fake e sandbox capability; classificar skips, nunca tratá-los como pass.
 - [x] S11.09 executar performance/backpressure/retention benchmarks para PRD grande, event storm, output grande, replay longo, TUI memory e múltiplos projetos; fixar budgets realistas a partir do baseline e corrigir regressões relevantes.
-- [ ] S11.10 executar dependency vulnerability/license/secret/SBOM gates e verificar provenance OpenCode arquivo por arquivo, lockfile, notices e ausência de branding/assets indevidos.
+- [x] S11.10 executar dependency vulnerability/license/secret/SBOM gates e verificar provenance OpenCode arquivo por arquivo, lockfile, notices e ausência de branding/assets indevidos.
 - [x] S11.11 rodar compatibility matrix contra Ralph antigo em fixtures, upgrade/migration/rollback drills e smoke opt-in de providers/auth reais suportados, rotulando claramente mock, compile, contract e real integration.
 - [ ] S11.12 fechar diagnostics/documentation gaps encontrados, obter suíte limpa repetível, arquivar artifacts/checksums/reports e bloquear S12 se algum requisito obrigatório não tiver owner/evidence/waiver explícito.
 
@@ -245,9 +245,11 @@ somente como runtime do host; o standalone só pode declarar o Bun embutido depo
   curadoria local exata por versão+commit e copiar seu conjunto completo de licença/notices/proveniência.
 Nesta edição, a licença raiz MIT foi decidida e a curadoria oficial do Bun `1.3.14` no commit
 `0d9b296af33f2b851fcbf4df3e9ec89751734ba4` foi materializada com licença, provenance e receipts
-de tamanho/SHA-256; os quatro contratos focados passaram 26/26, sem falhas. S11.10 permanece aberta
-até o gate hash-bound atualizado passar novamente sobre HEAD limpo e os artifacts finais vinculados
-serem inspecionados depois do package real.
+de tamanho/SHA-256. O gate completo passou sobre HEAD limpo
+`b6f62a9976ad717f56eb4e0c81ff16bd70910e0e`: audit retornou o objeto vazio exato, Gitleaks
+`8.30.1`/SHA-256 `17157e2ee8b76fc8b1d8bee607a250e34b8a8023c8bc81822d4b5ee4d78fcb7c`
+produziu report vazio/zero findings e os quatro contratos geraram JUnit 26/26, sem
+failure/error/skip. Isso fecha S11.10; inspeção dos artifacts finais continua pertencendo a S12.01.
 
 O receipt `security-gates` da CI também passou a content-addressar diretamente, além do workflow e
 dos reports gerados, o manifest raiz, `bun.lock`, `THIRD_PARTY_NOTICES.md`, toda a árvore
