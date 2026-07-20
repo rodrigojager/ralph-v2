@@ -7198,6 +7198,12 @@ async function createCommandOwnedChildWatchdog(input: {
   )
   const sampleIntervalMs = Math.max(250, Math.min(phase.probeIntervalMs, phase.heartbeatIntervalMs))
   const gracefulStopMs = Math.max(250, Math.min(30_000, phase.heartbeatGraceMs))
+  // A delayed health probe must not revoke a healthy worker before the
+  // configured quiet boundary. heartbeatGrace still classifies individual
+  // heartbeat freshness; quietAfter is the bounded lease-proof window that
+  // tolerates host scheduling and slow process-table probes without renewing
+  // indefinitely through the watchdog's suspect/stall decisions.
+  const leaseHealthProofGraceMs = Math.max(phase.heartbeatGraceMs, phase.quietAfterMs)
 
   const failClosed = (error: unknown): void => {
     fatalError =
@@ -7416,7 +7422,7 @@ async function createCommandOwnedChildWatchdog(input: {
       return (
         renewalAuthorized &&
         !fatalError &&
-        now - lastExactHealthMonotonicMs <= phase.heartbeatGraceMs
+        now - lastExactHealthMonotonicMs <= leaseHealthProofGraceMs
       )
     },
     fail(error) {

@@ -599,9 +599,9 @@ describe("native PTY TUI matrix", () => {
         session.write("\x7f\x7f")
         session.typeText("pt-BR")
         session.write("\r")
-        await session.waitForOutput("pt-BR · draft", cursor)
+        await session.waitForRenderedText("pt-BR · draft", cursor)
         session.write("v")
-        await session.waitForOutput("apply this run: available", cursor)
+        await session.waitForRenderedText("apply this run: available", cursor)
         session.write("w")
         await session.waitForOutput("CONFIRM: save workspace", cursor)
         session.write("\r")
@@ -614,7 +614,7 @@ describe("native PTY TUI matrix", () => {
         // explicit global-default mutation without relying on hidden state.
         await session.waitForOutput("EDIT Language> en", cursor)
         session.write("\r")
-        await session.waitForOutput("en · draft", cursor)
+        await session.waitForRenderedText("en · draft", cursor)
         session.write("g")
         await session.waitForOutput("CONFIRM: save global", cursor)
         session.write("\r")
@@ -626,13 +626,13 @@ describe("native PTY TUI matrix", () => {
         session.write("\x7f\x7f")
         session.typeText("pt-BR")
         session.write("\r")
-        await session.waitForOutput("pt-BR · draft", cursor)
+        await session.waitForRenderedText("pt-BR · draft", cursor)
         // Preview is the deterministic acknowledgement that the final draft
         // revision reached the shared settings handler and is applyable. Do not
         // race Apply against a screen redraw or rely on an arbitrary delay.
         cursor = session.mark()
         session.write("v")
-        await session.waitForOutput("apply this run: available", cursor)
+        await session.waitForRenderedText("apply this run: available", cursor)
         session.write("a")
 
         await session.waitForOutput("RALPH_PTY_PRE_RUN_RESULT:")
