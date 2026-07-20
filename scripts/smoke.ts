@@ -604,7 +604,11 @@ async function observe(
   if (observation.timedOut) throw new Error(`${args.join(" ")} exceeded the smoke timeout`)
   assertNoSecretLeak(
     [stdout, stderr],
-    [...secretValuesFromEnvironment(), SUBPROCESS_SECRET_CANARY],
+    // Compare against the exact isolated environment handed to this child.
+    // Host-only credentials are deliberately excluded from the subprocess;
+    // treating an unrelated short host value as an output substring creates a
+    // false leak report without testing the actual process boundary.
+    [...secretValuesFromEnvironment(environment), SUBPROCESS_SECRET_CANARY],
     `Smoke command ${args.join(" ")}`,
   )
   if (exitCode !== 0) {
