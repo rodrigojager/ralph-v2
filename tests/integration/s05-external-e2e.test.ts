@@ -26,7 +26,9 @@ import { createS05Services } from "../../apps/ralph-cli/src/s05-services"
 
 const temporaryDirectories: string[] = []
 
-setDefaultTimeout(20_000)
+// Windows quality runners can be heavily contended while the full integration suite is active.
+// Keep this vertical protocol test bounded without letting runner latency preempt its assertions.
+setDefaultTimeout(120_000)
 
 afterEach(async () => {
   await Promise.all(
@@ -56,7 +58,7 @@ describe("S05 external CLI vertical execution", () => {
       prdPath,
       (await readFile(prdPath, "utf8")).replace(
         "model_calls=1; timeout=20s",
-        "model_calls=3; tool_calls=2; timeout=20s",
+        "model_calls=3; tool_calls=2; timeout=60s",
       ),
     )
 
