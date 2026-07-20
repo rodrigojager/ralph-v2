@@ -851,5 +851,9 @@ try {
     ),
   )
 } finally {
-  await rm(temporaryRoot, { recursive: true, force: true })
+  // Windows security/indexing can briefly retain a handle after the last
+  // standalone child exits. Node's recursive rm retries EBUSY/EPERM with a
+  // bounded linear backoff; never convert a transient cleanup lock into a
+  // false artifact-smoke failure.
+  await rm(temporaryRoot, { recursive: true, force: true, maxRetries: 20, retryDelay: 100 })
 }

@@ -699,14 +699,11 @@ describe("native PTY TUI matrix", () => {
         // renderer-owned acknowledgement that global key handling is active.
         await background.waitForOutput("q close/background")
         background.write("q")
-        await background.waitForOutput("RALPH_PTY_BACKGROUND:source-progressed-without-renderer")
-        await background.waitForOutput("RALPH_PTY_BACKGROUND_RESULT:")
-        expect(await background.waitForExit()).toBe(0)
-
-        const backgroundResult = markerJson<{
+        const backgroundResult = await readJsonFileWhenAvailable<{
           status: string
           progress: { completed: number; total: number }
-        }>(background.output(), "RALPH_PTY_BACKGROUND_RESULT")
+        }>(`${stateFile}.background-result.json`)
+        expect(await background.waitForExit()).toBe(0)
         expect(backgroundResult).toEqual({
           status: "running",
           progress: { completed: 2, total: 3 },
@@ -732,7 +729,6 @@ describe("native PTY TUI matrix", () => {
           reattach.write("?")
           await reattach.waitForOutput("RALPH TUI · KEYS", cursor)
           reattach.write("\x03")
-          await reattach.waitForOutput("RALPH_PTY_CTRL_C:command-owned-interrupt")
           const reattachResult = await readJsonFileWhenAvailable<{
             interrupted: boolean
             status: string

@@ -3,7 +3,6 @@ import { createCommandShutdownLifecycle } from "../../../../apps/ralph-cli/src/c
 import {
   installPtyChildDiagnostics,
   markPtyChildStage,
-  writePtyChildOutput,
 } from "../../../../tests/fixtures/pty/child-diagnostics"
 import {
   createEmptyRunUiSnapshot,
@@ -25,6 +24,7 @@ if ((phase !== "background" && phase !== "reattach") || !stateFile) {
   )
 }
 const parentAcknowledgementFile = `${stateFile}.parent-observed`
+const backgroundResultFile = `${stateFile}.background-result.json`
 const reattachResultFile = `${stateFile}.reattach-result.json`
 
 async function waitForParentAcknowledgement(path: string): Promise<void> {
@@ -137,14 +137,20 @@ if (phase === "background") {
   )
   source.flushNow()
   await writeFile(stateFile, JSON.stringify(source.getSnapshot()), "utf8")
-  await writePtyChildOutput("\nRALPH_PTY_BACKGROUND:source-progressed-without-renderer\n")
-  await writePtyChildOutput(
-    `RALPH_PTY_BACKGROUND_RESULT:${JSON.stringify({
+  // Closing OpenTUI also closes the ConPTY output channel on some Windows
+  // runners. Publish the post-renderer result atomically instead of racing an
+  // informational stdout write against a pipe that is already gone.
+  const backgroundResultStagingFile = `${backgroundResultFile}.${process.pid}.tmp`
+  await writeFile(
+    backgroundResultStagingFile,
+    JSON.stringify({
       status: source.getSnapshot().status,
       progress: source.getSnapshot().progress,
-    })}\n`,
+    }),
+    "utf8",
   )
-  markPtyChildStage("lifecycle.background.result-written")
+  await rename(backgroundResultStagingFile, backgroundResultFile)
+  markPtyChildStage("lifecycle.background.result-persisted")
 } else {
   // Reattach is a new CLI invocation in production. Use a fresh process and a
   // fresh renderer, hydrating only the durable source projection written by
@@ -180,9 +186,6 @@ if (phase === "background") {
   await handle.closed
   markPtyChildStage("lifecycle.reattach.handle-closed")
   await shutdown.close()
-  if (interrupted) {
-    await writePtyChildOutput("\nRALPH_PTY_CTRL_C:command-owned-interrupt\n")
-  }
   const result = {
     interrupted,
     status: source.getSnapshot().status,
