@@ -114,6 +114,11 @@ jobs:
           --expected-arch x64
 
       - name: Build native standalone
+        env:
+          # Bun 1.3.14 extracts cross-target runtimes relative to the checkout,
+          # then moves them into this cache. Keep both on the runner's work
+          # drive so Windows does not fail the move across D: and C:.
+          BUN_INSTALL_CACHE_DIR: ${{ runner.temp }}/bun-install-cache
         run: >-
           bun run scripts/ci/run-step.ts
           --id build
@@ -286,6 +291,11 @@ jobs:
           --expected-arch ${{ matrix.architecture }}
 
       - name: Build native standalone
+        env:
+          # Bun 1.3.14 extracts cross-target runtimes relative to the checkout,
+          # then moves them into this cache. Keep both on the runner's work
+          # drive so Windows does not fail the move across D: and C:.
+          BUN_INSTALL_CACHE_DIR: ${{ runner.temp }}/bun-install-cache
         run: >-
           bun run scripts/ci/run-step.ts
           --id build
