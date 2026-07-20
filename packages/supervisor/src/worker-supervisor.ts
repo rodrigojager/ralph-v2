@@ -952,10 +952,9 @@ export async function spawnTypedWorker(
   )
   if (process.platform === "win32") {
     try {
-      windowsJob = WindowsProcessJob.tryCreate()
-      windowsJob?.assign(child.pid)
+      windowsJob = await WindowsProcessJob.createForProcess(child.pid)
     } catch (error) {
-      windowsJob?.close()
+      await windowsJob?.close()
       windowsJob = undefined
       killWorkerTree()
       state = "failed"
@@ -1027,14 +1026,14 @@ export async function spawnTypedWorker(
   }, spec.startupTimeoutMs)
   void ready.finally(() => clearTimeout(startupTimeout)).catch(() => undefined)
 
-  const settlement = child.exited.then((code) => {
+  const settlement = child.exited.then(async (code) => {
     if (state === "starting") {
       readyReject(new Error(`Worker ${spec.workerId} exited before becoming ready (code ${code})`))
     }
     exitCode = code
     exitSignal = child.signalCode ?? undefined
     state = state === "failed" ? "failed" : "exited"
-    windowsJob?.close()
+    await windowsJob?.close()
     rejectAll(new Error(`Worker ${spec.workerId} exited with code ${code}`))
     observeState()
     return { exitCode: code, snapshot: snapshot() }
@@ -1046,7 +1045,7 @@ export async function spawnTypedWorker(
     if (outcome === "timeout" && child.exitCode === null) {
       killWorkerTree()
       if (process.platform === "win32" && windowsJob) {
-        windowsJob.close()
+        await windowsJob.close()
         windowsJob = undefined
       }
       throw new Error(

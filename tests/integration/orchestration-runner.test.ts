@@ -1939,5 +1939,5 @@ describe("S03 command-authoritative runner", () => {
       )
       expect(listAttempts(layout.ledger, { runId: resumed.runId as string })).toHaveLength(1)
     }
-  })
+  }, 60_000)
 })

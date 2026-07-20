@@ -352,8 +352,8 @@ async function spawnWindowsProcess(
   child: Bun.ReadableSubprocess
   windowsJob: WindowsProcessJob | undefined
 }> {
-  const windowsJob = WindowsProcessJob.tryCreate()
-  let child: Bun.PipedSubprocess
+  let windowsJob: WindowsProcessJob | undefined
+  let child!: Bun.PipedSubprocess
   try {
     child = Bun.spawn([process.execPath, "-e", WINDOWS_LAUNCHER_SOURCE], {
       cwd,
@@ -364,13 +364,15 @@ async function spawnWindowsProcess(
       detached: true,
       windowsHide: true,
     })
+    windowsJob = await WindowsProcessJob.createForProcess(child.pid)
   } catch (error) {
-    windowsJob?.close()
+    if (child?.exitCode === null) child.kill(9)
+    await child?.exited.catch(() => undefined)
+    await windowsJob?.close()
     throw error
   }
 
   try {
-    windowsJob?.assign(child.pid)
     const request: WindowsLauncherRequest = {
       schemaVersion: 3,
       argv,
@@ -387,7 +389,7 @@ async function spawnWindowsProcess(
     windowsJob?.terminate()
     if (child.exitCode === null) child.kill(9)
     await child.exited.catch(() => undefined)
-    windowsJob?.close()
+    await windowsJob?.close()
     throw error
   }
 }
@@ -472,7 +474,9 @@ export class BunProcessSupervisor implements ProcessSupervisor {
     executable: string,
     environment?: Readonly<Record<string, string | undefined>>,
   ): string | null {
-    if (executable === "bun" || executable === "bun.exe") return process.execPath
+    if (executable === "bun" || executable === "bun.exe") {
+      return realpathSync.native(process.execPath)
+    }
     const path = environment ? environmentValue(environment, "PATH") : undefined
     return Bun.which(executable, path ? { PATH: path } : undefined)
   }
@@ -692,7 +696,9 @@ export class BunProcessSupervisor implements ProcessSupervisor {
     const treeMayStillBeAlive = (): boolean => {
       if (process.platform === "win32") {
         try {
-          return windowsJob ? windowsJob.activeProcessCount() > 0 : child.exitCode === null
+          return windowsJob?.hasProcessAccounting()
+            ? windowsJob.activeProcessCount() > 0
+            : child.exitCode === null
         } catch {
           // A query failure is not evidence that the tree is gone. Keep the
           // conservative answer so the forced termination path still runs.
@@ -720,7 +726,12 @@ export class BunProcessSupervisor implements ProcessSupervisor {
         }
         const treeStillAlive = treeMayStillBeAlive()
         if (treeWasAlive && !treeStillAlive) treeTerminated = true
-        if (treeStillAlive) {
+        if (
+          treeStillAlive ||
+          (process.platform === "win32" &&
+            windowsJob !== undefined &&
+            !windowsJob.hasProcessAccounting())
+        ) {
           treeTerminated = (await terminateTree(true)) || treeTerminated
         }
       })()
@@ -765,7 +776,7 @@ export class BunProcessSupervisor implements ProcessSupervisor {
       if (treeMayStillBeAlive()) {
         treeTerminated = (await terminateTree(true)) || treeTerminated
       }
-      windowsJob?.close()
+      await windowsJob?.close()
       const outputRefs: string[] = []
       if (this.#outputStore) {
         try {

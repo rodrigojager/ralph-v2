@@ -9,6 +9,27 @@ import { setTimeout as delay } from "node:timers/promises"
 const WINDOWS_RENAME_RETRY_DELAYS_MS = [0, 10, 25, 50, 100] as const
 const WINDOWS_RETRYABLE_RENAME_CODES = new Set(["EACCES", "EBUSY", "EEXIST", "ENOTEMPTY", "EPERM"])
 const ERROR_UNABLE_TO_MOVE_REPLACEMENT_2 = 1177
+const WINDOWS_REPLACE_TIMEOUT_MS = 15_000
+
+const WINDOWS_REPLACE_FILE_SCRIPT = `
+$ErrorActionPreference = "Stop"
+try {
+  $request = [Console]::In.ReadToEnd() | ConvertFrom-Json
+  [System.IO.File]::Replace(
+    [string]$request.source,
+    [string]$request.target,
+    [string]$request.recovery,
+    $true
+  )
+} catch {
+  $code = $_.Exception.HResult -band 0xffff
+  [Console]::Error.Write("RALPH_WINDOWS_ERROR:$code:" + $_.Exception.Message)
+  exit 1
+}
+`
+const WINDOWS_REPLACE_FILE_ENCODED = Buffer.from(WINDOWS_REPLACE_FILE_SCRIPT, "utf16le").toString(
+  "base64",
+)
 
 function isUnavailableBunFfi(error: unknown): boolean {
   return (
@@ -42,21 +63,23 @@ function windowsWideString(value: string): Uint8Array {
 }
 
 async function replaceFileAtomicWindows(source: string, target: string): Promise<void> {
-  if (!windowsFiles) throw new Error("ReplaceFileW is unavailable in this Bun build")
   const recovery = join(
     dirname(target),
     `.${basename(target)}.${process.pid}.${crypto.randomUUID()}.recovery`,
   )
-  const replaced = windowsFiles.symbols.ReplaceFileW(
-    windowsWideString(target),
-    windowsWideString(source),
-    windowsWideString(recovery),
-    0,
-    null,
-    null,
-  )
-  if (replaced === 0) {
-    const code = windowsFiles.symbols.GetLastError()
+  const code = windowsFiles
+    ? windowsFiles.symbols.ReplaceFileW(
+        windowsWideString(target),
+        windowsWideString(source),
+        windowsWideString(recovery),
+        0,
+        null,
+        null,
+      ) === 0
+      ? windowsFiles.symbols.GetLastError()
+      : 0
+    : await replaceFileAtomicWindowsWithPowerShell(source, target, recovery)
+  if (code !== 0) {
     if (code === ERROR_UNABLE_TO_MOVE_REPLACEMENT_2) {
       try {
         await restoreWindowsRecovery(recovery, target)
@@ -75,6 +98,77 @@ async function replaceFileAtomicWindows(source: string, target: string): Promise
   // old-reader handle, retaining the narrowly named recovery file is safer than
   // reporting a false rollback after the new target has already committed.
   await rm(recovery, { force: true }).catch(() => undefined)
+}
+
+async function replaceFileAtomicWindowsWithPowerShell(
+  source: string,
+  target: string,
+  recovery: string,
+): Promise<number> {
+  const powershell = Bun.which("powershell.exe") ?? Bun.which("pwsh.exe") ?? Bun.which("pwsh")
+  if (!powershell) throw new Error("PowerShell is unavailable for atomic Windows replacement")
+  const child = Bun.spawn(
+    [
+      powershell,
+      "-NoLogo",
+      "-NoProfile",
+      "-NonInteractive",
+      "-EncodedCommand",
+      WINDOWS_REPLACE_FILE_ENCODED,
+    ],
+    {
+      env: windowsPowerShellEnvironment(),
+      stdin: "pipe",
+      stdout: "ignore",
+      stderr: "pipe",
+      windowsHide: true,
+    },
+  )
+  const stderrPromise = new Response(child.stderr).text()
+  await child.stdin.write(JSON.stringify({ source, target, recovery }))
+  await child.stdin.end()
+  let timeout: ReturnType<typeof setTimeout> | undefined
+  const outcome = await Promise.race([
+    child.exited.then((exitCode) => ({ exitCode })),
+    new Promise<{ exitCode: undefined }>((resolveTimeout) => {
+      timeout = setTimeout(
+        () => resolveTimeout({ exitCode: undefined }),
+        WINDOWS_REPLACE_TIMEOUT_MS,
+      )
+    }),
+  ])
+  if (timeout) clearTimeout(timeout)
+  if (outcome.exitCode === undefined) {
+    child.kill(9)
+    await child.exited.catch(() => undefined)
+    await stderrPromise.catch(() => "")
+    throw new Error("PowerShell atomic Windows replacement timed out")
+  }
+  const stderr = await stderrPromise
+  if (outcome.exitCode === 0) return 0
+  const windowsCode = /RALPH_WINDOWS_ERROR:(\d+):/u.exec(stderr)?.[1]
+  if (!windowsCode) {
+    throw new Error(`PowerShell atomic Windows replacement failed: ${stderr || "unknown error"}`)
+  }
+  return Number.parseInt(windowsCode, 10)
+}
+
+function windowsPowerShellEnvironment(): Record<string, string> {
+  const environment: Record<string, string> = {}
+  for (const key of [
+    "SystemRoot",
+    "WINDIR",
+    "SystemDrive",
+    "PATH",
+    "PATHEXT",
+    "TEMP",
+    "TMP",
+    "PSModulePath",
+  ]) {
+    const value = process.env[key]
+    if (value !== undefined) environment[key] = value
+  }
+  return environment
 }
 
 async function restoreWindowsRecovery(recovery: string, target: string): Promise<void> {

@@ -32,7 +32,7 @@ const LATEST = "2026-07-18T12:02:00.000Z"
 const HASH_A = "a".repeat(64)
 const HASH_B = "b".repeat(64)
 const HASH_C = "c".repeat(64)
-const CURRENT_LEDGER_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+const CURRENT_LEDGER_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
 const temporaryDirectories: string[] = []
 

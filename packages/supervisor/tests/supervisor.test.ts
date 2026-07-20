@@ -1,10 +1,16 @@
-import { describe, expect, test } from "bun:test"
+import { describe, expect, setDefaultTimeout, test } from "bun:test"
 import { mkdtemp, readFile, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 import { BunProcessSupervisor } from "../src"
 
 const processTreeFixture = resolve(import.meta.dir, "fixtures", "process-tree.ts")
+
+// Windows ARM64 uses the native PowerShell/.NET Job Object controller when
+// Bun's experimental FFI backend is unavailable. Starting that controller is
+// still bounded by production deadlines, but can exceed Bun's five-second
+// default on a cold hosted runner.
+setDefaultTimeout(30_000)
 
 function processIsAlive(pid: number): boolean {
   try {
@@ -19,7 +25,7 @@ async function waitFor<T>(
   probe: () => T | undefined | Promise<T | undefined>,
   description: string,
 ): Promise<T> {
-  const deadline = performance.now() + 5_000
+  const deadline = performance.now() + 15_000
   while (performance.now() < deadline) {
     const value = await probe()
     if (value !== undefined) return value

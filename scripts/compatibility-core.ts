@@ -463,7 +463,11 @@ async function runCapture(
   const { exitCode, stdout, stderr, timedOut } = captured
   assertNoSecretLeak(
     [stdout, stderr],
-    [...secretValuesFromEnvironment(), SUBPROCESS_SECRET_CANARY],
+    // Compare against the exact isolated environment handed to this child.
+    // Host-only credentials are deliberately excluded from the subprocess;
+    // treating an unrelated short host value as an output substring creates a
+    // false leak report without testing the actual process boundary.
+    [...secretValuesFromEnvironment(environment), SUBPROCESS_SECRET_CANARY],
     `Compatibility command ${arguments_.join(" ")}`,
   )
   return {

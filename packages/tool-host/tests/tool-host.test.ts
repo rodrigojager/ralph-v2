@@ -1,5 +1,14 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from "node:fs/promises"
+import {
+  mkdir,
+  mkdtemp,
+  readFile,
+  realpath,
+  rename,
+  rm,
+  symlink,
+  writeFile,
+} from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 import { z } from "zod"
@@ -21,6 +30,10 @@ const temporary: string[] = []
 afterEach(async () => {
   await Promise.all(temporary.splice(0).map((path) => rm(path, { recursive: true, force: true })))
 })
+
+async function testDirectory(prefix: string): Promise<string> {
+  return realpath(await mkdtemp(join(tmpdir(), prefix)))
+}
 
 function policy(overrides: Record<string, unknown> = {}) {
   return ToolPolicySchema.parse({
@@ -154,7 +167,7 @@ function processPolicy(securityMode: "safe" | "auto" | "dangerous", allowUnliste
 
 describe("tool host governance", () => {
   test("never exposes the Ralph control directory to executor read tools", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-control-read-"))
+    const root = await testDirectory("ralph-tool-host-control-read-")
     temporary.push(root)
     await mkdir(resolve(root, ".ralph", "runs", "run", "evaluation"), { recursive: true })
     await writeFile(
@@ -179,7 +192,7 @@ describe("tool host governance", () => {
   })
 
   test("materializes exactly ten builtins and keeps judges read-only", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-"))
+    const root = await testDirectory("ralph-tool-host-")
     temporary.push(root)
     const registry = createBuiltinToolRegistry()
     expect(registry.names()).toHaveLength(10)
@@ -215,7 +228,7 @@ describe("tool host governance", () => {
   })
 
   test("denies a judge write request even under a nominal dangerous allow rule", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-judge-write-"))
+    const root = await testDirectory("ralph-tool-host-judge-write-")
     temporary.push(root)
     const target = join(root, "judge-must-not-write.txt")
     const session: ToolSession = {
@@ -253,7 +266,7 @@ describe("tool host governance", () => {
   })
 
   test("settles additive tool schema abuse as invalid before any effect", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-schema-abuse-"))
+    const root = await testDirectory("ralph-tool-host-schema-abuse-")
     temporary.push(root)
     const target = join(root, "schema-abuse.txt")
 
@@ -314,7 +327,7 @@ describe("tool host governance", () => {
   })
 
   test("safe mode requires an exact argv rule even when process.exec is nominally allowed", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-process-"))
+    const root = await testDirectory("ralph-tool-host-process-")
     temporary.push(root)
     const executions: string[][] = []
     const { host, journal } = processHost(executions)
@@ -332,7 +345,7 @@ describe("tool host governance", () => {
   })
 
   test("auto mode asks and therefore denies headless argv outside the exact command rule", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-process-"))
+    const root = await testDirectory("ralph-tool-host-process-")
     temporary.push(root)
     const executions: string[][] = []
     const { host } = processHost(executions)
@@ -347,7 +360,7 @@ describe("tool host governance", () => {
   })
 
   test("allows an unsafe headless ask only when explicit and records the audited override", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-headless-ask-"))
+    const root = await testDirectory("ralph-tool-host-headless-ask-")
     temporary.push(root)
     const executions: string[][] = []
     const { host, journal } = processHost(executions)
@@ -369,7 +382,7 @@ describe("tool host governance", () => {
   })
 
   test("matches metacharacters as one literal argv value without invoking a shell", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-argv-literal-"))
+    const root = await testDirectory("ralph-tool-host-argv-literal-")
     temporary.push(root)
     const executions: string[][] = []
     const { host } = processHost(executions)
@@ -407,7 +420,7 @@ describe("tool host governance", () => {
   })
 
   test("dangerous mode still needs an exact rule unless unlisted processes are explicitly enabled", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-process-"))
+    const root = await testDirectory("ralph-tool-host-process-")
     temporary.push(root)
     const executions: string[][] = []
     const { host, journal } = processHost(executions)
@@ -440,7 +453,7 @@ describe("tool host governance", () => {
   })
 
   test("persists intent before effects and does not replay a provider call", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-"))
+    const root = await testDirectory("ralph-tool-host-")
     temporary.push(root)
     const order: string[] = []
     class TrackingJournal extends InMemoryToolJournal {
@@ -529,7 +542,7 @@ describe("tool host governance", () => {
 
 describe("workspace path escape rejection", () => {
   test("rejects parent traversal and Windows-equivalent backslash traversal", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-paths-"))
+    const root = await testDirectory("ralph-tool-host-paths-")
     temporary.push(root)
     const resolver = await WorkspacePathResolver.create(root, policy())
 
@@ -544,7 +557,7 @@ describe("workspace path escape rejection", () => {
   })
 
   test("rejects native, POSIX, Windows drive, and UNC absolute paths", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-paths-"))
+    const root = await testDirectory("ralph-tool-host-paths-")
     temporary.push(root)
     const resolver = await WorkspacePathResolver.create(root, policy())
     const nativeAbsolute = resolve(root, "capability.txt").replaceAll("\\", "/")
@@ -563,7 +576,7 @@ describe("workspace path escape rejection", () => {
   })
 
   test("ToolHost settles traversal and absolute writes as invalid without effects", async () => {
-    const container = await mkdtemp(join(tmpdir(), "ralph-tool-host-escape-"))
+    const container = await testDirectory("ralph-tool-host-escape-")
     temporary.push(container)
     const root = join(container, "workspace")
     const outside = join(container, "outside.txt")
@@ -607,7 +620,7 @@ describe("workspace path escape rejection", () => {
 
 describe("atomic workspace writes", () => {
   test("creates a file while tolerating only the staged parent metadata change", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-write-"))
+    const root = await testDirectory("ralph-tool-host-write-")
     temporary.push(root)
     await mkdir(join(root, "product"))
 
@@ -629,7 +642,7 @@ describe("atomic workspace writes", () => {
   })
 
   test("atomically replaces an existing file under its SHA-256 precondition", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-write-"))
+    const root = await testDirectory("ralph-tool-host-write-")
     temporary.push(root)
     await mkdir(join(root, "product"))
     await writeFile(join(root, "product", "capability.txt"), "before", "utf8")
@@ -652,7 +665,7 @@ describe("atomic workspace writes", () => {
   })
 
   test("rejects a parent directory identity swap during staging", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-write-"))
+    const root = await testDirectory("ralph-tool-host-write-")
     temporary.push(root)
     await mkdir(join(root, "product"))
     const resolver = await WorkspacePathResolver.create(root, policy())
@@ -668,8 +681,8 @@ describe("atomic workspace writes", () => {
   })
 
   test("rejects a symlink or junction parent escape during staging", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-write-"))
-    const outside = await mkdtemp(join(tmpdir(), "ralph-tool-host-outside-"))
+    const root = await testDirectory("ralph-tool-host-write-")
+    const outside = await testDirectory("ralph-tool-host-outside-")
     temporary.push(root, outside)
     await mkdir(join(root, "product"))
     const resolver = await WorkspacePathResolver.create(root, policy())
@@ -685,7 +698,7 @@ describe("atomic workspace writes", () => {
   })
 
   test("keeps the target fingerprint strict while parent metadata is permitted", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-tool-host-write-"))
+    const root = await testDirectory("ralph-tool-host-write-")
     temporary.push(root)
     await mkdir(join(root, "product"))
     const targetPath = join(root, "product", "capability.txt")

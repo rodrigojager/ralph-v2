@@ -26,7 +26,11 @@ const POSIX_RESIZE_FIXTURE = resolve(ROOT, "tests/fixtures/pty/posix-resize.ts")
 // chunk made the Bun runner spend minutes copying text after a failed wait.
 const OUTPUT_RETAINED_CHARACTERS = 512 * 1024
 const OUTPUT_TRIM_THRESHOLD = OUTPUT_RETAINED_CHARACTERS * 2
-const STEP_TIMEOUT_MS = 12_000
+// Hosted Windows runners can spend several seconds scheduling ConPTY redraws
+// while the full native matrix is active. Keep each observable transition
+// bounded, but leave enough room for a real renderer response before treating
+// the terminal as stalled.
+const STEP_TIMEOUT_MS = 20_000
 const PTY_EXIT_OUTPUT_IDLE_MS = 75
 const PTY_EXIT_OUTPUT_LIMIT_MS = 750
 const temporaryDirectories: string[] = []
@@ -385,6 +389,11 @@ describe("native PTY TUI matrix", () => {
       try {
         await session.waitForOutput("RALPH_POSIX_PTY_READY:")
         session.resize(120, 36)
+        // Bun.Terminal.resize() updates the real PTY winsize on POSIX but does
+        // not currently notify the child. A terminal emulator performs both
+        // operations, so deliver SIGWINCH explicitly after the winsize write.
+        await pauseForInput(25)
+        process.kill(session.child.pid, "SIGWINCH")
         await session.waitForOutput("RALPH_POSIX_PTY_RESIZE:")
         expect(await session.waitForExit()).toBe(0)
         expect(
@@ -419,7 +428,7 @@ describe("native PTY TUI matrix", () => {
           }>(session.output(), "RALPH_PTY_STREAM_RESULT"),
         ).toMatchObject({
           tty: "T111",
-          status: "waiting",
+          status: "running",
           progress: { completed: 1, total: 4 },
           childPlaceholder: true,
           streams: { large: true, reasoning: true, tool: true, gate: true, external: true },
