@@ -18,7 +18,7 @@
     },
     "apps/ralph-cli": {
       "name": "ralph-next",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "bin": {
         "ralph-next": "./src/main.ts",
       },
@@ -44,14 +44,14 @@
     },
     "apps/ralph-launcher": {
       "name": "@ralph-next/launcher",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/distribution": "workspace:*",
       },
     },
     "packages/commands": {
       "name": "@ralph-next/commands",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/credentials": "workspace:*",
         "@ralph-next/distribution": "workspace:*",
@@ -67,14 +67,14 @@
     },
     "packages/credentials": {
       "name": "@ralph-next/credentials",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "zod": "4.4.3",
       },
     },
     "packages/distribution": {
       "name": "@ralph-next/distribution",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/domain": "workspace:*",
         "zod": "4.4.3",
@@ -82,14 +82,14 @@
     },
     "packages/domain": {
       "name": "@ralph-next/domain",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "zod": "4.4.3",
       },
     },
     "packages/evaluation": {
       "name": "@ralph-next/evaluation",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/domain": "workspace:*",
         "zod": "4.4.3",
@@ -97,7 +97,7 @@
     },
     "packages/model-drivers": {
       "name": "@ralph-next/model-drivers",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/domain": "workspace:*",
         "@ralph-next/evaluation": "workspace:*",
@@ -114,11 +114,11 @@
     },
     "packages/openai-driver": {
       "name": "@ralph-next/openai-driver",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
     },
     "packages/orchestration": {
       "name": "@ralph-next/orchestration",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/domain": "workspace:*",
         "@ralph-next/evaluation": "workspace:*",
@@ -133,7 +133,7 @@
     },
     "packages/persistence": {
       "name": "@ralph-next/persistence",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/domain": "workspace:*",
         "@ralph-next/telemetry": "workspace:*",
@@ -142,7 +142,7 @@
     },
     "packages/prd": {
       "name": "@ralph-next/prd",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/domain": "workspace:*",
         "@ralph-next/persistence": "workspace:*",
@@ -156,14 +156,14 @@
     },
     "packages/providers": {
       "name": "@ralph-next/providers",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "zod": "4.4.3",
       },
     },
     "packages/supervisor": {
       "name": "@ralph-next/supervisor",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/domain": "workspace:*",
         "@ralph-next/telemetry": "workspace:*",
@@ -172,7 +172,7 @@
     },
     "packages/telemetry": {
       "name": "@ralph-next/telemetry",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/domain": "workspace:*",
         "@ralph-next/providers": "workspace:*",
@@ -181,7 +181,7 @@
     },
     "packages/test-kit": {
       "name": "@ralph-next/test-kit",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/credentials": "workspace:*",
         "@ralph-next/domain": "workspace:*",
@@ -193,7 +193,7 @@
     },
     "packages/tool-host": {
       "name": "@ralph-next/tool-host",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/supervisor": "workspace:*",
         "@ralph-next/telemetry": "workspace:*",
@@ -202,7 +202,7 @@
     },
     "packages/tui": {
       "name": "@ralph-next/tui",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@opentui/core": "0.4.5",
         "@opentui/solid": "0.4.5",
@@ -211,7 +211,7 @@
     },
     "packages/verification": {
       "name": "@ralph-next/verification",
-      "version": "0.1.0-beta.1",
+      "version": "0.1.0-beta.2",
       "dependencies": {
         "@ralph-next/domain": "workspace:*",
         "@ralph-next/prd": "workspace:*",

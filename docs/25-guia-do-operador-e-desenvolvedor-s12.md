@@ -354,7 +354,7 @@ O binding de versão é obrigatório: `dev` requer prerelease iniciado por `dev`
 prerelease iniciado por `nightly` ou `dev`; `beta` requer `beta`; `stable` proíbe prerelease.
 Metadata `+...` não muda o canal. No npm, os únicos bindings de `dist-tag` são respectivamente
 `dev`, `nightly`, `beta` e `latest`; qualquer divergência bloqueia o empacotamento. A versão atual
-`0.1.0-beta.1` pode ser usada somente no canal `beta`, nunca em `dev`, `nightly` ou `stable`.
+`0.1.0-beta.2` pode ser usada somente no canal `beta`, nunca em `dev`, `nightly` ou `stable`.
 
 Rollback de engine troca somente o pointer para uma versão receipt-bound compatível. Rollback de
 workspace é outra operação, com preview/hash/expiração. Nunca misture os dois.

@@ -29,10 +29,10 @@ automaticamente os gates abaixo.
 - [x] política de assinatura/provenance confirmada para o beta: indisponibilidade explícita, sem
   alegação de assinatura ou confiança; `stable` continua proibido sem signer e trust policy reais.
 
-A identidade aprovada usa `https://github.com/rodrigojager/ralph-v2` e versão `0.1.0-beta.1`. O
+A identidade aprovada usa `https://github.com/rodrigojager/ralph-v2` e versão `0.1.0-beta.2`. O
 origin público, a configuração Pages por workflow e o fetch HTTP 200 de um schema v2 publicado foram
 observados em 2026-07-20. A policy específica está em
-`release/support-policy-0.1.0-beta.1.json`: inclui somente `bun-windows-x64-baseline`; mantém os
+`release/support-policy-0.1.0-beta.2.json`: inclui somente `bun-windows-x64-baseline`; mantém os
 outros cinco targets visíveis e não promovidos, inclusive a limitação OpenTUI de Windows ARM64. O
 snapshot OpenCode conserva sua atribuição MIT separada; a MIT própria da raiz não substitui notices
 de terceiros. O beta usará `--signature-unavailable-reason` porque nenhum signer/trust root foi
@@ -116,7 +116,7 @@ proibidas.
 
 Antes de ler a support policy ou compor artifacts, o standalone vincula o channel à versão raiz:
 `dev` requer prerelease `dev`; `nightly` aceita `nightly` ou `dev`; `beta` requer `beta`; `stable`
-requer ausência de prerelease. A versão raiz atual `0.1.0-beta.1` satisfaz somente o canal `beta`;
+requer ausência de prerelease. A versão raiz atual `0.1.0-beta.2` satisfaz somente o canal `beta`;
 qualquer tentativa `dev`, `nightly` ou `stable` falha fechada antes de compor artifacts.
 
 `--support-policy` é sempre obrigatório. O arquivo schema v1 contém as seis entries em ordem

@@ -5,11 +5,16 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
 
 ## [Unreleased]
 
+## [0.1.0-beta.2] — candidato de hardening
+
 ### Fixed
 
 - Portabilidade de workers/gates Bun, leitura SQLite em WAL no macOS, encerramento de árvores de
   processo sem FFI no Windows ARM64, resize PTY nativo e isolamento de refs Git paralelas.
 - Fixtures e budgets da matriz de CI alinhados ao schema/migrations atuais e a runners mais lentos.
+- Flush determinístico de evidence grande em Unix, heartbeat de encerramento tolerante a mensagens
+  autenticadas em trânsito, normalização C1 do ConPTY e fallback PowerShell 7 para identidade de
+  processo em Windows ARM64.
 
 ## [0.1.0-beta.1] — candidato não publicado
 

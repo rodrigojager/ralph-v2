@@ -722,7 +722,7 @@ promover resultado local a suporte de release.
 ### B02 — identidade decidida; publicação do namespace ainda pendente
 
 O proprietário delegou a decisão e o source agora declara MIT própria, `ralph-next`, versão
-`0.1.0-beta.1`, channel `beta` e repositório `https://github.com/rodrigojager/ralph-v2`. O gerador
+`0.1.0-beta.2`, channel `beta` e repositório `https://github.com/rodrigojager/ralph-v2`. O gerador
 usa `$id` sob `https://rodrigojager.github.io/ralph-v2/schemas/v2/`, materializado por workflow Pages
 com actions pinadas por SHA. `private: true` permanece apenas no monorepo de desenvolvimento; o
 packager npm produz staging público separado.

@@ -259,12 +259,12 @@ TUI/attach em PTY, providers reais nem a matriz externa exigida por esses casos.
 ## Identidade e licença próprias decididas
 
 O proprietário delegou as decisões finais. O source agora usa MIT própria, copyright Rodrigo Jager,
-package/binário `ralph-next`, versão `0.1.0-beta.1`, primeiro channel `beta`, repositório
+package/binário `ralph-next`, versão `0.1.0-beta.2`, primeiro channel `beta`, repositório
 `https://github.com/rodrigojager/ralph-v2` e namespace de schemas
 `https://rodrigojager.github.io/ralph-v2/schemas/v2/`. O monorepo raiz permanece `private: true`
 porque não é o tarball publicável; `package:npm` materializa o package público em staging separado.
 O origin público e um schema v2 servido por GitHub Pages com HTTP 200 foram observados em 2026-07-20.
-A policy `release/support-policy-0.1.0-beta.1.json` inclui somente Windows x64 no primeiro beta e
+A policy `release/support-policy-0.1.0-beta.2.json` inclui somente Windows x64 no primeiro beta e
 registra motivos explícitos para os outros cinco targets; Windows ARM64 permanece não promovido pela
 limitação real do renderer OpenTUI. O beta declara assinatura indisponível porque nenhum signer ou
 trust root independente foi configurado. S12.01 continua aberta até o candidato exato passar pelos
