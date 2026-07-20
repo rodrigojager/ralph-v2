@@ -48,7 +48,11 @@ import { BunProcessSupervisor } from "@ralph-next/supervisor"
 import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph-next/test-kit"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
-setDefaultTimeout(60_000)
+// These black-box recovery cases execute several nested runs and filesystem
+// checkpoints. Keep the test-runner wall-clock guard above the independent
+// per-task 60 s budgets so a contended Windows CI runner cannot cancel a
+// healthy recovery sequence before the engine's own deadlines decide it.
+setDefaultTimeout(120_000)
 
 const temporaryDirectories: string[] = []
 
