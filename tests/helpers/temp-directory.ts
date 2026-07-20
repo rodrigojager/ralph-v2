@@ -14,5 +14,9 @@ export async function removeTestDirectory(path: string): Promise<void> {
   if (dirname(target) !== temporaryRoot || !basename(target).startsWith(TEST_DIRECTORY_PREFIX)) {
     throw new Error(`Refusing to remove a directory outside the Ralph test namespace: ${target}`)
   }
-  await rm(target, { recursive: true, force: true })
+  // Windows scanners and recently closed subprocess handles can transiently
+  // retain a directory. Node/Bun's bounded recursive retry applies only after
+  // the namespace check above, so cleanup stays safe without making EBUSY a
+  // false product failure.
+  await rm(target, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 })
 }

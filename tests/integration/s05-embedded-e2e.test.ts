@@ -259,7 +259,11 @@ async function prepareRun(input: {
   const prdPath = resolve(workspaceRoot, "PRD.md")
   let prdSource = (await readFile(prdPath, "utf8")).replace(
     "model_calls=1; timeout=20s",
-    "model_calls=3; tool_calls=2; timeout=20s",
+    // This adversarial matrix runs five complete scenarios in the shared CI
+    // suite. Keep the production deadline meaningful but large enough that a
+    // saturated Windows runner does not turn scheduler delay into the behavior
+    // under test.
+    "model_calls=3; tool_calls=2; timeout=120s",
   )
   if (input.maliciousPrdPrompt) {
     prdSource = prdSource.replace(

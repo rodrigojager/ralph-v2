@@ -29,7 +29,11 @@ import { createTestDirectory, removeTestDirectory } from "../helpers/temp-direct
 
 const temporaryDirectories: string[] = []
 
-setDefaultTimeout(20_000)
+// The full Windows quality matrix can spend tens of seconds in filesystem and
+// process cleanup while 130+ files share the runner. Individual production
+// deadlines remain asserted by their dedicated tests; this suite timeout only
+// prevents scheduler pressure from aborting an otherwise bounded scenario.
+setDefaultTimeout(60_000)
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map(removeTestDirectory))
