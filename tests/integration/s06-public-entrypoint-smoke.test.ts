@@ -56,13 +56,16 @@ describe("S06 public executable judge smoke", () => {
     await unlink(resolve(root, "product", "capability.txt"))
     await initializeWorkspace(root, "0.1.0-s06-public-entrypoint")
     const prd = resolve(root, "PRD.md")
-    await writeFile(
-      prd,
-      (await readFile(prd, "utf8")).replace(
-        "model_calls=1; timeout=20s",
-        "model_calls=3; tool_calls=2; timeout=60s",
-      ),
+    const fixturePrd = await readFile(prd, "utf8")
+    const smokePrd = fixturePrd.replace(
+      "model_calls=1; timeout=20s",
+      "model_calls=3; tool_calls=2; timeout=120s",
     )
+    if (smokePrd === fixturePrd) throw new Error("Public judge smoke task timeout was not found")
+    // This smoke crosses the public CLI plus three cold external-CLI process
+    // turns. Keep the product task deadline below both outer guards while
+    // allowing a loaded hosted Windows runner to make healthy progress.
+    await writeFile(prd, smokePrd)
     await writeFile(
       workspaceLayout(root).config,
       stringify({
@@ -129,8 +132,8 @@ describe("S06 public executable judge smoke", () => {
         new Promise<never>((_, reject) => {
           deadline = setTimeout(() => {
             if (child.exitCode === null) child.kill()
-            reject(new Error("Public entrypoint smoke exceeded its 90s subprocess deadline"))
-          }, 90_000)
+            reject(new Error("Public entrypoint smoke exceeded its 150s subprocess deadline"))
+          }, 150_000)
         }),
       ])
 
@@ -181,5 +184,5 @@ describe("S06 public executable judge smoke", () => {
       if (child.exitCode === null) child.kill()
       await Promise.allSettled([exitPromise, stdoutPromise, stderrPromise])
     }
-  }, 60_000)
+  }, 180_000)
 })
