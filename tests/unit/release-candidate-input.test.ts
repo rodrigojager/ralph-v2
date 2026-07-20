@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { link, mkdtemp, rm, writeFile } from "node:fs/promises"
+import { link, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { resolve } from "node:path"
 import { releaseManifestSigningSha256 } from "@ralph-next/distribution"
@@ -13,7 +13,9 @@ import {
 const temporaryRoots: string[] = []
 
 async function releaseFixture() {
-  const root = await mkdtemp(resolve(tmpdir(), "ralph-release-candidate-input-"))
+  const root = await realpath(
+    await mkdtemp(resolve(await realpath(tmpdir()), "ralph-release-candidate-input-")),
+  )
   temporaryRoots.push(root)
   return createReleaseFixture(root, { version: "0.1.0-dev.1" })
 }

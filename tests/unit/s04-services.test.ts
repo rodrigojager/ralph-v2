@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { mkdir, mkdtemp, readFile, rm, symlink } from "node:fs/promises"
+import { mkdir, mkdtemp, readFile, realpath, rm, symlink } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import {
@@ -47,7 +47,9 @@ afterEach(async () => {
 })
 
 async function temporaryDirectory(): Promise<string> {
-  const directory = await mkdtemp(join(tmpdir(), "ralph-s04-services-"))
+  const directory = await realpath(
+    await mkdtemp(join(await realpath(tmpdir()), "ralph-s04-services-")),
+  )
   temporaryDirectories.push(directory)
   return directory
 }

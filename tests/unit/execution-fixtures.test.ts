@@ -30,6 +30,7 @@ describe("S03 executable PRD fixtures", () => {
       "blocking-gate-failure",
       "deadline",
       "no-change-change-only",
+      "s07-resume-matrix",
       "single-pass",
       "task-options",
       "two-task-order",

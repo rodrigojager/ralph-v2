@@ -10,23 +10,39 @@ const WINDOWS_RENAME_RETRY_DELAYS_MS = [0, 10, 25, 50, 100] as const
 const WINDOWS_RETRYABLE_RENAME_CODES = new Set(["EACCES", "EBUSY", "EEXIST", "ENOTEMPTY", "EPERM"])
 const ERROR_UNABLE_TO_MOVE_REPLACEMENT_2 = 1177
 
-const windowsFiles =
-  process.platform === "win32"
-    ? dlopen("kernel32.dll", {
-        ReplaceFileW: {
-          args: ["ptr", "ptr", "ptr", "u32", "ptr", "ptr"],
-          returns: "i32",
-        },
-        GetLastError: { args: [], returns: "u32" },
-      })
-    : undefined
+function isUnavailableBunFfi(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    (error.message.includes("dlopen() is not available in this build") ||
+      error.message.includes("TinyCC is disabled"))
+  )
+}
+
+const windowsFiles = (() => {
+  if (process.platform !== "win32") return undefined
+  try {
+    return dlopen("kernel32.dll", {
+      ReplaceFileW: {
+        args: ["ptr", "ptr", "ptr", "u32", "ptr", "ptr"],
+        returns: "i32",
+      },
+      GetLastError: { args: [], returns: "u32" },
+    })
+  } catch (error) {
+    // Bun's native Windows arm64 build can omit TinyCC/FFI. Ordinary rename
+    // remains the primary atomic replacement path; only the final sharing-
+    // violation fallback becomes unavailable and continues to fail closed.
+    if (isUnavailableBunFfi(error)) return undefined
+    throw error
+  }
+})()
 
 function windowsWideString(value: string): Uint8Array {
   return Buffer.from(`${value}\0`, "utf16le")
 }
 
 async function replaceFileAtomicWindows(source: string, target: string): Promise<void> {
-  if (!windowsFiles) throw new Error("ReplaceFileW is available only on Windows")
+  if (!windowsFiles) throw new Error("ReplaceFileW is unavailable in this Bun build")
   const recovery = join(
     dirname(target),
     `.${basename(target)}.${process.pid}.${crypto.randomUUID()}.recovery`,

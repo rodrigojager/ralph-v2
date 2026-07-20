@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { mkdtemp, readFile, rm } from "node:fs/promises"
+import { mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 
@@ -15,7 +15,7 @@ afterEach(async () => {
 
 describe("file raw model capture", () => {
   test("keeps a terminal settlement inside the byte bound after truncation", async () => {
-    const directory = await mkdtemp(join(tmpdir(), "ralph-raw-capture-"))
+    const directory = await realpath(await mkdtemp(join(tmpdir(), "ralph-raw-capture-")))
     directories.push(directory)
     const factory = new FileRawModelCaptureFactory({
       directory,

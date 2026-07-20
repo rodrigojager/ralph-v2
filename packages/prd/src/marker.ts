@@ -75,7 +75,8 @@ async function recoverStaleMarkerLock(lockPath: string, staleMs: number): Promis
     } catch {
       // Ralph v2 initially wrote a plain PID; retain recovery compatibility.
     }
-    if (Date.now() - metadata.mtimeMs < staleMs || processIsAlive(pid)) return false
+    if ((staleMs > 0 && Date.now() - metadata.mtimeMs < staleMs) || processIsAlive(pid))
+      return false
     const latest = await stat(lockPath)
     if (
       latest.dev !== metadata.dev ||

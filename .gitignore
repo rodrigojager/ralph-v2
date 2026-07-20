@@ -3,6 +3,8 @@ dist/
 coverage/
 .ralph/
 artifacts/
+!tests/fixtures/s12-vertical-notes-delivery/artifacts/
+!tests/fixtures/s12-vertical-notes-delivery/artifacts/*.md
 *.log
 *.tmp
 .DS_Store

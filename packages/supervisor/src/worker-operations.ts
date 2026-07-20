@@ -1787,7 +1787,9 @@ function assertPayloadBindings(operation: WorkerOperationName, payload: unknown)
         assertCommandIntent(request.invocation.command, "gate")
         const executableCandidate = isAbsolute(declaredCommand.executable)
           ? declaredCommand.executable
-          : Bun.which(declaredCommand.executable)
+          : declaredCommand.executable === "bun" || declaredCommand.executable === "bun.exe"
+            ? process.execPath
+            : Bun.which(declaredCommand.executable)
         if (!executableCandidate) {
           throw new Error(`Gate command executable is unavailable: ${declaredCommand.executable}`)
         }

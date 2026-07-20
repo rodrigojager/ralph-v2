@@ -511,7 +511,21 @@ export async function spawnTypedWorker(
   let child!: Bun.Subprocess<"ignore", "pipe", "pipe">
   const killWorkerTree = (): void => {
     if (!child) return
-    if (process.platform === "win32" && windowsJob?.terminate()) return
+    if (process.platform === "win32") {
+      if (windowsJob?.terminate()) return
+      try {
+        const helper = Bun.spawn(["taskkill.exe", "/PID", String(child.pid), "/T", "/F"], {
+          stdin: "ignore",
+          stdout: "ignore",
+          stderr: "ignore",
+          windowsHide: true,
+        })
+        helper.unref()
+        return
+      } catch {
+        // Fall through to the direct-child last resort below.
+      }
+    }
     if (process.platform !== "win32") {
       try {
         process.kill(-child.pid, "SIGKILL")
@@ -938,8 +952,8 @@ export async function spawnTypedWorker(
   )
   if (process.platform === "win32") {
     try {
-      windowsJob = WindowsProcessJob.create()
-      windowsJob.assign(child.pid)
+      windowsJob = WindowsProcessJob.tryCreate()
+      windowsJob?.assign(child.pid)
     } catch (error) {
       windowsJob?.close()
       windowsJob = undefined

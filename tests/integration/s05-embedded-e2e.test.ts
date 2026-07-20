@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
-import { cp, mkdtemp, readFile, rm, unlink, writeFile } from "node:fs/promises"
+import { cp, mkdtemp, readFile, realpath, rm, unlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 
@@ -49,7 +49,7 @@ const NOW = Date.parse("2026-07-18T15:00:00.000Z")
 const CREDENTIAL_ID = "openai-s05-e2e"
 const temporaryDirectories: string[] = []
 
-setDefaultTimeout(30_000)
+setDefaultTimeout(90_000)
 
 afterEach(async () => {
   await Promise.all(
@@ -122,7 +122,7 @@ function backendWithFailedCallUsage(
 }
 
 async function testDirectory(prefix: string): Promise<string> {
-  const directory = await mkdtemp(join(tmpdir(), prefix))
+  const directory = await realpath(await mkdtemp(join(tmpdir(), prefix)))
   temporaryDirectories.push(directory)
   return directory
 }

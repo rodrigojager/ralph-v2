@@ -1003,8 +1003,8 @@ function reportSummary(scenarios: ScenarioComparison[]): CompatibilityReport["su
 }
 
 function assertSafeTemporaryRoot(path: string): void {
-  const temporaryRoot = realpathSync(resolve(tmpdir()))
-  const candidate = resolve(path)
+  const temporaryRoot = realpathSync.native(resolve(tmpdir()))
+  const candidate = realpathSync.native(resolve(path))
   const segment = relative(temporaryRoot, candidate)
   if (!segment || segment.startsWith(`..${sep}`) || segment === ".." || isAbsolute(segment)) {
     throw new Error(`Refusing to remove unsafe fixture path: ${candidate}`)

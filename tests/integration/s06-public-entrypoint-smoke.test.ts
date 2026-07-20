@@ -129,8 +129,8 @@ describe("S06 public executable judge smoke", () => {
         new Promise<never>((_, reject) => {
           deadline = setTimeout(() => {
             if (child.exitCode === null) child.kill()
-            reject(new Error("Public entrypoint smoke exceeded its 45s subprocess deadline"))
-          }, 45_000)
+            reject(new Error("Public entrypoint smoke exceeded its 90s subprocess deadline"))
+          }, 90_000)
         }),
       ])
 

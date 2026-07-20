@@ -7,22 +7,35 @@ const PROCESS_TERMINATE = 0x0001
 const PROCESS_SET_QUOTA = 0x0100
 const TERMINATED_EXIT_CODE = 137
 
-const kernel32 =
-  process.platform === "win32"
-    ? dlopen("kernel32.dll", {
-        CreateJobObjectW: { args: ["ptr", "ptr"], returns: "ptr" },
-        SetInformationJobObject: { args: ["ptr", "u32", "ptr", "u32"], returns: "i32" },
-        OpenProcess: { args: ["u32", "bool", "u32"], returns: "ptr" },
-        AssignProcessToJobObject: { args: ["ptr", "ptr"], returns: "i32" },
-        QueryInformationJobObject: {
-          args: ["ptr", "u32", "ptr", "u32", "ptr"],
-          returns: "i32",
-        },
-        TerminateJobObject: { args: ["ptr", "u32"], returns: "i32" },
-        CloseHandle: { args: ["ptr"], returns: "i32" },
-        GetLastError: { args: [], returns: "u32" },
-      })
-    : undefined
+function isUnavailableBunFfi(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    (error.message.includes("dlopen() is not available in this build") ||
+      error.message.includes("TinyCC is disabled"))
+  )
+}
+
+const kernel32 = (() => {
+  if (process.platform !== "win32") return undefined
+  try {
+    return dlopen("kernel32.dll", {
+      CreateJobObjectW: { args: ["ptr", "ptr"], returns: "ptr" },
+      SetInformationJobObject: { args: ["ptr", "u32", "ptr", "u32"], returns: "i32" },
+      OpenProcess: { args: ["u32", "bool", "u32"], returns: "ptr" },
+      AssignProcessToJobObject: { args: ["ptr", "ptr"], returns: "i32" },
+      QueryInformationJobObject: {
+        args: ["ptr", "u32", "ptr", "u32", "ptr"],
+        returns: "i32",
+      },
+      TerminateJobObject: { args: ["ptr", "u32"], returns: "i32" },
+      CloseHandle: { args: ["ptr"], returns: "i32" },
+      GetLastError: { args: [], returns: "u32" },
+    })
+  } catch (error) {
+    if (isUnavailableBunFfi(error)) return undefined
+    throw error
+  }
+})()
 
 function lastWindowsError(operation: string): Error {
   return new Error(
@@ -54,7 +67,7 @@ export class WindowsProcessJob {
   }
 
   static create(): WindowsProcessJob {
-    if (!kernel32) throw new Error("Windows Job Objects are available only on Windows")
+    if (!kernel32) throw new Error("Windows Job Objects are unavailable in this Bun build")
     const handle = kernel32.symbols.CreateJobObjectW(null, null)
     if (!handle) throw lastWindowsError("CreateJobObjectW")
     const limits = extendedLimitInformation()
@@ -71,6 +84,10 @@ export class WindowsProcessJob {
       throw error
     }
     return new WindowsProcessJob(handle)
+  }
+
+  static tryCreate(): WindowsProcessJob | undefined {
+    return kernel32 ? WindowsProcessJob.create() : undefined
   }
 
   assign(pid: number): void {

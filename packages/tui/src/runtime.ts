@@ -123,16 +123,26 @@ export async function renderRunDashboard(
       }
     },
   })
-  if (outputBridge && !closedSettled) {
+  if (!closedSettled) {
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined
     const resize = () => {
-      renderer.resize(
-        process.stdout.columns ?? renderer.width,
-        process.stdout.rows ?? renderer.height,
-      )
+      if (resizeTimer) clearTimeout(resizeTimer)
+      // POSIX updates stdout dimensions as part of SIGWINCH delivery. Defer
+      // one turn so Bun's TTY stream has observed the new winsize before the
+      // renderer reads it; the same bridge remains valid for ConPTY.
+      resizeTimer = setTimeout(() => {
+        resizeTimer = undefined
+        if (renderer.isDestroyed) return
+        renderer.resize(
+          process.stdout.columns ?? renderer.width,
+          process.stdout.rows ?? renderer.height,
+        )
+      }, 0)
     }
     process.on("SIGWINCH", resize)
     removeResizeBridge = () => {
       process.off("SIGWINCH", resize)
+      if (resizeTimer) clearTimeout(resizeTimer)
       removeResizeBridge = undefined
     }
   }

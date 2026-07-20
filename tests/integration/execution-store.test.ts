@@ -65,7 +65,7 @@ const HASH_B = "b".repeat(64)
 const HASH_C = "c".repeat(64)
 const HASH_D = "d".repeat(64)
 const HASH_E = "e".repeat(64)
-const CURRENT_LEDGER_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+const CURRENT_LEDGER_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
 const temporaryDirectories: string[] = []
 
@@ -262,6 +262,9 @@ describe("execution persistence", () => {
     expect(await Bun.file(`${workspace.migrations}/0006-tool-call-journal.sql`).exists()).toBeTrue()
     expect(await Bun.file(`${workspace.migrations}/0007-evidence-store.sql`).exists()).toBeTrue()
     expect(await Bun.file(`${workspace.migrations}/0008-judge-assessment.sql`).exists()).toBeTrue()
+    expect(
+      await Bun.file(`${workspace.migrations}/0015-parallel-reserved-attempts.sql`).exists(),
+    ).toBeTrue()
 
     const layout = await ensureRunLayout(workspace, "run-safe_1")
     expect(layout).toEqual(runLayout(workspace, "run-safe_1"))

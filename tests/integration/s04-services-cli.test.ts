@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { mkdtemp, readFile, rm } from "node:fs/promises"
+import { mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { executeCli } from "@ralph-next/commands"
@@ -26,7 +26,7 @@ afterEach(async () => {
 
 describe("S04 command-to-runtime integration", () => {
   test("configures independent profiles and runs a redacted read-only smoke", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-s04-cli-"))
+    const root = await realpath(await mkdtemp(join(tmpdir(), "ralph-s04-cli-")))
     temporaryDirectories.push(root)
     const apiCanary = "sk-S04-CLI-API-CANARY"
     const judgeCanary = "sk-S04-CLI-JUDGE-CANARY"
@@ -340,7 +340,7 @@ describe("S04 command-to-runtime integration", () => {
   })
 
   test("revokes local credentials when catalog eligibility drifts or the catalog is down", async () => {
-    const root = await mkdtemp(join(tmpdir(), "ralph-s04-revoke-recovery-"))
+    const root = await realpath(await mkdtemp(join(tmpdir(), "ralph-s04-revoke-recovery-")))
     temporaryDirectories.push(root)
     const keychainStore = new FakeSecretStore()
     const catalogFailureCanary = "CATALOG-DOWN-S04-CANARY"

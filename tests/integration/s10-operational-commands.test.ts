@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from "bun:test"
+import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { cp, mkdir, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import {
@@ -14,6 +14,8 @@ import { createTestDirectory, removeTestDirectory } from "../helpers/temp-direct
 
 const VERSION = "0.1.0-s10-operational-test"
 const temporaryDirectories: string[] = []
+
+setDefaultTimeout(30_000)
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map(removeTestDirectory))

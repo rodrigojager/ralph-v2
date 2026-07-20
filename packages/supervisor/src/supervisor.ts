@@ -350,9 +350,9 @@ async function spawnWindowsProcess(
   expectedCanonicalCwd: string | undefined,
 ): Promise<{
   child: Bun.ReadableSubprocess
-  windowsJob: WindowsProcessJob
+  windowsJob: WindowsProcessJob | undefined
 }> {
-  const windowsJob = WindowsProcessJob.create()
+  const windowsJob = WindowsProcessJob.tryCreate()
   let child: Bun.PipedSubprocess
   try {
     child = Bun.spawn([process.execPath, "-e", WINDOWS_LAUNCHER_SOURCE], {
@@ -365,12 +365,12 @@ async function spawnWindowsProcess(
       windowsHide: true,
     })
   } catch (error) {
-    windowsJob.close()
+    windowsJob?.close()
     throw error
   }
 
   try {
-    windowsJob.assign(child.pid)
+    windowsJob?.assign(child.pid)
     const request: WindowsLauncherRequest = {
       schemaVersion: 3,
       argv,
@@ -384,10 +384,10 @@ async function spawnWindowsProcess(
     await child.stdin.end()
     return { child, windowsJob }
   } catch (error) {
-    windowsJob.terminate()
+    windowsJob?.terminate()
     if (child.exitCode === null) child.kill(9)
     await child.exited.catch(() => undefined)
-    windowsJob.close()
+    windowsJob?.close()
     throw error
   }
 }
@@ -472,6 +472,7 @@ export class BunProcessSupervisor implements ProcessSupervisor {
     executable: string,
     environment?: Readonly<Record<string, string | undefined>>,
   ): string | null {
+    if (executable === "bun" || executable === "bun.exe") return process.execPath
     const path = environment ? environmentValue(environment, "PATH") : undefined
     return Bun.which(executable, path ? { PATH: path } : undefined)
   }

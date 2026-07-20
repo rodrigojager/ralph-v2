@@ -5,7 +5,11 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
 
 ## [Unreleased]
 
-- Nenhuma mudança acumulada depois do primeiro candidato beta.
+### Fixed
+
+- Portabilidade de workers/gates Bun, leitura SQLite em WAL no macOS, encerramento de árvores de
+  processo sem FFI no Windows ARM64, resize PTY nativo e isolamento de refs Git paralelas.
+- Fixtures e budgets da matriz de CI alinhados ao schema/migrations atuais e a runners mais lentos.
 
 ## [0.1.0-beta.1] — candidato não publicado
 

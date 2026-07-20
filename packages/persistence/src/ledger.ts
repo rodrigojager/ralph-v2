@@ -1931,12 +1931,26 @@ export async function flushOutbox(layout: WorkspaceLayout): Promise<number> {
   }
 }
 
+function openLedgerForQuery(path: string): Database {
+  // WAL readers may need to create or update the shared-memory coordination
+  // file. Open the existing ledger read-write without CREATE, then make the
+  // connection query-only so SQL issued through this handle cannot mutate it.
+  const database = new Database(path, { readwrite: true, create: false, strict: true })
+  try {
+    database.exec("PRAGMA foreign_keys = ON;")
+    database.exec("PRAGMA busy_timeout = 5000;")
+    database.exec("PRAGMA query_only = ON;")
+    return database
+  } catch (error) {
+    database.close(true)
+    throw error
+  }
+}
+
 export function readEvents(path: string): EventEnvelope[] {
   try {
-    const database = new Database(path, { readonly: true, strict: true })
+    const database = openLedgerForQuery(path)
     try {
-      database.exec("PRAGMA foreign_keys = ON;")
-      database.exec("PRAGMA busy_timeout = 5000;")
       return database
         .query<EventRow, []>("SELECT event_json FROM events ORDER BY sequence")
         .all()
@@ -1961,10 +1975,8 @@ export function readEvents(path: string): EventEnvelope[] {
  */
 export function readEventHighWater(path: string): number {
   try {
-    const database = new Database(path, { readonly: true, strict: true })
+    const database = openLedgerForQuery(path)
     try {
-      database.exec("PRAGMA foreign_keys = ON;")
-      database.exec("PRAGMA busy_timeout = 5000;")
       const row = database
         .query<EventHighWaterRow, []>("SELECT COALESCE(MAX(sequence), 0) AS sequence FROM events")
         .get()
@@ -2023,10 +2035,8 @@ export function readRunEventBatch(
   }
 
   try {
-    const database = new Database(path, { readonly: true, strict: true })
+    const database = openLedgerForQuery(path)
     try {
-      database.exec("PRAGMA foreign_keys = ON;")
-      database.exec("PRAGMA busy_timeout = 5000;")
       const rows = database
         .query<EventScanRow, [string, number, number, number]>(
           `SELECT sequence, event_json FROM events
@@ -2086,10 +2096,8 @@ export function readEventBatch(path: string, query: ReadEventBatchQuery): ReadEv
   }
 
   try {
-    const database = new Database(path, { readonly: true, strict: true })
+    const database = openLedgerForQuery(path)
     try {
-      database.exec("PRAGMA foreign_keys = ON;")
-      database.exec("PRAGMA busy_timeout = 5000;")
       const rows = database
         .query<EventScanRow, [number, number]>(
           "SELECT sequence, event_json FROM events WHERE sequence > ? ORDER BY sequence LIMIT ?",

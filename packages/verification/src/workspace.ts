@@ -295,6 +295,17 @@ async function scanGitControlFacts(
   }
   let factCount = 0
   const addSnapshot = async (absolute: string, virtualPath: string): Promise<void> => {
+    const normalizedVirtualPath = portable(virtualPath)
+    if (
+      normalizedVirtualPath.startsWith(".git/refs/heads/ralph/") ||
+      normalizedVirtualPath.startsWith(".git/common/refs/heads/ralph/")
+    ) {
+      // Parallel lanes move their command-owned attempt refs independently.
+      // Those refs are bound and verified by the Git integration records; a
+      // sibling lane must not mistake that expected control-plane movement for
+      // an executor workspace mutation.
+      return
+    }
     const snapshot = await gitControlSnapshot(absolute, virtualPath)
     if (!snapshot) return
     facts[snapshot[0]] = snapshot[1]

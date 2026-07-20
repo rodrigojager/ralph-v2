@@ -20,6 +20,7 @@ const STREAM_FIXTURE = resolve(ROOT, "packages/tui/tests/fixtures/pty-dashboard.
 const LIFECYCLE_FIXTURE = resolve(ROOT, "packages/tui/tests/fixtures/pty-lifecycle.ts")
 const PRE_RUN_FIXTURE = resolve(ROOT, "tests/fixtures/pty/pre-run-settings.ts")
 const PERSISTED_FIXTURE = resolve(ROOT, "tests/fixtures/pty/persisted-attach-replay.ts")
+const POSIX_RESIZE_FIXTURE = resolve(ROOT, "tests/fixtures/pty/posix-resize.ts")
 // ConPTY can emit many complete-screen redraws per second. Keep a small rolling
 // transcript and trim in coarse batches: slicing an 8 MiB string on every PTY
 // chunk made the Bun runner spend minutes copying text after a failed wait.
@@ -373,352 +374,424 @@ async function seedCompletedRun(root: string): Promise<string> {
   return execution.runId
 }
 
-describe("real Windows ConPTY TUI matrix", () => {
-  for (const usageMode of ["no-usage", "reported"] as const) {
-    test(`renders varied streams (${usageMode}), large output, child placeholder and resize`, async () => {
-      const session = openPty(STREAM_FIXTURE, {
-        environment: { RALPH_PTY_USAGE_MODE: usageMode },
-      })
+function windowsPtyTest(name: string, callback: () => Promise<void>, timeout: number): void {
+  if (process.platform === "win32") test(name, callback, timeout)
+}
+
+describe("native PTY TUI matrix", () => {
+  if (process.platform !== "win32") {
+    test("propagates a real POSIX PTY resize with updated dimensions", async () => {
+      const session = openPty(POSIX_RESIZE_FIXTURE)
       try {
-        expect(session.child.terminal).toBe(session.terminal)
-        expect(session.child.stdin).toBeNull()
-        expect(session.child.stdout).toBeNull()
-        expect(session.child.stderr).toBeNull()
-
-        // The dashboard title is intentionally clipped at narrow widths, so
-        // synchronize on its stable prefix and assert the full TTY marker in
-        // the fixture's machine-readable result below.
-        await session.waitForOutput("RALPH_PTY_READY")
-        await session.waitForOutput("1/4")
-        await session.waitForOutput("child-placeholder")
-        await session.waitForOutput(`source=${usageMode}`)
-
+        await session.waitForOutput("RALPH_POSIX_PTY_READY:")
         session.resize(120, 36)
-        await session.waitForOutput("RALPH_PTY_RESIZE:120x36")
-        await session.waitForOutput("4/4")
-
-        session.write("q")
-        await session.waitForOutput("RALPH_PTY_STREAM_RESULT:")
+        await session.waitForOutput("RALPH_POSIX_PTY_RESIZE:")
         expect(await session.waitForExit()).toBe(0)
-        const result = markerJson<{
-          usageMode: string
-          tty: string
-          status: string
-          progress: { completed: number; total: number }
-          usageSource: string
-          childPlaceholder: boolean
-          streams: Record<string, boolean>
-          droppedDisplayCharacters: number
-        }>(session.output(), "RALPH_PTY_STREAM_RESULT")
-        expect(result).toMatchObject({
-          usageMode,
-          tty: "T111",
-          status: "completed",
-          progress: { completed: 4, total: 4 },
-          usageSource: usageMode,
-          childPlaceholder: true,
-          streams: { large: true, reasoning: true, tool: true, gate: true, external: true },
-        })
-        expect(result.droppedDisplayCharacters).toBeGreaterThan(0)
+        expect(
+          markerJson<{ tty: string; columns: number; rows: number }>(
+            session.output(),
+            "RALPH_POSIX_PTY_RESIZE",
+          ),
+        ).toEqual({ tty: "T111", columns: 120, rows: 36 })
       } catch (error) {
         throw outputFailure(error, session.output())
       } finally {
         await session.cleanup()
       }
-    }, 45_000)
+    }, 30_000)
+
+    test("renders the dashboard and structured streams in a real POSIX PTY", async () => {
+      const session = openPty(STREAM_FIXTURE)
+      try {
+        await session.waitForOutput("RALPH_PTY_READY")
+        await session.waitForOutput("1/4")
+        await session.waitForOutput("child-placeholder")
+        session.write("q")
+        await session.waitForOutput("RALPH_PTY_STREAM_RESULT:")
+        expect(await session.waitForExit()).toBe(0)
+        expect(
+          markerJson<{
+            tty: string
+            status: string
+            progress: { completed: number; total: number }
+            childPlaceholder: boolean
+            streams: Record<string, boolean>
+          }>(session.output(), "RALPH_PTY_STREAM_RESULT"),
+        ).toMatchObject({
+          tty: "T111",
+          status: "waiting",
+          progress: { completed: 1, total: 4 },
+          childPlaceholder: true,
+          streams: { large: true, reasoning: true, tool: true, gate: true, external: true },
+        })
+      } catch (error) {
+        throw outputFailure(error, session.output())
+      } finally {
+        await session.cleanup()
+      }
+    }, 30_000)
   }
 
-  test("applies a mutable pre-run draft and saves workspace/global defaults through shared handlers", async () => {
-    const workspaceRoot = await temporaryDirectory()
-    const configHome = await temporaryDirectory()
-    const session = openPty(PRE_RUN_FIXTURE, {
-      cols: 120,
-      rows: 40,
-      environment: {
-        RALPH_PTY_WORKSPACE: workspaceRoot,
-        RALPH_CONFIG_HOME: configHome,
+  for (const usageMode of ["no-usage", "reported"] as const) {
+    windowsPtyTest(
+      `renders varied streams (${usageMode}), large output, child placeholder and resize`,
+      async () => {
+        const session = openPty(STREAM_FIXTURE, {
+          environment: { RALPH_PTY_USAGE_MODE: usageMode },
+        })
+        try {
+          expect(session.child.terminal).toBe(session.terminal)
+          expect(session.child.stdin).toBeNull()
+          expect(session.child.stdout).toBeNull()
+          expect(session.child.stderr).toBeNull()
+
+          // The dashboard title is intentionally clipped at narrow widths, so
+          // synchronize on its stable prefix and assert the full TTY marker in
+          // the fixture's machine-readable result below.
+          await session.waitForOutput("RALPH_PTY_READY")
+          await session.waitForOutput("1/4")
+          await session.waitForOutput("child-placeholder")
+          await session.waitForOutput(`source=${usageMode}`)
+
+          session.resize(120, 36)
+          await session.waitForOutput("RALPH_PTY_RESIZE:120x36")
+
+          session.write("q")
+          await session.waitForOutput("RALPH_PTY_STREAM_RESULT:")
+          expect(await session.waitForExit()).toBe(0)
+          const result = markerJson<{
+            usageMode: string
+            tty: string
+            status: string
+            progress: { completed: number; total: number }
+            usageSource: string
+            childPlaceholder: boolean
+            streams: Record<string, boolean>
+            droppedDisplayCharacters: number
+          }>(session.output(), "RALPH_PTY_STREAM_RESULT")
+          expect(result).toMatchObject({
+            usageMode,
+            tty: "T111",
+            status: "completed",
+            progress: { completed: 4, total: 4 },
+            usageSource: usageMode,
+            childPlaceholder: true,
+            streams: { large: true, reasoning: true, tool: true, gate: true, external: true },
+          })
+          expect(result.droppedDisplayCharacters).toBeGreaterThan(0)
+        } catch (error) {
+          throw outputFailure(error, session.output())
+        } finally {
+          await session.cleanup()
+        }
       },
-    })
-    try {
-      await session.waitForOutput("mode=pre-run")
+      45_000,
+    )
+  }
 
-      let cursor = session.mark()
-      session.write("/")
-      await session.waitForOutput("SEARCH>", cursor)
-      session.typeText("language")
-      await session.waitForOutput('query="language"', cursor)
-      session.write("\r")
-      await pauseForInput()
-
-      cursor = session.mark()
-      session.write("\r")
-      await session.waitForOutput("EDIT Language> en", cursor)
-      session.write("\x7f\x7f")
-      session.typeText("pt-BR")
-      session.write("\r")
-      await session.waitForOutput("Language = pt-BR · draft", cursor)
-      session.write("v")
-      await session.waitForOutput("apply this run: available", cursor)
-      session.write("w")
-      await session.waitForOutput("CONFIRM: save workspace", cursor)
-      session.write("\r")
-      await session.waitForOutput("Defaults saved for workspace", cursor)
-
-      cursor = session.mark()
-      session.write("\r")
-      // A successful save clears the draft and restores the command-owned
-      // invocation value (`en`) in the popup. Committing it again creates the
-      // explicit global-default mutation without relying on hidden state.
-      await session.waitForOutput("EDIT Language> en", cursor)
-      session.write("\r")
-      await session.waitForOutput("Language = en · draft", cursor)
-      session.write("g")
-      await session.waitForOutput("CONFIRM: save global", cursor)
-      session.write("\r")
-      await session.waitForOutput("Defaults saved for global", cursor)
-
-      cursor = session.mark()
-      session.write("\r")
-      await session.waitForOutput("EDIT Language> en", cursor)
-      session.write("\x7f\x7f")
-      session.typeText("pt-BR")
-      session.write("\r")
-      await session.waitForOutput("Language = pt-BR · draft", cursor)
-      // Preview is the deterministic acknowledgement that the final draft
-      // revision reached the shared settings handler and is applyable. Do not
-      // race Apply against a screen redraw or rely on an arbitrary delay.
-      cursor = session.mark()
-      session.write("v")
-      await session.waitForOutput("apply this run: available", cursor)
-      session.write("a")
-
-      await session.waitForOutput("RALPH_PTY_PRE_RUN_RESULT:")
-      expect(await session.waitForExit()).toBe(0)
-      expect(
-        markerJson<{
-          disposition: string
-          appliedLanguage: string | null
-          workspaceLanguage: string
-          globalLanguage: string
-          persistedRuns: number
-        }>(session.output(), "RALPH_PTY_PRE_RUN_RESULT"),
-      ).toEqual({
-        disposition: "applied",
-        appliedLanguage: "pt-BR",
-        workspaceLanguage: "pt-BR",
-        globalLanguage: "en",
-        persistedRuns: 0,
+  windowsPtyTest(
+    "applies a mutable pre-run draft and saves workspace/global defaults through shared handlers",
+    async () => {
+      const workspaceRoot = await temporaryDirectory()
+      const configHome = await temporaryDirectory()
+      const session = openPty(PRE_RUN_FIXTURE, {
+        cols: 120,
+        rows: 40,
+        environment: {
+          RALPH_PTY_WORKSPACE: workspaceRoot,
+          RALPH_CONFIG_HOME: configHome,
+        },
       })
-    } catch (error) {
-      throw outputFailure(error, session.output())
-    } finally {
-      await session.cleanup()
-    }
-  }, 60_000)
+      try {
+        await session.waitForOutput("pre-run")
 
-  test("q leaves the source in background, reattach observes progress and Ctrl+C uses the command bridge", async () => {
-    const stateDirectory = await temporaryDirectory()
-    const stateFile = resolve(stateDirectory, "lifecycle-state.json")
-    const background = openPty(LIFECYCLE_FIXTURE, {
-      cols: 110,
-      rows: 36,
-      environment: {
-        RALPH_PTY_LIFECYCLE_PHASE: "background",
-        RALPH_PTY_LIFECYCLE_STATE: stateFile,
-      },
-    })
-    try {
-      await background.waitForOutput("RALPH_PTY_LIFECYCLE")
-      await background.waitForOutput("child-placeholder")
-      await background.waitForOutput("1/3")
-      // The footer is emitted after the complete initial frame and is the
-      // renderer-owned acknowledgement that global key handling is active.
-      await background.waitForOutput("q close/background")
-      background.write("q")
-      await background.waitForOutput("RALPH_PTY_BACKGROUND:source-progressed-without-renderer")
-      await background.waitForOutput("RALPH_PTY_BACKGROUND_RESULT:")
-      expect(await background.waitForExit()).toBe(0)
+        let cursor = session.mark()
+        session.write("/")
+        await session.waitForOutput("SEARCH>", cursor)
+        session.typeText("language")
+        await pauseForInput(200)
+        session.write("\r")
+        await pauseForInput()
 
-      const backgroundResult = markerJson<{
-        status: string
-        progress: { completed: number; total: number }
-      }>(background.output(), "RALPH_PTY_BACKGROUND_RESULT")
-      expect(backgroundResult).toEqual({
-        status: "running",
-        progress: { completed: 2, total: 3 },
-      })
+        cursor = session.mark()
+        session.write("\r")
+        await session.waitForOutput("EDIT Language> en", cursor)
+        session.write("\x7f\x7f")
+        session.typeText("pt-BR")
+        session.write("\r")
+        await session.waitForOutput("Language = pt-BR · draft", cursor)
+        session.write("v")
+        await session.waitForOutput("apply this run: available", cursor)
+        session.write("w")
+        await session.waitForOutput("CONFIRM: save workspace", cursor)
+        session.write("\r")
+        await session.waitForOutput("Defaults saved for workspace", cursor)
 
-      const reattach = openPty(LIFECYCLE_FIXTURE, {
+        cursor = session.mark()
+        session.write("\r")
+        // A successful save clears the draft and restores the command-owned
+        // invocation value (`en`) in the popup. Committing it again creates the
+        // explicit global-default mutation without relying on hidden state.
+        await session.waitForOutput("EDIT Language> en", cursor)
+        session.write("\r")
+        await session.waitForOutput("Language = en · draft", cursor)
+        session.write("g")
+        await session.waitForOutput("CONFIRM: save global", cursor)
+        session.write("\r")
+        await session.waitForOutput("Defaults saved for global", cursor)
+
+        cursor = session.mark()
+        session.write("\r")
+        await session.waitForOutput("EDIT Language> en", cursor)
+        session.write("\x7f\x7f")
+        session.typeText("pt-BR")
+        session.write("\r")
+        await session.waitForOutput("Language = pt-BR · draft", cursor)
+        // Preview is the deterministic acknowledgement that the final draft
+        // revision reached the shared settings handler and is applyable. Do not
+        // race Apply against a screen redraw or rely on an arbitrary delay.
+        cursor = session.mark()
+        session.write("v")
+        await session.waitForOutput("apply this run: available", cursor)
+        session.write("a")
+
+        await session.waitForOutput("RALPH_PTY_PRE_RUN_RESULT:")
+        expect(await session.waitForExit()).toBe(0)
+        expect(
+          markerJson<{
+            disposition: string
+            appliedLanguage: string | null
+            workspaceLanguage: string
+            globalLanguage: string
+            persistedRuns: number
+          }>(session.output(), "RALPH_PTY_PRE_RUN_RESULT"),
+        ).toEqual({
+          disposition: "applied",
+          appliedLanguage: "pt-BR",
+          workspaceLanguage: "pt-BR",
+          globalLanguage: "en",
+          persistedRuns: 0,
+        })
+      } catch (error) {
+        throw outputFailure(error, session.output())
+      } finally {
+        await session.cleanup()
+      }
+    },
+    60_000,
+  )
+
+  windowsPtyTest(
+    "q leaves the source in background, reattach observes progress and Ctrl+C uses the command bridge",
+    async () => {
+      const stateDirectory = await temporaryDirectory()
+      const stateFile = resolve(stateDirectory, "lifecycle-state.json")
+      const background = openPty(LIFECYCLE_FIXTURE, {
         cols: 110,
         rows: 36,
         environment: {
-          RALPH_PTY_LIFECYCLE_PHASE: "reattach",
+          RALPH_PTY_LIFECYCLE_PHASE: "background",
           RALPH_PTY_LIFECYCLE_STATE: stateFile,
         },
       })
       try {
-        await reattach.waitForOutput("REATTACHED")
-        await reattach.waitForOutput("2/3")
-        await reattach.waitForOutput("q close/background")
-        reattach.write("\x03")
-        await reattach.waitForOutput("RALPH_PTY_CTRL_C:command-owned-interrupt")
-        await reattach.waitForOutput("RALPH_PTY_LIFECYCLE_RESULT:")
-        expect(await reattach.waitForExit()).toBe(0)
-        expect(
-          markerJson<{
-            interrupted: boolean
-            status: string
-            progress: { completed: number; total: number }
-            childPlaceholder: boolean
-          }>(reattach.output(), "RALPH_PTY_LIFECYCLE_RESULT"),
-        ).toEqual({
-          interrupted: true,
+        await background.waitForOutput("RALPH_PTY_LIFECYCLE")
+        await background.waitForOutput("child-placeholder")
+        await background.waitForOutput("1/3")
+        // The footer is emitted after the complete initial frame and is the
+        // renderer-owned acknowledgement that global key handling is active.
+        await background.waitForOutput("q close/background")
+        background.write("q")
+        await background.waitForOutput("RALPH_PTY_BACKGROUND:source-progressed-without-renderer")
+        await background.waitForOutput("RALPH_PTY_BACKGROUND_RESULT:")
+        expect(await background.waitForExit()).toBe(0)
+
+        const backgroundResult = markerJson<{
+          status: string
+          progress: { completed: number; total: number }
+        }>(background.output(), "RALPH_PTY_BACKGROUND_RESULT")
+        expect(backgroundResult).toEqual({
           status: "running",
           progress: { completed: 2, total: 3 },
-          childPlaceholder: true,
         })
+
+        const reattach = openPty(LIFECYCLE_FIXTURE, {
+          cols: 110,
+          rows: 36,
+          environment: {
+            RALPH_PTY_LIFECYCLE_PHASE: "reattach",
+            RALPH_PTY_LIFECYCLE_STATE: stateFile,
+          },
+        })
+        try {
+          await reattach.waitForOutput("REATTACHED")
+          await reattach.waitForOutput("2/3")
+          await reattach.waitForOutput("q close/background")
+          reattach.write("\x03")
+          await reattach.waitForOutput("RALPH_PTY_CTRL_C:command-owned-interrupt")
+          await reattach.waitForOutput("RALPH_PTY_LIFECYCLE_RESULT:")
+          expect(await reattach.waitForExit()).toBe(0)
+          expect(
+            markerJson<{
+              interrupted: boolean
+              status: string
+              progress: { completed: number; total: number }
+              childPlaceholder: boolean
+            }>(reattach.output(), "RALPH_PTY_LIFECYCLE_RESULT"),
+          ).toEqual({
+            interrupted: true,
+            status: "running",
+            progress: { completed: 2, total: 3 },
+            childPlaceholder: true,
+          })
+        } catch (error) {
+          throw outputFailure(error, reattach.output())
+        } finally {
+          await reattach.cleanup()
+        }
       } catch (error) {
-        throw outputFailure(error, reattach.output())
+        throw outputFailure(error, background.output())
       } finally {
-        await reattach.cleanup()
+        await background.cleanup()
       }
-    } catch (error) {
-      throw outputFailure(error, background.output())
-    } finally {
-      await background.cleanup()
-    }
-  }, 45_000)
+    },
+    45_000,
+  )
 
-  test("attach/replay stay read-only and final TUI, human, JSON and replay status agree", async () => {
-    const workspaceRoot = await temporaryDirectory()
-    const configHome = await temporaryDirectory()
-    const runId = await seedCompletedRun(workspaceRoot)
-    const beforeSnapshot = buildRunUiSnapshot(workspaceRoot, runId)
-    const beforeHash = createHash("sha256").update(JSON.stringify(beforeSnapshot)).digest("hex")
-    const environment = {
-      RALPH_PTY_WORKSPACE: workspaceRoot,
-      RALPH_PTY_RUN_ID: runId,
-      RALPH_CONFIG_HOME: configHome,
-    }
-    const attach = openPty(PERSISTED_FIXTURE, {
-      cols: 120,
-      rows: 40,
-      environment: { ...environment, RALPH_PTY_ATTACH_MODE: "attach" },
-    })
-    try {
-      await attach.waitForOutput("RALPH_PTY_ATTACH_START")
-      await attach.waitForOutput("completed")
-      await attach.waitForOutput("1/1")
-      let cursor = attach.mark()
-      attach.write("\x10")
-      await attach.waitForOutput("mode=attach", cursor)
-      attach.write("a")
-      await attach.waitForOutput("Attach and replay settings are read-only", cursor)
-      cursor = attach.mark()
-      attach.write("\x1b")
-      await attach.waitForOutput("ENGINE OUTPUT", cursor)
-      attach.write("q")
-      await attach.waitForOutput("RALPH_PTY_PERSISTED_RESULT:")
-      expect(await attach.waitForExit()).toBe(0)
-      const attachResult = markerJson<{
-        mode: string
-        runId: string
-        status: string
-        progress: { completed: number; total: number }
-        result: { observedStatus: string; closeReason: string }
-        readOnly: boolean
-      }>(attach.output(), "RALPH_PTY_PERSISTED_RESULT")
-      expect(attachResult).toMatchObject({
-        mode: "attach",
-        runId,
-        status: "completed",
-        progress: { completed: 1, total: 1 },
-        result: { observedStatus: "completed", closeReason: "user" },
-        readOnly: true,
-      })
-
-      const replay = openPty(PERSISTED_FIXTURE, {
+  windowsPtyTest(
+    "attach/replay stay read-only and final TUI, human, JSON and replay status agree",
+    async () => {
+      const workspaceRoot = await temporaryDirectory()
+      const configHome = await temporaryDirectory()
+      const runId = await seedCompletedRun(workspaceRoot)
+      const beforeSnapshot = buildRunUiSnapshot(workspaceRoot, runId)
+      const beforeHash = createHash("sha256").update(JSON.stringify(beforeSnapshot)).digest("hex")
+      const environment = {
+        RALPH_PTY_WORKSPACE: workspaceRoot,
+        RALPH_PTY_RUN_ID: runId,
+        RALPH_CONFIG_HOME: configHome,
+      }
+      const attach = openPty(PERSISTED_FIXTURE, {
         cols: 120,
         rows: 40,
-        environment: { ...environment, RALPH_PTY_ATTACH_MODE: "replay" },
+        environment: { ...environment, RALPH_PTY_ATTACH_MODE: "attach" },
       })
-      let replayResult: {
-        mode: string
-        runId: string
-        status: string
-        progress: { completed: number; total: number }
-        result: { observedStatus: string; closeReason: string }
-        readOnly: boolean
-      }
       try {
-        await replay.waitForOutput("RALPH_PTY_REPLAY_START")
-        await replay.waitForOutput("completed")
-        await replay.waitForOutput("1/1")
-        cursor = replay.mark()
-        replay.write("\x10")
-        await replay.waitForOutput("mode=replay", cursor)
-        replay.write("a")
-        await replay.waitForOutput("Attach and replay settings are read-only", cursor)
-        cursor = replay.mark()
-        replay.write("\x1b")
-        await replay.waitForOutput("ENGINE OUTPUT", cursor)
-        replay.write("\x03")
-        await replay.waitForOutput("RALPH_PTY_CTRL_C:replay-command-interrupt")
-        await replay.waitForOutput("RALPH_PTY_PERSISTED_RESULT:")
-        expect(await replay.waitForExit()).toBe(0)
-        replayResult = markerJson(replay.output(), "RALPH_PTY_PERSISTED_RESULT")
-        expect(replayResult).toMatchObject({
-          mode: "replay",
+        await attach.waitForOutput("RALPH_PTY_ATTACH_START")
+        await attach.waitForOutput("completed")
+        await attach.waitForOutput("1/1")
+        let cursor = attach.mark()
+        attach.write("\x10")
+        await attach.waitForOutput("attach · status", cursor)
+        attach.write("a")
+        await attach.waitForOutput("Attach and replay settings are read-only", cursor)
+        cursor = attach.mark()
+        attach.write("\x1b")
+        await attach.waitForOutput("ENGINE OUTPUT", cursor)
+        attach.write("q")
+        await attach.waitForOutput("RALPH_PTY_PERSISTED_RESULT:")
+        expect(await attach.waitForExit()).toBe(0)
+        const attachResult = markerJson<{
+          mode: string
+          runId: string
+          status: string
+          progress: { completed: number; total: number }
+          result: { observedStatus: string; closeReason: string }
+          readOnly: boolean
+        }>(attach.output(), "RALPH_PTY_PERSISTED_RESULT")
+        expect(attachResult).toMatchObject({
+          mode: "attach",
           runId,
           status: "completed",
           progress: { completed: 1, total: 1 },
-          result: { observedStatus: "completed", closeReason: "signal" },
+          result: { observedStatus: "completed", closeReason: "user" },
           readOnly: true,
         })
+
+        const replay = openPty(PERSISTED_FIXTURE, {
+          cols: 120,
+          rows: 40,
+          environment: { ...environment, RALPH_PTY_ATTACH_MODE: "replay" },
+        })
+        let replayResult: {
+          mode: string
+          runId: string
+          status: string
+          progress: { completed: number; total: number }
+          result: { observedStatus: string; closeReason: string }
+          readOnly: boolean
+        }
+        try {
+          await replay.waitForOutput("RALPH_PTY_REPLAY_START")
+          await replay.waitForOutput("completed")
+          await replay.waitForOutput("1/1")
+          cursor = replay.mark()
+          replay.write("\x10")
+          await replay.waitForOutput("replay · status", cursor)
+          replay.write("a")
+          await replay.waitForOutput("Attach and replay settings are read-only", cursor)
+          cursor = replay.mark()
+          replay.write("\x1b")
+          await replay.waitForOutput("ENGINE OUTPUT", cursor)
+          replay.write("\x03")
+          await replay.waitForOutput("RALPH_PTY_CTRL_C:replay-command-interrupt")
+          await replay.waitForOutput("RALPH_PTY_PERSISTED_RESULT:")
+          expect(await replay.waitForExit()).toBe(0)
+          replayResult = markerJson(replay.output(), "RALPH_PTY_PERSISTED_RESULT")
+          expect(replayResult).toMatchObject({
+            mode: "replay",
+            runId,
+            status: "completed",
+            progress: { completed: 1, total: 1 },
+            result: { observedStatus: "completed", closeReason: "signal" },
+            readOnly: true,
+          })
+        } catch (error) {
+          throw outputFailure(error, replay.output())
+        } finally {
+          await replay.cleanup()
+        }
+
+        const commandContext = {
+          version: "0.1.0-pty",
+          cwd: workspaceRoot,
+          environment: {
+            ...globalThis.process.env,
+            RALPH_CONFIG_HOME: configHome,
+            RALPH_LANG: "en",
+          },
+        }
+        const humanStatus = await executeCli(
+          ["status", "run", "--workspace", workspaceRoot, "--run-id", runId],
+          commandContext,
+        )
+        const jsonStatus = await executeCli(
+          ["status", "run", "--workspace", workspaceRoot, "--run-id", runId, "--format", "json"],
+          commandContext,
+        )
+        const replaySnapshot = buildRunUiSnapshot(workspaceRoot, runId)
+        const afterHash = createHash("sha256").update(JSON.stringify(replaySnapshot)).digest("hex")
+        const jsonData = jsonStatus.execution.result.data as {
+          run: { status: string }
+          progress: { completed: number; total: number }
+        }
+
+        expect(humanStatus.execution.human).toContain("Status:   completed")
+        expect(humanStatus.execution.human).toContain("Progress: 1/1")
+        expect(jsonData.run.status).toBe("completed")
+        expect(jsonData.progress).toMatchObject({ completed: 1, total: 1 })
+        expect(replaySnapshot.status).toBe("completed")
+        expect(replaySnapshot.progress).toEqual({ completed: 1, total: 1 })
+        expect(beforeSnapshot.status).toBe(attachResult.status)
+        expect(jsonData.run.status).toBe(replayResult.status)
+        expect(replaySnapshot.status).toBe(replayResult.status)
+        expect(afterHash).toBe(beforeHash)
       } catch (error) {
-        throw outputFailure(error, replay.output())
+        throw outputFailure(error, attach.output())
       } finally {
-        await replay.cleanup()
+        await attach.cleanup()
       }
-
-      const commandContext = {
-        version: "0.1.0-pty",
-        cwd: workspaceRoot,
-        environment: {
-          ...globalThis.process.env,
-          RALPH_CONFIG_HOME: configHome,
-          RALPH_LANG: "en",
-        },
-      }
-      const humanStatus = await executeCli(
-        ["status", "run", "--workspace", workspaceRoot, "--run-id", runId],
-        commandContext,
-      )
-      const jsonStatus = await executeCli(
-        ["status", "run", "--workspace", workspaceRoot, "--run-id", runId, "--format", "json"],
-        commandContext,
-      )
-      const replaySnapshot = buildRunUiSnapshot(workspaceRoot, runId)
-      const afterHash = createHash("sha256").update(JSON.stringify(replaySnapshot)).digest("hex")
-      const jsonData = jsonStatus.execution.result.data as {
-        run: { status: string }
-        progress: { completed: number; total: number }
-      }
-
-      expect(humanStatus.execution.human).toContain("Status:   completed")
-      expect(humanStatus.execution.human).toContain("Progress: 1/1")
-      expect(jsonData.run.status).toBe("completed")
-      expect(jsonData.progress).toMatchObject({ completed: 1, total: 1 })
-      expect(replaySnapshot.status).toBe("completed")
-      expect(replaySnapshot.progress).toEqual({ completed: 1, total: 1 })
-      expect(beforeSnapshot.status).toBe(attachResult.status)
-      expect(jsonData.run.status).toBe(replayResult.status)
-      expect(replaySnapshot.status).toBe(replayResult.status)
-      expect(afterHash).toBe(beforeHash)
-    } catch (error) {
-      throw outputFailure(error, attach.output())
-    } finally {
-      await attach.cleanup()
-    }
-  }, 90_000)
+    },
+    90_000,
+  )
 })

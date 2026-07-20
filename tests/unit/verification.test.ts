@@ -404,6 +404,9 @@ describe("workspace evidence", () => {
     const worktreeGitDirectory = resolve(external, "worktree")
     const commonGitDirectory = resolve(external, "common")
     await mkdir(resolve(commonGitDirectory, "refs", "heads"), { recursive: true })
+    await mkdir(resolve(commonGitDirectory, "refs", "heads", "ralph", "run-a"), {
+      recursive: true,
+    })
     await mkdir(resolve(commonGitDirectory, "hooks"), { recursive: true })
     await mkdir(worktreeGitDirectory, { recursive: true })
     await writeFile(resolve(root, "safe.txt"), "unchanged\n")
@@ -413,12 +416,21 @@ describe("workspace evidence", () => {
     await writeFile(resolve(worktreeGitDirectory, "index"), "first index")
     await writeFile(resolve(commonGitDirectory, "config"), "[core]\n\tbare = false\n")
     await writeFile(resolve(commonGitDirectory, "refs", "heads", "main"), "a".repeat(40))
+    await writeFile(
+      resolve(commonGitDirectory, "refs", "heads", "ralph", "run-a", "attempt-a"),
+      "c".repeat(40),
+    )
     await writeFile(resolve(commonGitDirectory, "hooks", "pre-commit"), "first hook")
 
     const before = await captureWorkspaceBaseline(root, {
       objectStore: { directory: resolve(root, ".ralph", "runs", "run-gitfile", "artifacts") },
     })
+    expect(before.files[".git/common/refs/heads/ralph/run-a/attempt-a"]).toBeUndefined()
     await writeFile(resolve(worktreeGitDirectory, "HEAD"), "ref: refs/heads/other\n")
+    await writeFile(
+      resolve(commonGitDirectory, "refs", "heads", "ralph", "run-a", "attempt-a"),
+      "d".repeat(40),
+    )
     await writeFile(resolve(commonGitDirectory, "hooks", "pre-commit"), "second hook")
     const after = await captureWorkspaceBaseline(root, {
       objectStore: { directory: resolve(root, ".ralph", "runs", "run-gitfile", "artifacts") },

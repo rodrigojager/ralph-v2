@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
-import { cp, mkdtemp, readFile, rm, unlink, writeFile } from "node:fs/promises"
+import { cp, mkdtemp, readFile, realpath, rm, unlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 
@@ -37,7 +37,7 @@ afterEach(async () => {
 })
 
 async function testDirectory(prefix: string): Promise<string> {
-  const directory = await mkdtemp(join(tmpdir(), prefix))
+  const directory = await realpath(await mkdtemp(join(tmpdir(), prefix)))
   temporaryDirectories.push(directory)
   return directory
 }
