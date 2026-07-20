@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "product": "ralph-next",
+  "version": "0.1.0-beta.1",
+  "channel": "beta",
+  "matrix": [
+    {
+      "target": "bun-windows-x64-baseline",
+      "status": "included",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "unsupported-file-sync-only",
+          "guarantee": "reduced"
+        }
+      },
+      "limitations": [
+        "Windows cannot fsync the containing directory after control-state rename, so crash durability is reduced to file fsync plus atomic rename.",
+        "This is an initial beta candidate distributed as ralph-next; the opt-in ralph alias is not promoted."
+      ]
+    },
+    {
+      "target": "bun-windows-arm64",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "unsupported-file-sync-only",
+          "guarantee": "reduced"
+        }
+      },
+      "reason": "Bun 1.3.14 for Windows ARM64 lacks the bun:ffi or TinyCC capability required by the native OpenTUI renderer; headless CLI behavior remains classified separately and is not sufficient for beta promotion."
+    },
+    {
+      "target": "bun-linux-x64-baseline",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "fsync-after-rename",
+          "guarantee": "full"
+        }
+      },
+      "reason": "Native CI build and smoke evidence exists, but the exact 0.1.0-beta.1 package has not completed the install, update, rollback and uninstall drill on a Linux x64 host."
+    },
+    {
+      "target": "bun-linux-arm64",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "fsync-after-rename",
+          "guarantee": "full"
+        }
+      },
+      "reason": "Native CI build and smoke evidence exists, but the exact 0.1.0-beta.1 package has not completed the install, update, rollback and uninstall drill on a Linux ARM64 host."
+    },
+    {
+      "target": "bun-darwin-x64",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "fsync-after-rename",
+          "guarantee": "full"
+        }
+      },
+      "reason": "Native CI build and smoke evidence exists, but the exact 0.1.0-beta.1 package has not completed the install, update, rollback and uninstall drill on a macOS x64 host."
+    },
+    {
+      "target": "bun-darwin-arm64",
+      "status": "not-promoted",
+      "capabilities": {
+        "installControlStateDurability": {
+          "fileSync": "fsync-before-rename",
+          "directorySync": "fsync-after-rename",
+          "guarantee": "full"
+        }
+      },
+      "reason": "Native CI build and smoke evidence exists, but the exact 0.1.0-beta.1 package has not completed the install, update, rollback and uninstall drill on a macOS ARM64 host."
+    }
+  ]
+}

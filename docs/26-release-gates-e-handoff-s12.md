@@ -19,21 +19,24 @@ automaticamente os gates abaixo.
 - [x] nome final do package escolhido pelo proprietário: `ralph-next`;
 - [x] licença própria escolhida e registrada em `package.json`: MIT;
 - [x] `LICENSE` própria presente;
-- [ ] owner/repository de publicação confirmado;
-- [ ] namespace público dos JSON Schemas confirmado em
+- [x] owner/repository de publicação confirmado;
+- [x] namespace público dos JSON Schemas confirmado em
   `https://rodrigojager.github.io/ralph-v2/schemas/v2/`;
 - [x] channel inicial confirmado: `beta`;
-- [ ] policy de suporte v1 preenchida com as seis entries `included`/`not-promoted` e motivos;
-- [ ] cópia de `examples/release-support-policy.template.json` deixou de ser placeholder, possui a
+- [x] policy de suporte v1 preenchida com as seis entries `included`/`not-promoted` e motivos;
+- [x] a policy derivada de `examples/release-support-policy.template.json` deixou de ser placeholder, possui a
   versão/channel do candidato e contém ao menos uma decisão explícita `included`;
-- [ ] política de assinatura/provenance confirmada.
+- [x] política de assinatura/provenance confirmada para o beta: indisponibilidade explícita, sem
+  alegação de assinatura ou confiança; `stable` continua proibido sem signer e trust policy reais.
 
 A identidade aprovada usa `https://github.com/rodrigojager/ralph-v2` e versão `0.1.0-beta.1`. O
-workflow Pages está versionado com actions presas a SHA; owner/repository e namespace só passam a
-`[x]` depois que origin, primeiro push, configuração Pages e fetch público forem observados. O
+origin público, a configuração Pages por workflow e o fetch HTTP 200 de um schema v2 publicado foram
+observados em 2026-07-20. A policy específica está em
+`release/support-policy-0.1.0-beta.1.json`: inclui somente `bun-windows-x64-baseline`; mantém os
+outros cinco targets visíveis e não promovidos, inclusive a limitação OpenTUI de Windows ARM64. O
 snapshot OpenCode conserva sua atribuição MIT separada; a MIT própria da raiz não substitui notices
-de terceiros. Enquanto as demais condições do gate estiverem abertas, os packagers continuam
-fail-closed antes de produzir um artifact publicável.
+de terceiros. O beta usará `--signature-unavailable-reason` porque nenhum signer/trust root foi
+configurado; isso é disclosure de ausência, não provenance criptográfica.
 
 ## Gate B — source e provenance
 

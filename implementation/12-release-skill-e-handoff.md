@@ -263,9 +263,12 @@ package/binário `ralph-next`, versão `0.1.0-beta.1`, primeiro channel `beta`, 
 `https://github.com/rodrigojager/ralph-v2` e namespace de schemas
 `https://rodrigojager.github.io/ralph-v2/schemas/v2/`. O monorepo raiz permanece `private: true`
 porque não é o tarball publicável; `package:npm` materializa o package público em staging separado.
-Essas decisões removem o blocker de autoridade, mas S12.01 continua aberta até o origin existir, os
-schemas estarem acessíveis, a curadoria Bun e os inventories estarem completos e o candidato passar
-pelos gates reais.
+O origin público e um schema v2 servido por GitHub Pages com HTTP 200 foram observados em 2026-07-20.
+A policy `release/support-policy-0.1.0-beta.1.json` inclui somente Windows x64 no primeiro beta e
+registra motivos explícitos para os outros cinco targets; Windows ARM64 permanece não promovido pela
+limitação real do renderer OpenTUI. O beta declara assinatura indisponível porque nenhum signer ou
+trust root independente foi configurado. S12.01 continua aberta até o candidato exato passar pelos
+gates, inventários e drills reais.
 
 ## Verificação mínima ainda necessária para S12
 
@@ -296,10 +299,11 @@ A fila operacional restante deve ser executada nesta ordem, sempre pelo wrapper 
    binários/candidato/digests explícitos e qualquer waiver externo aprovado. Exit `2` continua sendo
    `local-pass/release-blocked`, não conclusão.
 
-Nesta edição a licença/identidade foram decididas, existe HEAD local e a curadoria exata do runtime
-Bun foi materializada. O Gitleaks oficial Windows foi preso por SHA-256 e já deixou audit/scan
-verdes; ainda faltam confirmar o gate completo no novo HEAD, criar/confirmar origin, obter as
-execuções remotas e produzir o release candidate até que as etapas seguintes fechem esses inputs.
+Nesta edição a licença/identidade foram decididas, o origin público e Pages foram confirmados, a
+support policy do beta foi congelada e a curadoria exata do runtime Bun foi materializada. O
+Gitleaks oficial Windows 8.30.1 foi preso por SHA-256 e o gate completo deixou audit, scan e 26 testes
+de licença/proveniência verdes. Ainda faltam obter a execução remota verde do HEAD final e produzir e
+ensaiar o release candidate até que as etapas seguintes fechem esses inputs.
 
 ```text
 ralph-next prd validate <skill-generated-root> --recursive --strict
