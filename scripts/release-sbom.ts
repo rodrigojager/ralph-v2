@@ -20,6 +20,7 @@ type LockPackageMetadata = {
   readonly dependencies?: Readonly<Record<string, string>>
   readonly optionalDependencies?: Readonly<Record<string, string>>
   readonly peerDependencies?: Readonly<Record<string, string>>
+  readonly optionalPeers?: readonly string[]
 }
 
 type LockPackage = readonly [string, string?, LockPackageMetadata?, string?]
@@ -224,10 +225,25 @@ async function installedManifest(
 }
 
 function dependencyNames(metadata: LockPackageMetadata | undefined): readonly string[] {
+  const peerDependencies = metadata?.peerDependencies ?? {}
+  const rawOptionalPeers: unknown = metadata?.optionalPeers
+  if (
+    rawOptionalPeers !== undefined &&
+    (!Array.isArray(rawOptionalPeers) ||
+      rawOptionalPeers.some((name) => typeof name !== "string" || name.length === 0))
+  ) {
+    throw new Error("bun.lock package optionalPeers must be an array of non-empty names")
+  }
+  const optionalPeers = new Set((rawOptionalPeers as readonly string[] | undefined) ?? [])
+  for (const name of optionalPeers) {
+    if (!Object.hasOwn(peerDependencies, name)) {
+      throw new Error(`bun.lock optional peer is absent from peerDependencies: ${name}`)
+    }
+  }
   return [
     ...Object.keys(metadata?.dependencies ?? {}),
     ...Object.keys(metadata?.optionalDependencies ?? {}),
-    ...Object.keys(metadata?.peerDependencies ?? {}),
+    ...Object.keys(peerDependencies).filter((name) => !optionalPeers.has(name)),
   ]
 }
 

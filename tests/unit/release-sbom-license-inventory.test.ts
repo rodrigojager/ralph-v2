@@ -273,6 +273,29 @@ afterEach(async () => {
 })
 
 describe("release SBOM and license inventory boundary", () => {
+  test("does not require an absent peer that bun.lock explicitly marks optional", async () => {
+    const fixture = await createReleaseFixture()
+    const lockPath = resolve(fixture.root, "bun.lock")
+    const lock = JSON.parse(await readFile(lockPath, "utf8")) as {
+      packages: Record<string, [string, string, Record<string, unknown>, string]>
+    }
+    const dependency = lock.packages[DEPENDENCY_NAME]
+    if (!dependency) throw new Error("Synthetic dependency lock record is missing")
+    dependency[2] = {
+      ...dependency[2],
+      peerDependencies: { "@types/fixture-optional": "^1.0.0" },
+      optionalPeers: ["@types/fixture-optional"],
+    }
+    await writeJson(lockPath, lock)
+
+    const sbom = await createFixtureSbom(fixture)
+
+    expect(sbom.components.some((component) => component.name === "@types/fixture-optional")).toBe(
+      false,
+    )
+    expect(sbom.components.some((component) => component.name === DEPENDENCY_NAME)).toBe(true)
+  })
+
   test("is deterministic and content-addresses every copied license/provenance file", async () => {
     const fixture = await createReleaseFixture()
     const firstSbom = await createFixtureSbom(fixture)
