@@ -711,6 +711,13 @@ describe("native PTY TUI matrix", () => {
           await reattach.waitForOutput("REATTACHED")
           await reattach.waitForOutput("2/3")
           await reattach.waitForOutput("q close/background")
+          // A complete frame is not, by itself, proof that the new renderer
+          // has already accepted terminal input on every Windows runner. Use a
+          // benign key and wait for its observable popup before exercising the
+          // command-owned Ctrl+C bridge.
+          const cursor = reattach.mark()
+          reattach.write("?")
+          await reattach.waitForOutput("RALPH TUI · KEYS", cursor)
           reattach.write("\x03")
           await reattach.waitForOutput("RALPH_PTY_CTRL_C:command-owned-interrupt")
           await reattach.waitForOutput("RALPH_PTY_LIFECYCLE_RESULT:")
