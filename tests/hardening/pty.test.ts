@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { createHash, randomUUID } from "node:crypto"
-import { cp, readFile, rm } from "node:fs/promises"
+import { cp, readFile, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { resolve } from "node:path"
 import { executeCli } from "@ralph-next/commands"
@@ -118,6 +118,19 @@ function waitWithTimeout<T>(promise: Promise<T>, milliseconds: number, label: st
 
 function pauseForInput(milliseconds = 75): Promise<void> {
   return new Promise((resolvePause) => setTimeout(resolvePause, milliseconds))
+}
+
+async function readJsonFileWhenAvailable<T>(path: string): Promise<T> {
+  const deadline = performance.now() + STEP_TIMEOUT_MS
+  while (performance.now() < deadline) {
+    try {
+      return JSON.parse(await readFile(path, "utf8")) as T
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error
+    }
+    await pauseForInput(10)
+  }
+  throw new Error(`Timed out waiting for durable JSON result ${path}`)
 }
 
 test("terminal text matching preserves cells skipped by incremental cursor-forward redraws", () => {
@@ -720,16 +733,18 @@ describe("native PTY TUI matrix", () => {
           await reattach.waitForOutput("RALPH TUI · KEYS", cursor)
           reattach.write("\x03")
           await reattach.waitForOutput("RALPH_PTY_CTRL_C:command-owned-interrupt")
-          await reattach.waitForOutput("RALPH_PTY_LIFECYCLE_RESULT:")
+          const reattachResult = await readJsonFileWhenAvailable<{
+            interrupted: boolean
+            status: string
+            progress: { completed: number; total: number }
+            childPlaceholder: boolean
+          }>(`${stateFile}.reattach-result.json`)
+          // The fixture exits only after the parent has observed both the PTY
+          // interrupt notice and the durable structured result. This file ACK
+          // stays valid after the renderer-owned input channel is torn down.
+          await writeFile(`${stateFile}.parent-observed`, "observed\n", "utf8")
           expect(await reattach.waitForExit()).toBe(0)
-          expect(
-            markerJson<{
-              interrupted: boolean
-              status: string
-              progress: { completed: number; total: number }
-              childPlaceholder: boolean
-            }>(reattach.output(), "RALPH_PTY_LIFECYCLE_RESULT"),
-          ).toEqual({
+          expect(reattachResult).toEqual({
             interrupted: true,
             status: "running",
             progress: { completed: 2, total: 3 },

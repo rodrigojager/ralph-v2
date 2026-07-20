@@ -1,4 +1,5 @@
-import { readFile, writeFile } from "node:fs/promises"
+import { access, readFile, rename, writeFile } from "node:fs/promises"
+import { createCommandShutdownLifecycle } from "../../../../apps/ralph-cli/src/command-shutdown"
 import {
   installPtyChildDiagnostics,
   markPtyChildStage,
@@ -22,6 +23,24 @@ if ((phase !== "background" && phase !== "reattach") || !stateFile) {
   throw new Error(
     "RALPH_PTY_LIFECYCLE_PHASE=background|reattach and RALPH_PTY_LIFECYCLE_STATE are required",
   )
+}
+const parentAcknowledgementFile = `${stateFile}.parent-observed`
+const reattachResultFile = `${stateFile}.reattach-result.json`
+
+async function waitForParentAcknowledgement(path: string): Promise<void> {
+  const deadline = performance.now() + 10_000
+  while (performance.now() < deadline) {
+    try {
+      await access(path)
+      return
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error
+    }
+    // This is a bounded condition poll, not a flush delay: exit depends only
+    // on the parent's durable acknowledgement becoming observable.
+    await Bun.sleep(10)
+  }
+  throw new Error(`Parent did not acknowledge PTY result through ${path}`)
 }
 const empty = createEmptyRunUiSnapshot(RUN_ID)
 const usage = { available: false, source: "no-usage", note: "deterministic PTY fixture" } as const
@@ -138,30 +157,51 @@ if (phase === "background") {
   })
   let interrupted = false
   let handle: Awaited<ReturnType<typeof renderRunDashboard>> | undefined
+  // A Windows ConPTY may deliver Ctrl+C as either a parsed keypress or a
+  // process SIGINT. Production registers both routes against this same
+  // command-owned lifecycle, so the fixture must model that boundary instead
+  // of assuming the renderer always receives an ETX byte first.
+  const shutdown = createCommandShutdownLifecycle({
+    forceExit: () => undefined,
+    onStateChange: (state) => {
+      if (state !== "graceful") return
+      interrupted = true
+      markPtyChildStage("lifecycle.reattach.command-interrupt")
+      handle?.destroy()
+    },
+  })
   handle = await renderRunDashboard({
     source,
     ascii: true,
     locale: "en",
-    onInterrupt: () => {
-      interrupted = true
-      handle?.destroy()
-    },
+    onInterrupt: () => shutdown.interrupt("SIGINT"),
   })
   markPtyChildStage("lifecycle.reattach.handle-created")
   await handle.closed
   markPtyChildStage("lifecycle.reattach.handle-closed")
+  await shutdown.close()
   if (interrupted) {
     await writePtyChildOutput("\nRALPH_PTY_CTRL_C:command-owned-interrupt\n")
   }
-  await writePtyChildOutput(
-    `RALPH_PTY_LIFECYCLE_RESULT:${JSON.stringify({
-      interrupted,
-      status: source.getSnapshot().status,
-      progress: source.getSnapshot().progress,
-      childPlaceholder: source
-        .getSnapshot()
-        .taskTree?.some((task) => task.id === "child-placeholder"),
-    })}\n`,
-  )
-  markPtyChildStage("lifecycle.reattach.result-written")
+  const result = {
+    interrupted,
+    status: source.getSnapshot().status,
+    progress: source.getSnapshot().progress,
+    childPlaceholder: source
+      .getSnapshot()
+      .taskTree?.some((task) => task.id === "child-placeholder"),
+  }
+  // The durable projection is the authoritative result after a renderer is
+  // torn down. Publish it atomically so the harness never observes partial
+  // JSON, even if ConPTY drops its final display-only output block.
+  const resultStagingFile = `${reattachResultFile}.${process.pid}.tmp`
+  await writeFile(resultStagingFile, JSON.stringify(result), "utf8")
+  await rename(resultStagingFile, reattachResultFile)
+  markPtyChildStage("lifecycle.reattach.result-persisted")
+  // A stdout write callback means the bytes reached the ConPTY host, not that
+  // the parent data callback consumed its final block. The OpenTUI teardown
+  // also leaves PTY stdin unsuitable as an acknowledgement channel, so use a
+  // sibling file to prove that the parent observed the result before exit.
+  await waitForParentAcknowledgement(parentAcknowledgementFile)
+  markPtyChildStage("lifecycle.reattach.result-acknowledged")
 }
