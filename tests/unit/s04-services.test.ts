@@ -7,13 +7,9 @@ import {
   type ModelSmokeCommandRequest,
   ROLE_PROFILE_FORM_METADATA,
   roleProfileFormMetadata,
-} from "@ralph-next/commands"
-import { FakeSecretStore, secretInputFromValue } from "@ralph-next/credentials"
-import {
-  type ChatGptCredential,
-  type FetchLike,
-  OpenAiDriverError,
-} from "@ralph-next/openai-driver"
+} from "@ralph/commands"
+import { FakeSecretStore, secretInputFromValue } from "@ralph/credentials"
+import { type ChatGptCredential, type FetchLike, OpenAiDriverError } from "@ralph/openai-driver"
 import {
   CachedModelCatalog,
   CatalogResolutionSchema,
@@ -22,7 +18,7 @@ import {
   type ModelCatalog,
   ProviderEventSchema,
   TokenUsageSchema,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import {
   createTerminalProfileForm,
   type TerminalProfilePrompt,
@@ -599,9 +595,9 @@ describe("S04 concrete credential composition", () => {
       },
     ])
     expect(JSON.stringify(notices)).not.toContain("device-access-token")
-    expect(
-      requests.slice(0, 2).every((request) => request.userAgent?.startsWith("ralph-next/")),
-    ).toBe(true)
+    expect(requests.slice(0, 2).every((request) => request.userAgent?.startsWith("ralph/"))).toBe(
+      true,
+    )
     expect(requests.some((request) => request.url.endsWith("/oauth/token"))).toBe(true)
   })
 

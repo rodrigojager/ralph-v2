@@ -3,9 +3,9 @@ import { realpathSync } from "node:fs"
 import { lstat, mkdir, open, realpath, rm } from "node:fs/promises"
 import { hostname as localHostname } from "node:os"
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path"
-import { type TelemetryConfig, TelemetryConfigSchema } from "@ralph-next/domain"
-import type { ProcessRecoveryProbeResult } from "@ralph-next/orchestration"
-import { probeProcessIdentity } from "@ralph-next/orchestration"
+import { type TelemetryConfig, TelemetryConfigSchema } from "@ralph/domain"
+import type { ProcessRecoveryProbeResult } from "@ralph/orchestration"
+import { probeProcessIdentity } from "@ralph/orchestration"
 import {
   acquireDurableLease,
   appendEvent,
@@ -19,7 +19,7 @@ import {
   runLayout,
   workspaceLayout,
   writeJsonAtomic,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   captureProcessIdentity,
   createWorkerCapabilityToken,
@@ -37,8 +37,8 @@ import {
   WorkerCommandInvocationSchema,
   workerCommandCapabilityFingerprint,
   workerExecutableContentHash,
-} from "@ralph-next/supervisor"
-import type { ProcessPortResult } from "@ralph-next/tool-host"
+} from "@ralph/supervisor"
+import type { ProcessPortResult } from "@ralph/tool-host"
 import { z } from "zod"
 
 import { createWorkspaceBunProcessSupervisor } from "./process-output-store"

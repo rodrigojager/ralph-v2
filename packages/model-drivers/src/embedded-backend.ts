@@ -1,11 +1,11 @@
-import { type ExecutorOutcome, ExecutorOutcomeSchema } from "@ralph-next/domain"
+import { type ExecutorOutcome, ExecutorOutcomeSchema } from "@ralph/domain"
 import type {
   CallHandle,
   ExecutionBackend,
   ExecutionBackendLimits,
   ExecutionChannel,
   ExecutionRequest,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   type ModelParameters,
   type ModelRef,
@@ -16,7 +16,7 @@ import {
   type ProviderModelResult,
   ProviderModelResultSchema,
   RoleProfileLimitsSchema,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 
 const ExecutorAllegationSchema = ExecutorOutcomeSchema.omit({
   reportedAt: true,

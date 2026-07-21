@@ -40,7 +40,8 @@ Antes de editar código:
 - Trabalhe pela ordem de `PRD.md`.
 - Cada entrega deve ser uma vertical slice utilizável de ponta a ponta.
 - Não implemente primeiro todos os providers, depois toda a TUI e só depois a orquestração. A primeira slice deve executar uma tarefa completa por um backend mínimo e produzir evidência observável.
-- Mantenha o binário em desenvolvimento como `ralph-next` até a paridade de migração ser aceita.
+- O binário, o pacote e o comando público são sempre `ralph`. Não crie nome temporário, alias de
+  transição ou segundo comando público para a v2.
 - Preserve fixtures e testes black-box do Ralph antigo como contrato de compatibilidade.
 - Não copie o runner de sessão completo do OpenCode. Extraia providers, autenticação, catálogo, protocolos LLM, normalização de eventos, tools ou componentes de TUI somente quando forem necessários e desacople-os dos conceitos de sessão/servidor do OpenCode.
 - Todo arquivo derivado do OpenCode deve ter origem, commit e licença documentados.

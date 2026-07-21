@@ -2,7 +2,7 @@ import {
   type ProcessShutdownRegistry,
   TwoPhaseShutdownController,
   type TwoPhaseShutdownState,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 
 export type CommandSignal = "SIGINT" | "SIGTERM"
 

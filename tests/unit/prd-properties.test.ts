@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { parsePrdFile, updateTaskMarker } from "@ralph-next/prd"
+import { parsePrdFile, updateTaskMarker } from "@ralph/prd"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 function propertyDocument(options: {

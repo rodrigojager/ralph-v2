@@ -16,8 +16,8 @@ import {
   type ReleaseDistTag,
   ReleaseDistTagSchema,
   ReleaseSbomSchema,
-} from "@ralph-next/distribution"
-import { TwoPhaseShutdownController } from "@ralph-next/supervisor"
+} from "@ralph/distribution"
+import { TwoPhaseShutdownController } from "@ralph/supervisor"
 import packageJson from "../package.json" with { type: "json" }
 import { BundleBuildMetadataSchema, sha256File, validateBundleArtifact } from "./build-artifact"
 import { PUBLIC_SCHEMA_DEFINITIONS, publicSchemaMismatches } from "./generate-schemas"
@@ -421,10 +421,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
     expectedCommit: args.sourceCommit,
   })
   assertPackagingActive(signal)
-  const bundle = await validateBundleArtifact(
-    resolve(projectRoot, "dist", "ralph-next.js"),
-    projectRoot,
-  )
+  const bundle = await validateBundleArtifact(resolve(projectRoot, "dist", "ralph.js"), projectRoot)
   assertPackagingActive(signal)
   const safeOutputDirectory = await resolveManagedReleaseDestination({
     trustedRoot: verifiedSource.root,
@@ -460,14 +457,14 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
     // The generated package is ESM (`type: module`) and Bun supports top-level
     // await. Dynamic import is intentional: it publishes the immutable,
     // diagnostic-only origin before the application bundle runs any side effect.
-    const wrapper = `#!/usr/bin/env bun\nglobalThis[Symbol.for("ralph-next.distribution-origin")] = Object.freeze(${wrapperOrigin})\nawait import("../dist/ralph-next.js")\n`
-    const wrapperPath = resolve(packageDirectory, "bin", "ralph-next.js")
+    const wrapper = `#!/usr/bin/env bun\nglobalThis[Symbol.for("ralph.distribution-origin")] = Object.freeze(${wrapperOrigin})\nawait import("../dist/ralph.js")\n`
+    const wrapperPath = resolve(packageDirectory, "bin", "ralph.js")
     await mkdir(dirname(wrapperPath), { recursive: true })
     await writeFile(wrapperPath, wrapper, { encoding: "utf8", flag: "wx", mode: 0o700 })
     await chmod(wrapperPath, 0o755)
     await copyRegular(
       bundle.bundle,
-      resolve(packageDirectory, "dist", "ralph-next.js"),
+      resolve(packageDirectory, "dist", "ralph.js"),
       false,
       bundle.metadata.sha256,
     )
@@ -575,7 +572,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
       description: "Command-authoritative AI task runner for vertical-slice PRDs",
       license: rootManifest.license.trim(),
       type: "module",
-      bin: { "ralph-next": "bin/ralph-next.js" },
+      bin: { ralph: "bin/ralph.js" },
       engines: { bun: ">=1.3.14" },
       files: [
         "bin",
@@ -618,7 +615,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
       `${JSON.stringify(
         {
           schemaVersion: 2,
-          product: "ralph-next",
+          product: "ralph",
           packageName: args.packageName,
           version: packageJson.version,
           channel: args.channel,
@@ -629,7 +626,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
             fingerprintSha256: sourceSha256,
           },
           bundle: {
-            path: "dist/ralph-next.js",
+            path: "dist/ralph.js",
             sha256: bundle.metadata.sha256,
             buildMetadataSha256: stagedBundleMetadataReceipt.sha256,
           },
@@ -699,7 +696,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
       tarPath,
       Math.floor(Date.parse(args.publishedAt) / 1000),
       {
-        executablePaths: ["package/bin/ralph-next.js"],
+        executablePaths: ["package/bin/ralph.js"],
         expectedSha256ByPath: expectedArchiveReceipts,
       },
     )
@@ -762,10 +759,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
         resolve(packageCopy, "package.json"),
         "package/package.json",
       ),
-      bundle: await boundFile(
-        resolve(packageCopy, "dist", "ralph-next.js"),
-        "package/dist/ralph-next.js",
-      ),
+      bundle: await boundFile(resolve(packageCopy, "dist", "ralph.js"), "package/dist/ralph.js"),
       buildMetadata: await boundFile(
         resolve(packageCopy, "bundle-build-metadata.json"),
         "package/bundle-build-metadata.json",
@@ -796,7 +790,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
       const candidatePath = resolve(resultDirectory, "npm-candidate-receipt.json")
       const candidateReceipt = await writeBoundJson(candidatePath, "npm-candidate-receipt.json", {
         schemaVersion: 1,
-        product: "ralph-next",
+        product: "ralph",
         subject: "npm-package-candidate",
         status: "candidate-only",
         publishable: false,
@@ -873,9 +867,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
       await removeManagedReleaseOperation(stagingBase, operationDirectory).catch(
         (error: unknown) => {
           const message = error instanceof Error ? error.message : String(error)
-          process.stderr.write(
-            `ralph-next npm candidate: committed with stale staging (${message})\n`,
-          )
+          process.stderr.write(`ralph npm candidate: committed with stale staging (${message})\n`)
         },
       )
       process.stdout.write(
@@ -973,7 +965,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
         : { status: "packaged-not-tested" as const }
     const bindingBase = {
       schemaVersion: 1,
-      product: "ralph-next",
+      product: "ralph",
       subject: "npm-package",
       package: packageIdentity,
       publishedAt: args.publishedAt,
@@ -1225,7 +1217,7 @@ async function packageNpm(signal: AbortSignal): Promise<void> {
     committed = true
     await removeManagedReleaseOperation(stagingBase, operationDirectory).catch((error: unknown) => {
       const message = error instanceof Error ? error.message : String(error)
-      process.stderr.write(`ralph-next npm package: committed with stale staging (${message})\n`)
+      process.stderr.write(`ralph npm package: committed with stale staging (${message})\n`)
     })
     process.stdout.write(
       `${JSON.stringify({
@@ -1272,7 +1264,7 @@ try {
   if (npmAbort.signal.aborted) process.exitCode = 130
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error)
-  process.stderr.write(`ralph-next npm package: ${message}\n`)
+  process.stderr.write(`ralph npm package: ${message}\n`)
   process.exitCode = npmAbort.signal.aborted ? 130 : 1
 } finally {
   npmShutdown.close()

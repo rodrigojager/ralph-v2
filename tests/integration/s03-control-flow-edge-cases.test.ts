@@ -2,14 +2,14 @@ import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { createHash } from "node:crypto"
 import { cp, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { type CommandContext, runCli } from "@ralph-next/commands"
+import { type CommandContext, runCli } from "@ralph/commands"
 import {
   type ExecuteRunInput,
   executeRun as executeRunInternal,
   type RunOptionOverrides,
   type RunOptionResolutionContext,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   initializeWorkspace,
   listAttempts,
@@ -18,10 +18,10 @@ import {
   listRunTasks,
   readEvents,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
-import type { OutputWriters } from "@ralph-next/telemetry"
-import { ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
+import type { OutputWriters } from "@ralph/telemetry"
+import { ScriptedExecutionBackend } from "@ralph/test-kit"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const VERSION = "0.1.0-s03-control-flow-test"

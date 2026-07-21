@@ -37,7 +37,7 @@ Entregar uma reescrita independente do Ralph em TypeScript/Bun que preserve o mo
 
 ## Fase 1 — fundação executável
 
-- [x] S01 entregar um `ralph-next` instalável que inicializa workspace, carrega configuração versionada, oferece help/version/status em modo headless e possui harness de compatibilidade contra o Ralph atual; seguir integralmente `implementation/01-fundacao-e-compatibilidade.md` e só concluir após todos os seus itens e testes.
+- [x] S01 entregar um `ralph` instalável que inicializa workspace, carrega configuração versionada, oferece help/version/status em modo headless e possui harness de compatibilidade contra o Ralph atual; seguir integralmente `implementation/01-fundacao-e-compatibilidade.md` e só concluir após todos os seus itens e testes.
 - [x] S02 entregar PRD v1 compatível e PRD v2 Markdown legível com parser AST, schema forte, validação recursiva, edição posicional de status, exemplos e contrato de autoria exclusiva pela skill; seguir integralmente `implementation/02-prd-v2-e-skill.md`.
 - [x] S03 entregar a primeira execução completa comandada pelo CLI nos modos once, loop e wiggum, com seleção determinística, contexto controlado, tentativa limitada, no-change básico, gates e marcação somente após verificação; seguir integralmente `implementation/03-orquestrador-e-modos.md`.
 
@@ -63,4 +63,4 @@ Entregar uma reescrita independente do Ralph em TypeScript/Bun que preserve o mo
 ## Fase 6 — hardening e entrega
 
 - [x] S11 validar a matriz completa com unitários, property/golden tests, fixtures de providers, PTY/TUI, falhas de rede, OAuth, crashes, watchdog, concorrência, segurança e plataformas suportadas, corrigindo toda divergência obrigatória; seguir integralmente `implementation/11-testes-matriz-e-hardening.md`.
-- [x] S12 finalizar empacotamento e releases, avisos de terceiros, documentação de usuário, migração do nome `ralph-next` para `ralph` somente após gate, e adaptar a skill de geração para o schema final do PRD v2 com validação pelo mesmo parser; seguir integralmente `implementation/12-release-skill-e-handoff.md`.
+- [x] S12 finalizar empacotamento e releases, avisos de terceiros, documentação de usuário, migração do nome `ralph` para `ralph` somente após gate, e adaptar a skill de geração para o schema final do PRD v2 com validação pelo mesmo parser; seguir integralmente `implementation/12-release-skill-e-handoff.md`.

@@ -7,8 +7,8 @@ import {
   ContextBudgetSchema,
   GitBaselineSchema,
   JudgeAssessmentSchema,
-} from "@ralph-next/domain"
-import { compilePrdGraph } from "@ralph-next/prd"
+} from "@ralph/domain"
+import { compilePrdGraph } from "@ralph/prd"
 import {
   buildContextManifest,
   ContextBuildError,

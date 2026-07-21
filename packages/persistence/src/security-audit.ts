@@ -1,5 +1,5 @@
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
-import { redactText, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
+import { redactText, secretValuesFromEnvironment } from "@ralph/telemetry"
 import { appendEvent } from "./ledger"
 
 export type SecurityAuditScope = {

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto"
 import { readFile } from "node:fs/promises"
-import type { Diagnostic } from "@ralph-next/domain"
+import type { Diagnostic } from "@ralph/domain"
 import type { List, ListItem, Paragraph, RootContent } from "mdast"
 import { LineCounter, parseDocument } from "yaml"
 import { type ZodIssue, z } from "zod"

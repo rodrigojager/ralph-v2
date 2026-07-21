@@ -18,22 +18,19 @@ import {
   type CredentialStatus,
   CredentialStatusSchema,
   type SecretInput,
-} from "@ralph-next/credentials"
+} from "@ralph/credentials"
 import {
   type DeferredUninstallScheduler,
   type InstallOrigin,
-  inspectRalphAlias,
   installOriginFromManifest,
-  installRalphAlias,
   installStandalone,
   type ReleaseSignatureTrustPolicy,
   type ReleaseSignatureVerifier,
   rejectUnmanagedInstallOrigin,
-  removeRalphAlias,
   rollbackStandalone,
   uninstallStandalone,
   updateStandalone,
-} from "@ralph-next/distribution"
+} from "@ralph/distribution"
 import {
   type ChildUsageSummary,
   type CommandResult,
@@ -60,7 +57,7 @@ import {
   type SandboxConfig,
   type TelemetryConfig,
   type VerificationCommandReport,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   type ExecutionBackendResolver,
   type ExecutionRuntimeDependencies,
@@ -79,7 +76,7 @@ import {
   sandboxCapabilityProblem,
   selectTask,
   taskRefKey,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   canonicalDirectory,
   composeEffectiveConfigLayers,
@@ -107,7 +104,7 @@ import {
   writeFileAtomic,
   writeJsonAtomic,
   writeRoleProfileConfig,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   type CompiledPrdGraph,
   compilePrdGraph,
@@ -117,7 +114,7 @@ import {
   type PrdDocument,
   type PrdTask,
   parseClassicPrdFile,
-} from "@ralph-next/prd"
+} from "@ralph/prd"
 import {
   type CatalogResolution,
   createModelCatalogRuntime,
@@ -131,7 +128,7 @@ import {
   type ProviderInfo,
   type TokenUsage,
   TokenUsageSchema,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import {
   type CommandExecution,
   type CommandStreamItem,
@@ -142,7 +139,7 @@ import {
   logRecordsForEvent,
   matchesLogFilter,
   projectLogRecords,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 
 import {
   handleModelInspect,
@@ -2189,7 +2186,7 @@ async function handleMigration(
             ? data.emptyDirectoryCandidates.map((path) => `  - ${path}`)
             : ["  (none)"]),
           "Apply only after inspecting this exact plan:",
-          `  ralph-next migrate rollback ${JSON.stringify(data.manifestPath)} --confirm-plan-hash ${data.planHash}`,
+          `  ralph migrate rollback ${JSON.stringify(data.manifestPath)} --confirm-plan-hash ${data.planHash}`,
         ].join("\n"),
       })
     }
@@ -2874,113 +2871,6 @@ async function handleDistributionCommand(
   })
 }
 
-function ralphAliasHuman(data: {
-  action: string
-  state: string
-  installRoot: string
-  currentVersion: string
-  channel: string
-  aliasPath: string
-  aliasReceiptPath: string
-  aliasRemovalQuarantinePath?: string
-  aliasReceiptRemovalQuarantinePath?: string
-  pendingAliasControlReceiptPath?: string
-  pendingAliasControlReceiptQuarantinePath?: string
-  aliasRemovalQuarantineSha256?: string
-  aliasReceiptRemovalQuarantineSha256?: string
-  pendingAliasControlReceiptSha256?: string
-  pendingAliasControlReceiptQuarantineSha256?: string
-  mutationPerformed: boolean
-  runningBinaryReplaced: boolean
-  planHash?: string
-  previousGeneration?: number
-  currentGeneration?: number
-}): string {
-  return [
-    `Action:        ${data.action}`,
-    `Alias:         ralph`,
-    `State:         ${data.state}`,
-    `Install root:  ${data.installRoot}`,
-    `Version:       ${data.currentVersion}`,
-    `Channel:       ${data.channel}`,
-    `Policy:        ${
-      data.action === "alias-remove"
-        ? "removal is receipt/hash-bound and channel-independent"
-        : data.action === "alias-install"
-          ? data.channel === "stable"
-            ? "installation eligible from stable receipt"
-            : "installation blocked; stable receipt required"
-          : data.channel === "stable"
-            ? "installation eligible; status remains read-only"
-            : "installation blocked; status and removal remain available"
-    }`,
-    `Alias path:    ${data.aliasPath}`,
-    `Alias receipt: ${data.aliasReceiptPath}`,
-    ...(data.aliasRemovalQuarantineSha256 && data.aliasRemovalQuarantinePath
-      ? [
-          `Alias removal quarantine: ${data.aliasRemovalQuarantinePath}`,
-          `Alias quarantine SHA-256:  ${data.aliasRemovalQuarantineSha256}`,
-        ]
-      : []),
-    ...(data.aliasReceiptRemovalQuarantineSha256 && data.aliasReceiptRemovalQuarantinePath
-      ? [
-          `Receipt removal quarantine: ${data.aliasReceiptRemovalQuarantinePath}`,
-          `Receipt quarantine SHA-256:  ${data.aliasReceiptRemovalQuarantineSha256}`,
-        ]
-      : []),
-    ...(data.pendingAliasControlReceiptSha256 && data.pendingAliasControlReceiptPath
-      ? [
-          `Pending control receipt: ${data.pendingAliasControlReceiptPath}`,
-          `Pending receipt SHA-256: ${data.pendingAliasControlReceiptSha256}`,
-        ]
-      : []),
-    ...(data.pendingAliasControlReceiptQuarantineSha256 &&
-    data.pendingAliasControlReceiptQuarantinePath
-      ? [
-          `Pending receipt quarantine: ${data.pendingAliasControlReceiptQuarantinePath}`,
-          `Pending quarantine SHA-256: ${data.pendingAliasControlReceiptQuarantineSha256}`,
-        ]
-      : []),
-    ...(data.planHash ? [`Plan SHA-256: ${data.planHash}`] : []),
-    ...(data.previousGeneration !== undefined
-      ? [`Generation:    ${data.previousGeneration} -> ${data.currentGeneration}`]
-      : []),
-    `Mutation:      ${data.mutationPerformed ? "performed" : "none"}`,
-    `Running file:  ${data.runningBinaryReplaced ? "replaced" : "not replaced"}`,
-  ].join("\n")
-}
-
-async function handleRalphAliasCommand(
-  parsed: ParsedCli,
-  context: CommandContext,
-): Promise<HandledCommand> {
-  const installRoot = distributionInstallRoot(parsed, context)
-  const data =
-    parsed.command === "alias.ralph.status"
-      ? await inspectRalphAlias(installRoot)
-      : parsed.command === "alias.ralph.install"
-        ? await installRalphAlias({
-            installRoot,
-            dryRun: parsed.options.dryRun,
-            ...(parsed.options.confirmationPlanHash
-              ? { confirmationPlanHash: parsed.options.confirmationPlanHash }
-              : {}),
-            ...(context.signal ? { signal: context.signal } : {}),
-          })
-        : await removeRalphAlias({
-            installRoot,
-            dryRun: parsed.options.dryRun,
-            ...(parsed.options.confirmationPlanHash
-              ? { confirmationPlanHash: parsed.options.confirmationPlanHash }
-              : {}),
-            ...(context.signal ? { signal: context.signal } : {}),
-          })
-  return handled({
-    result: commandResult(parsed.command, data),
-    human: ralphAliasHuman(data),
-  })
-}
-
 async function handleConfig(parsed: ParsedCli, context: CommandContext): Promise<HandledCommand> {
   const start = workspaceStart(parsed, context)
 
@@ -2993,7 +2883,7 @@ async function handleConfig(parsed: ParsedCli, context: CommandContext): Promise
         "The selected config operation requires an initialized Ralph v2 workspace",
         {
           exitCode: EXIT_CODES.invalidUsage,
-          hint: "Run `ralph-next init`, pass --workspace, or select --scope global.",
+          hint: "Run `ralph init`, pass --workspace, or select --scope global.",
         },
       )
     }
@@ -3006,7 +2896,7 @@ async function handleConfig(parsed: ParsedCli, context: CommandContext): Promise
         {
           exitCode: EXIT_CODES.invalidUsage,
           file: candidate,
-          hint: "Run `ralph-next init` before using workspace configuration.",
+          hint: "Run `ralph init` before using workspace configuration.",
         },
       )
     }
@@ -3345,7 +3235,7 @@ async function handleConfig(parsed: ParsedCli, context: CommandContext): Promise
           "No initialized Ralph v2 workspace was found for the workspace settings scope",
           {
             exitCode: EXIT_CODES.invalidUsage,
-            hint: "Run `ralph-next init` or select --scope global.",
+            hint: "Run `ralph init` or select --scope global.",
           },
         )
       }
@@ -3357,7 +3247,7 @@ async function handleConfig(parsed: ParsedCli, context: CommandContext): Promise
           {
             exitCode: EXIT_CODES.invalidUsage,
             file: candidate,
-            hint: "Run `ralph-next init` before saving workspace defaults.",
+            hint: "Run `ralph init` before saving workspace defaults.",
           },
         )
       }
@@ -3618,7 +3508,7 @@ async function handlePrd(parsed: ParsedCli, context: CommandContext): Promise<Ha
           classic.document ?? null,
           diagnostics,
           classic.document
-            ? `Classic PRD compatibility document: ${classic.document.tasks.length} tasks\nRun \`ralph-next prd migrate ${input.file}\` for a v2 conversion report.`
+            ? `Classic PRD compatibility document: ${classic.document.tasks.length} tasks\nRun \`ralph prd migrate ${input.file}\` for a v2 conversion report.`
             : "",
         )
       }
@@ -3674,7 +3564,7 @@ async function handlePrd(parsed: ParsedCli, context: CommandContext): Promise<Ha
               severity: "error" as const,
               message: "PRD task grammar is valid but not in canonical form",
               file: input.file,
-              hint: "Run `ralph-next prd format <file> --in-place` or use --output.",
+              hint: "Run `ralph prd format <file> --in-place` or use --output.",
             },
           ]
         : formatDiagnostics
@@ -3857,7 +3747,7 @@ async function requireInitializedWorkspace(
       {
         exitCode: EXIT_CODES.invalidUsage,
         file: status.root,
-        hint: "Run `ralph-next init` first.",
+        hint: "Run `ralph init` first.",
       },
     )
   }
@@ -4275,7 +4165,7 @@ async function handleExecution(
       "No compatible non-terminal run is available to resume",
       {
         exitCode: EXIT_CODES.invalidUsage,
-        hint: "Use `ralph-next status --all` to inspect persisted runs.",
+        hint: "Use `ralph status --all` to inspect persisted runs.",
       },
     )
   }
@@ -4614,7 +4504,7 @@ async function handleStop(parsed: ParsedCli, context: CommandContext): Promise<H
       "This Ralph executable has no supervisor-owned run-control adapter",
       {
         exitCode: EXIT_CODES.operationalError,
-        hint: "Inspect the run with `ralph-next status --all`; do not signal an unverified PID manually.",
+        hint: "Inspect the run with `ralph status --all`; do not signal an unverified PID manually.",
       },
     )
   }
@@ -4752,10 +4642,10 @@ async function handleRunStatus(
           `Recovery manifest hash: ${pendingRecovery.payload.recoveryHash}`,
           `Recovery expected: ${pendingRecovery.payload.expectedWorkspaceHash}`,
           `Recovery observed: ${pendingRecovery.payload.observedWorkspaceHash}`,
-          `Recovery inspect: ralph-next status run --run-id ${run.id}`,
-          `Recovery continue: ralph-next resume ${run.id} --accept-workspace-changes`,
-          `Recovery checkpoint: ralph-next checkpoint create --run-id ${run.id}`,
-          "Recovery rollback: ralph-next rollback preview <checkpoint-id>, then rollback apply <plan-id> --confirm-plan-hash <plan-hash>",
+          `Recovery inspect: ralph status run --run-id ${run.id}`,
+          `Recovery continue: ralph resume ${run.id} --accept-workspace-changes`,
+          `Recovery checkpoint: ralph checkpoint create --run-id ${run.id}`,
+          "Recovery rollback: ralph rollback preview <checkpoint-id>, then rollback apply <plan-id> --confirm-plan-hash <plan-hash>",
         ]
       : recoveryInspectionError
         ? [`Recovery: invalid durable decision (${recoveryInspectionError})`]
@@ -4811,14 +4701,14 @@ async function handleAttach(parsed: ParsedCli, context: CommandContext): Promise
       `The ${replay ? "replay" : "attach"} TUI requires an interactive terminal`,
       {
         exitCode: EXIT_CODES.invalidUsage,
-        hint: `Use \`ralph-next status run --run-id ${run.id}\` in headless environments.`,
+        hint: `Use \`ralph status run --run-id ${run.id}\` in headless environments.`,
       },
     )
   }
   if (!context.runUi) {
     throw new RalphError("RALPH_TUI_UNAVAILABLE", "This Ralph executable has no TUI adapter", {
       exitCode: EXIT_CODES.operationalError,
-      hint: `Use \`ralph-next status run --run-id ${run.id}\` or install the full distribution.`,
+      hint: `Use \`ralph status run --run-id ${run.id}\` or install the full distribution.`,
     })
   }
   const attached = await context.runUi.attach({
@@ -5571,7 +5461,7 @@ function skippedS04DoctorChecks(message: string): DoctorCheck[] {
 
 function runtimeProfileFailure(error: unknown): Pick<DoctorCheck, "message" | "hint"> {
   if (error instanceof RalphError && error.code.startsWith("RALPH_PROFILE_")) {
-    let hint = "Inspect the effective role profiles and run `ralph-next doctor` again."
+    let hint = "Inspect the effective role profiles and run `ralph doctor` again."
     if (error.code.includes("CREDENTIAL")) {
       hint = "Inspect `auth list` and the credential reference configured for each role profile."
     } else if (error.code.includes("FALLBACK")) {
@@ -5587,7 +5477,7 @@ function runtimeProfileFailure(error: unknown): Pick<DoctorCheck, "message" | "h
   }
   return {
     message: "Runtime role profile validation failed",
-    hint: "Inspect the effective role profiles and run `ralph-next doctor` again.",
+    hint: "Inspect the effective role profiles and run `ralph doctor` again.",
   }
 }
 
@@ -5955,7 +5845,7 @@ async function doctorChecks(
       message: status.initialized
         ? `Ralph v2 workspace ${status.workspaceId} is ready`
         : "Ralph v2 workspace is not initialized",
-      ...(!status.initialized ? { hint: "Run `ralph-next init` when you are ready." } : {}),
+      ...(!status.initialized ? { hint: "Run `ralph init` when you are ready." } : {}),
     })
   } catch (error) {
     checks.push({
@@ -6013,23 +5903,23 @@ export async function handleCommand(
       return handled({ result: commandResult("help", data), human: helpText(context.version) })
     }
     case "version": {
-      const data = { name: "ralph-next", version: context.version }
+      const data = { name: "ralph", version: context.version }
       return handled({
         result: commandResult("version", data),
-        human: `ralph-next ${context.version}`,
+        human: `ralph ${context.version}`,
       })
     }
     case "about": {
       const data = {
         name: "Ralph v2",
-        binary: "ralph-next",
+        binary: "ralph",
         version: context.version,
         authority: "Commands and deterministic policy govern models, tools, evidence and state.",
         status: "development",
       }
       return handled({
         result: commandResult("about", data),
-        human: `Ralph v2 (${context.version})\nCommand-authoritative execution for small, verifiable vertical slices.\nDevelopment binary: ralph-next`,
+        human: `Ralph v2 (${context.version})\nCommand-authoritative execution for small, verifiable vertical slices.\nDevelopment binary: ralph`,
       })
     }
     case "init": {
@@ -6186,10 +6076,6 @@ export async function handleCommand(
     case "install.rollback":
     case "uninstall":
       return handleDistributionCommand(parsed, context)
-    case "alias.ralph.status":
-    case "alias.ralph.install":
-    case "alias.ralph.remove":
-      return handleRalphAliasCommand(parsed, context)
     case "profiles.list":
     case "profiles.inspect":
     case "profiles.configure":

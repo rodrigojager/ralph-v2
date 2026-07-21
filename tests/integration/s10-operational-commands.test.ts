@@ -6,10 +6,10 @@ import {
   type DistributionCommandService,
   executeCli,
   runCli,
-} from "@ralph-next/commands"
-import { initializeWorkspace, workspaceLayout } from "@ralph-next/persistence"
-import type { OutputWriters } from "@ralph-next/telemetry"
-import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/commands"
+import { initializeWorkspace, workspaceLayout } from "@ralph/persistence"
+import type { OutputWriters } from "@ralph/telemetry"
+import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph/test-kit"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const VERSION = "0.1.0-s10-operational-test"

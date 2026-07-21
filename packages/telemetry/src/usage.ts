@@ -6,7 +6,7 @@ import {
   TokenUsageSchema,
   type UsageMetric,
   type UsageSource,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import type { EventEnvelope } from "./events"
 
 export type UsageRole = "executor" | "judge" | "child" | "tool-model"

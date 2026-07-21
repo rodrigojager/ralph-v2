@@ -1,5 +1,5 @@
 {
-  "name": "@ralph-next/openai-driver",
+  "name": "@ralph/openai-driver",
   "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",

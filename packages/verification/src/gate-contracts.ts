@@ -1,4 +1,4 @@
-import type { VerificationSkipPolicy, VerificationSpec } from "@ralph-next/prd"
+import type { VerificationSkipPolicy, VerificationSpec } from "@ralph/prd"
 import type { GateExecutorRegistry } from "./gate-registry"
 
 export type VerificationStatus =

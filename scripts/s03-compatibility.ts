@@ -9,7 +9,7 @@ import {
   listRuns,
   workspaceLayout,
   writeFileAtomic,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import { nativeTarget, sha256File, validateStandaloneArtifact } from "./build-artifact"
 import {
   assertNoSecretLeak,
@@ -439,7 +439,7 @@ export async function runS03CompatibilityHarness(
   const extension = process.platform === "win32" ? ".exe" : ""
   const productCandidate = runtime.nextBinary
     ? resolve(runtime.nextBinary)
-    : join(root, "dist", "standalone", target, `ralph-next${extension}`)
+    : join(root, "dist", "standalone", target, `ralph${extension}`)
   const product = await validateStandaloneArtifact(productCandidate, root, target)
   const temporaryRoot = await realpath(await mkdtemp(join(tmpdir(), TEMPORARY_PREFIX)))
   assertSafeTemporaryRoot(temporaryRoot)

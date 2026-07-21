@@ -1,14 +1,14 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { join } from "node:path"
-import { type RalphError, RoleProfileConfigSchema } from "@ralph-next/domain"
+import { type RalphError, RoleProfileConfigSchema } from "@ralph/domain"
 import {
   effectiveValue,
   globalConfigPath,
   loadEffectiveConfig,
   readWorkspaceConfig,
   writeRoleProfileConfig,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const temporaryDirectories: string[] = []

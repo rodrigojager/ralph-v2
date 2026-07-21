@@ -9,7 +9,7 @@ import {
   type ReleasePromotionRecord,
   type ReleaseSupportPolicy,
   type ReleaseTarget,
-} from "@ralph-next/distribution"
+} from "@ralph/distribution"
 
 export interface PromotionTargetArtifacts {
   readonly target: ReleaseTarget

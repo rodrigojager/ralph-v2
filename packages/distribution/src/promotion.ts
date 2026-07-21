@@ -302,7 +302,7 @@ const StandaloneCandidateTargetFilesSchema = z
 export const StandaloneReleaseCandidateReceiptSchema = z
   .object({
     schemaVersion: z.literal(1),
-    product: z.literal("ralph-next"),
+    product: z.literal("ralph"),
     subject: z.literal("standalone-release-candidate"),
     status: z.literal("candidate-only"),
     publishable: z.literal(false),
@@ -415,7 +415,7 @@ export type StandaloneReleaseCandidateReceipt = z.infer<
 export const ReleasePromotionRecordSchema = z
   .object({
     schemaVersion: z.literal(3),
-    product: z.literal("ralph-next"),
+    product: z.literal("ralph"),
     version: SemverSchema,
     channel: z.enum(["beta", "stable"]),
     source: z

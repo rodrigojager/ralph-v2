@@ -2,16 +2,16 @@ import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { createHash } from "node:crypto"
 import { cp, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { executeCli } from "@ralph-next/commands"
-import { ContextAssessmentFeedbackSchema, type JudgeOutput } from "@ralph-next/domain"
-import type { JudgeBackend, JudgeEventSink, JudgeRequest } from "@ralph-next/evaluation"
+import { executeCli } from "@ralph/commands"
+import { ContextAssessmentFeedbackSchema, type JudgeOutput } from "@ralph/domain"
+import type { JudgeBackend, JudgeEventSink, JudgeRequest } from "@ralph/evaluation"
 import {
   type ExecuteRunInput,
   type ExecutionBackend,
   executeRun,
   type RunOptionOverrides,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   getEvidenceBundle,
   initializeWorkspace,
@@ -21,9 +21,9 @@ import {
   listRunTasks,
   readEvents,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
-import { ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
+import { ScriptedExecutionBackend } from "@ralph/test-kit"
 import { buildRunUiSnapshot } from "../../apps/ralph-cli/src/tui-services"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 

@@ -7,8 +7,8 @@ import {
   parseCli,
   ROLE_PROFILE_FORM_METADATA,
   roleProfileFormMetadata,
-} from "@ralph-next/commands"
-import { DEFAULT_CONFIG } from "@ralph-next/domain"
+} from "@ralph/commands"
+import { DEFAULT_CONFIG } from "@ralph/domain"
 
 describe("S04 shared role-profile form metadata", () => {
   test("maps every popup field to a documented CLI route and config key", () => {

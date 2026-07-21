@@ -4,7 +4,7 @@ import {
   RalphError,
   type ResourceClaimSetRecord,
   type ResourceClaimSpec,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   acquireResourceClaimSet,
   expandResourceClaimSet,
@@ -15,7 +15,7 @@ import {
   recoverExpiredResourceClaimSet,
   releaseResourceClaimSet,
   renewResourceClaimSet,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import type { ParallelClaimLifecyclePort } from "./parallel-runner"
 import { captureCurrentProcessIdentity, probeProcessIdentity } from "./process-identity"
 

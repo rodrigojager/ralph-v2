@@ -46,7 +46,7 @@ async function run(command: string[]): Promise<void> {
 
 async function buildBundle(projectRoot: string): Promise<void> {
   await mkdir(join(projectRoot, "dist"), { recursive: true })
-  const output = join(projectRoot, "dist", "ralph-next.js")
+  const output = join(projectRoot, "dist", "ralph.js")
   await run([
     process.execPath,
     "build",
@@ -57,7 +57,7 @@ async function buildBundle(projectRoot: string): Promise<void> {
     ...externalOpenTuiPackages(nativeTarget()),
     "--sourcemap=external",
     "--outdir=dist",
-    "--entry-naming=ralph-next.js",
+    "--entry-naming=ralph.js",
   ])
   const fingerprint = await sourceFingerprint(projectRoot)
   await Bun.write(
@@ -65,7 +65,7 @@ async function buildBundle(projectRoot: string): Promise<void> {
     `${JSON.stringify(
       {
         schemaVersion: 1,
-        product: "ralph-next-bundle",
+        product: "ralph-bundle",
         target: "bun",
         status: "built-not-tested",
         version: packageJson.version,
@@ -85,8 +85,8 @@ async function buildBundle(projectRoot: string): Promise<void> {
 async function buildStandalone(projectRoot: string, target: ReleaseTarget): Promise<void> {
   const extension = target.startsWith("bun-windows-") ? ".exe" : ""
   const directory = join(projectRoot, "dist", "standalone", target)
-  const output = join(directory, `ralph-next${extension}`)
-  const launcherOutput = join(directory, `ralph-next-launcher${extension}`)
+  const output = join(directory, `ralph${extension}`)
+  const launcherOutput = join(directory, `ralph-launcher${extension}`)
   await mkdir(directory, { recursive: true })
   await run([
     process.execPath,
@@ -133,7 +133,7 @@ async function buildStandalone(projectRoot: string, target: ReleaseTarget): Prom
   await Bun.write(join(directory, "build-metadata.json"), `${JSON.stringify(metadata, null, 2)}\n`)
   const launcherMetadata = {
     schemaVersion: 1,
-    product: "ralph-next-launcher",
+    product: "ralph-launcher",
     target,
     status: "built-not-tested",
     version: packageJson.version,

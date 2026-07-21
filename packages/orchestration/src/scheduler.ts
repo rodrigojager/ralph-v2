@@ -4,8 +4,8 @@ import {
   type TaskRecord,
   TaskRecordSchema,
   type TaskRuntimeStatus,
-} from "@ralph-next/domain"
-import type { CompiledPrdGraph, TaskRef } from "@ralph-next/prd"
+} from "@ralph/domain"
+import type { CompiledPrdGraph, TaskRef } from "@ralph/prd"
 
 export type TaskSelection = {
   task: TaskRef

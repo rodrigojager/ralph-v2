@@ -6,7 +6,7 @@ import {
   CachedModelCatalog,
   createCuratedCatalogSource,
   InMemoryModelCatalogCache,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import {
   createS04Services,
   isRealS04SmokeOptedIn,

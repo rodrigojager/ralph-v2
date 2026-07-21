@@ -326,10 +326,10 @@ execuções Bun foram iniciadas em processo oculto, `BelowNormal`, com timeout e
 ## Verificação mínima
 
 ```text
-ralph-next run --resume auto --prd <fixture>
-ralph-next status --all --format json
-ralph-next resume <run-id>
-ralph-next stop <run-id> --graceful
+ralph run --resume auto --prd <fixture>
+ralph status --all --format json
+ralph resume <run-id>
+ralph stop <run-id> --graceful
 bun test packages/persistence packages/supervisor --filter kill
 bun test packages/supervisor --filter watchdog
 ```

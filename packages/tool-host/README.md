@@ -1,4 +1,4 @@
-# `@ralph-next/tool-host`
+# `@ralph/tool-host`
 
 Governed tool execution for Ralph v2. The package deliberately has no access to
 the PRD scheduler, task markers, orchestration state, or the concrete ledger.

@@ -1,11 +1,11 @@
 import { describe, expect, test } from "bun:test"
-import { createGitCommandPort } from "@ralph-next/orchestration"
+import { createGitCommandPort } from "@ralph/orchestration"
 import type {
   ProcessSettlement,
   ProcessSupervisor,
   SupervisedProcessHandle,
   SupervisedProcessRequest,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 
 function settlement(request: SupervisedProcessRequest): ProcessSettlement {
   return {

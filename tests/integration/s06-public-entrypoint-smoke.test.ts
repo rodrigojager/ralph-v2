@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { cp, readFile, unlink, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { initializeWorkspace, workspaceLayout } from "@ralph-next/persistence"
+import { initializeWorkspace, workspaceLayout } from "@ralph/persistence"
 import { stringify } from "yaml"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 

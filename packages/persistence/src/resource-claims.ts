@@ -10,7 +10,7 @@ import {
   ResourceClaimSetRecordSchema,
   type ResourceClaimSpec,
   ResourceClaimSpecSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { appendEventInTransaction, withLedger } from "./ledger"
 
 const CLAIM_SET_COLUMNS = `id, schema_version, workspace_id, run_id, document_id, task_id,

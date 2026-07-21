@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { ExecutorOutcomeSchema } from "@ralph-next/domain"
+import { ExecutorOutcomeSchema } from "@ralph/domain"
 import {
   awaitBackendOutcome,
   awaitBackendStart,
@@ -10,7 +10,7 @@ import {
   isExecutionCancelled,
   isExecutionDeadlineExceeded,
   type ModelEventSink,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 
 function outcome() {
   return ExecutorOutcomeSchema.parse({

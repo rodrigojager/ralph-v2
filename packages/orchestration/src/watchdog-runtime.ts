@@ -6,7 +6,7 @@ import {
   type WatchdogRecoveryDecision,
   WatchdogRecoveryDecisionSchema,
   type WatchdogTriState,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   type WatchdogClock,
   type WatchdogDeadlines,
@@ -16,8 +16,8 @@ import {
   type WatchdogPhaseStart,
   type WatchdogProbeResult,
   type WatchdogScheduler,
-} from "@ralph-next/supervisor"
-import type { EventInput } from "@ralph-next/telemetry"
+} from "@ralph/supervisor"
+import type { EventInput } from "@ralph/telemetry"
 
 export type WatchdogRuntimeAction = Exclude<WatchdogRecoveryDecision["action"], "none">
 

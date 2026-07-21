@@ -1,7 +1,7 @@
 import { constants, type Stats } from "node:fs"
 import { access, lstat, readdir, realpath, stat } from "node:fs/promises"
 import { dirname, join, parse, resolve } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 
 export const RALPH_DIRECTORY = ".ralph"
 

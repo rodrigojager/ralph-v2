@@ -2,7 +2,7 @@ import { createHash } from "node:crypto"
 import { createReadStream } from "node:fs"
 import { lstat, readFile, realpath } from "node:fs/promises"
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path"
-import { CurrentInstallPointerSchema, InstallReceiptSchema } from "@ralph-next/distribution"
+import { CurrentInstallPointerSchema, InstallReceiptSchema } from "@ralph/distribution"
 
 const MAX_CONTROL_FILE_BYTES = 1024 * 1024
 
@@ -128,6 +128,6 @@ try {
   process.exitCode = await launch()
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error)
-  process.stderr.write(`ralph-next launcher: ${message}\n`)
+  process.stderr.write(`ralph launcher: ${message}\n`)
   process.exitCode = 127
 }

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto"
 import { createReadStream } from "node:fs"
 import { lstat, open, readFile, realpath, unlink } from "node:fs/promises"
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   type InstallOrigin,
   type ReleaseManifest,

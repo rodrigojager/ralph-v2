@@ -28,8 +28,8 @@ import {
   GitBaselineSchema,
   type MissingEvidence,
   type NoChangePolicy,
-} from "@ralph-next/domain"
-import type { PrdTask, VerificationSpec } from "@ralph-next/prd"
+} from "@ralph/domain"
+import type { PrdTask, VerificationSpec } from "@ralph/prd"
 import { validateArtifactContract } from "./artifact-contract"
 import type { VerificationResult } from "./gates"
 import {

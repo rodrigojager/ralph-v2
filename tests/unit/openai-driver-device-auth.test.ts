@@ -117,9 +117,9 @@ describe("ChatGPT headless device authorization", () => {
           })
         },
       },
-      { userAgent: "ralph-next/fixture" },
+      { userAgent: "ralph/fixture" },
     )
-    expect(observed).toEqual(["ralph-next/fixture"])
+    expect(observed).toEqual(["ralph/fixture"])
 
     const error = await startDeviceAuthorization(
       { fetch: async () => Response.json({}) },

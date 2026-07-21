@@ -44,15 +44,15 @@ workspace não pode redirecionar a credential para outra origem.
 ### Comandos
 
 ```text
-ralph-next providers list [--refresh] [--format human|json|jsonl]
-ralph-next providers inspect <provider> [--refresh] [--format human|json|jsonl]
+ralph providers list [--refresh] [--format human|json|jsonl]
+ralph providers inspect <provider> [--refresh] [--format human|json|jsonl]
 
-ralph-next models list [--provider <provider>] [--require-tools]
+ralph models list [--provider <provider>] [--require-tools]
   [--require-structured-output] [--refresh] [--format human|json|jsonl]
 
-ralph-next models inspect <provider>/<model> [--refresh]
+ralph models inspect <provider>/<model> [--refresh]
   [--format human|json|jsonl]
-ralph-next models inspect <model> --provider <provider> [--refresh]
+ralph models inspect <model> --provider <provider> [--refresh]
   [--format human|json|jsonl]
 ```
 
@@ -60,7 +60,7 @@ Para um model ID que já contém `/`, como os IDs do OpenRouter, use a segunda
 forma para desambiguar:
 
 ```text
-ralph-next models inspect openai/gpt-5.3-codex --provider openrouter --format json
+ralph models inspect openai/gpt-5.3-codex --provider openrouter --format json
 ```
 
 `providers inspect` mostra access e apenas os métodos de autenticação realmente
@@ -100,7 +100,7 @@ quota, elegibilidade da conta, compatibilidade dinâmica do modelo ou disponibil
 Em um terminal interativo, omitir `--secret-stdin` abre entrada mascarada:
 
 ```text
-ralph-next auth connect openai --method api-key \
+ralph auth connect openai --method api-key \
   --credential openai-main --label "OpenAI principal"
 ```
 
@@ -109,7 +109,7 @@ apenas ilustrativo; use o secret manager do seu ambiente e não escreva o valor
 literal no histórico:
 
 ```text
-<secret-provider-command> | ralph-next auth connect openai --method api-key \
+<secret-provider-command> | ralph auth connect openai --method api-key \
   --credential openai-ci --label "OpenAI CI" \
   --secret-stdin --non-interactive --format json
 ```
@@ -122,7 +122,7 @@ O parser não possui `--api-key` nem outro flag que aceite o valor. Em modo
 Este método persiste somente o nome da variável:
 
 ```text
-ralph-next auth connect openai --method environment \
+ralph auth connect openai --method environment \
   --credential openai-env --environment OPENAI_API_KEY \
   --non-interactive --format json
 ```
@@ -138,14 +138,14 @@ O driver OpenAI/Codex é embutido; os comandos abaixo **não** chamam o executá
 Fluxo no navegador com state, PKCE e callback loopback:
 
 ```text
-ralph-next auth connect openai --method oauth-browser \
+ralph auth connect openai --method oauth-browser \
   --credential chatgpt-main --label "ChatGPT pessoal"
 ```
 
 Fluxo device code, adequado para terminal headless:
 
 ```text
-ralph-next auth connect openai --method device-code \
+ralph auth connect openai --method device-code \
   --credential chatgpt-headless --headless --timeout 600
 ```
 
@@ -153,7 +153,7 @@ ralph-next auth connect openai --method device-code \
 interativo e device flow quando combinado com `--headless`.
 
 ```text
-ralph-next auth connect openai --method subscription-session \
+ralph auth connect openai --method subscription-session \
   --credential chatgpt-subscription
 ```
 
@@ -172,10 +172,10 @@ equivale a afirmar que uma conta real do usuário já foi conectada ou testada.
 ### Listar, verificar e revogar
 
 ```text
-ralph-next auth list [--provider <provider>] [--format human|json|jsonl]
-ralph-next auth status [<credential>] [--provider <provider>] [--refresh]
+ralph auth list [--provider <provider>] [--format human|json|jsonl]
+ralph auth status [<credential>] [--provider <provider>] [--refresh]
   [--format human|json|jsonl]
-ralph-next auth revoke <credential> [--format human|json|jsonl]
+ralph auth revoke <credential> [--format human|json|jsonl]
 ```
 
 `auth list` expõe apenas `CredentialRef`. `auth status` retorna estado como
@@ -229,11 +229,11 @@ Crie primeiro os perfis que serão usados como fallback e depois o perfil que os
 referencia. Exemplo de dois executores OpenAI:
 
 ```text
-ralph-next profiles configure executor-backup \
+ralph profiles configure executor-backup \
   --scope global --role executor --backend embedded \
   --provider openai --model gpt-5.4-mini --credential openai-main
 
-ralph-next profiles configure executor-main \
+ralph profiles configure executor-main \
   --scope global --role executor --backend embedded \
   --provider openai --model gpt-5.4 --credential chatgpt-main \
   --variant high --require-tools \
@@ -244,7 +244,7 @@ ralph-next profiles configure executor-main \
 Um judge pode usar credencial e provider distintos:
 
 ```text
-ralph-next profiles configure judge-main \
+ralph profiles configure judge-main \
   --scope workspace --workspace <projeto> \
   --role judge --backend embedded \
   --provider anthropic --model claude-sonnet-4-6 \
@@ -258,8 +258,8 @@ S06.
 Consultas:
 
 ```text
-ralph-next profiles list [--role executor|judge] [--workspace <projeto>]
-ralph-next profiles inspect <profile> [--workspace <projeto>] --format json
+ralph profiles list [--role executor|judge] [--workspace <projeto>]
+ralph profiles inspect <profile> [--workspace <projeto>] --format json
 ```
 
 `profiles inspect` resolve origem de config, model/capabilities e metadata da
@@ -346,13 +346,13 @@ que o smoke read-only seja um executor de PRD.
 Por perfil:
 
 ```text
-ralph-next model smoke --profile executor-main --timeout 30 --format json
+ralph model smoke --profile executor-main --timeout 30 --format json
 ```
 
 Ou por componentes explícitos:
 
 ```text
-ralph-next model smoke --provider openai --model gpt-5.4-mini \
+ralph model smoke --provider openai --model gpt-5.4-mini \
   --credential openai-main --variant medium --timeout 30 --format json
 ```
 
@@ -496,7 +496,7 @@ Ralph.
 O parâmetro `originator=opencode` é preservado porque pertence ao protocolo
 fixado de autorização/request. Ele é uma exceção documentada: não é User-Agent,
 branding, identidade do CLI nem alegação de afiliação. O User-Agent do driver é
-Ralph (`ralph-next/...`) e pode ser injetado. Alterar a exceção exige vendor
+Ralph (`ralph/...`) e pode ser injetado. Alterar a exceção exige vendor
 refresh revisado; drift de protocolo falha fechado.
 
 ## Schemas públicos
@@ -519,7 +519,7 @@ em relação à fonte Zod. Credenciais secretas não fazem parte desses schemas.
 ## Relação com `/goal`
 
 O `/goal` do Codex é apenas o mecanismo usado durante a construção deste
-repositório. O produto resultante é o CLI independente `ralph-next`: ele lê PRDs
+repositório. O produto resultante é o CLI independente `ralph`: ele lê PRDs
 e Sub-PRDs Ralph, escolhe tarefas por seus próprios comandos e usa os providers
 como ferramentas subordinadas. Nem o binário, nem seus PRDs, perfis, drivers ou
 state dependem de `/goal`.

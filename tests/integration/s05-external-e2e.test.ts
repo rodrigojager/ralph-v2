@@ -3,22 +3,22 @@ import { cp, mkdtemp, readFile, realpath, rm, unlink, writeFile } from "node:fs/
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 
-import { FakeSecretStore } from "@ralph-next/credentials"
-import { RoleProfileConfigSchema } from "@ralph-next/domain"
-import { executeRun, resolveEffectiveRunOptions } from "@ralph-next/orchestration"
+import { FakeSecretStore } from "@ralph/credentials"
+import { RoleProfileConfigSchema } from "@ralph/domain"
+import { executeRun, resolveEffectiveRunOptions } from "@ralph/orchestration"
 import {
   initializeWorkspace,
   listAttempts,
   loadEffectiveConfig,
   readEvents,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
+} from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
 import {
   CachedModelCatalog,
   createCuratedCatalogSource,
   InMemoryModelCatalogCache,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import { stringify } from "yaml"
 
 import { createS04Services } from "../../apps/ralph-cli/src/s04-services"

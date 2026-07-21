@@ -4,7 +4,7 @@ import {
   RalphError,
   type SandboxSessionRecord,
   SandboxSessionRecordSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { appendEventInTransaction, withLedger } from "./ledger"
 
 type SandboxRow = {

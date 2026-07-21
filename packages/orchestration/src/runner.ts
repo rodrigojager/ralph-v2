@@ -55,7 +55,7 @@ import {
   type SandboxSessionRecord,
   type WatchdogOperationalBudget,
   watchdogProfileFromConfig,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   buildJudgeEvaluationBundle,
   createJudgeEvaluator,
@@ -64,7 +64,7 @@ import {
   type JudgeBackendResolver,
   type JudgeEventSink,
   type JudgeKind,
-} from "@ralph-next/evaluation"
+} from "@ralph/evaluation"
 import {
   appendEvent,
   commitCompletion,
@@ -131,7 +131,7 @@ import {
   upsertRunTask,
   workspaceLayout,
   writeJsonAtomic,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   type CompiledPrdGraph,
   CompiledPrdGraphSchema,
@@ -143,7 +143,7 @@ import {
   parseMarkdownFragment,
   type TaskRef,
   updateTaskMarker,
-} from "@ralph-next/prd"
+} from "@ralph/prd"
 import {
   ProviderEventSchema,
   ProviderToolCallSchema,
@@ -151,14 +151,14 @@ import {
   RoleProfileLimitsSchema,
   type TokenUsage,
   TokenUsageSchema,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import {
   BunProcessSupervisor,
   type ProcessSupervisor,
   WatchdogMonitor,
   type WatchdogProbeResult,
-} from "@ralph-next/supervisor"
-import { redactValue, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+} from "@ralph/supervisor"
+import { redactValue, secretValuesFromEnvironment } from "@ralph/telemetry"
 import {
   buildEvidenceBundle,
   captureWorkspaceBaseline,
@@ -177,7 +177,7 @@ import {
   runVerifications,
   verifyWorkspaceBaselineContent,
   type WorkspaceBaseline,
-} from "@ralph-next/verification"
+} from "@ralph/verification"
 import type {
   BackendCapabilities,
   CallHandle,
@@ -1943,7 +1943,7 @@ async function compileExecutableGraph(
         file: portable(relative(workspaceRoot, input)),
         ...(detected.format === "classic"
           ? {
-              hint: "Run `ralph-next prd migrate <PRD> --output <new-file>` and inspect the result.",
+              hint: "Run `ralph prd migrate <PRD> --output <new-file>` and inspect the result.",
             }
           : {}),
         details: { diagnostics: detected.diagnostics },
@@ -4627,7 +4627,7 @@ async function runAttemptBody(
           pendingTask: `${pendingRecoveryDecision.documentId}/${pendingRecoveryDecision.taskId}`,
           selectedTask: `${reference.documentId}/${reference.taskId}`,
         },
-        hint: "Inspect `ralph-next status run`; Ralph will not transfer recovery authority between tasks.",
+        hint: "Inspect `ralph status run`; Ralph will not transfer recovery authority between tasks.",
       },
     )
   }
@@ -6155,7 +6155,7 @@ async function executeTask(
           pendingTask: `${runtime.pendingRecoveryDecision.documentId}/${runtime.pendingRecoveryDecision.taskId}`,
           selectedTask: `${reference.documentId}/${reference.taskId}`,
         },
-        hint: "Inspect `ralph-next status run`; no reconciliation or model work was started for the unrelated task.",
+        hint: "Inspect `ralph status run`; no reconciliation or model work was started for the unrelated task.",
       },
     )
   }
@@ -7612,7 +7612,7 @@ async function superviseChildWorkerAttempt(input: {
       owner: session.owner,
       workerId: session.workerId,
       parentWorkerId: session.parentWorkerId,
-      command: "ralph-next child-run worker",
+      command: "ralph child-run worker",
       probeOwner: probeProcessIdentity,
       execution: session.execution,
       signal: watchdog.signal,
@@ -8893,7 +8893,7 @@ async function createParallelCheckpoint(
     workspaceId: runtime.workspaceId,
     runId: runtime.run.id,
     reason,
-    createdBy: "ralph-next:parallel-runner",
+    createdBy: "ralph:parallel-runner",
     relevantPaths: [...new Set([...documents, ...inventory.changedPaths])],
     git: inventory,
     prdRevisionHash: runtime.graph.graphHash,
@@ -10890,7 +10890,7 @@ export async function executeRun(input: ExecuteRunInput): Promise<RunExecutionRe
       {
         exitCode: EXIT_CODES.invalidUsage,
         file: workspaceRoot,
-        hint: "Run `ralph-next init` first.",
+        hint: "Run `ralph init` first.",
       },
     )
   }
@@ -11095,7 +11095,7 @@ export async function executeRun(input: ExecuteRunInput): Promise<RunExecutionRe
     layout,
     workspaceId,
     ...(input.runId ? { runId: input.runId } : {}),
-    command: "ralph-next run",
+    command: "ralph run",
     capabilityScope: ["run:supervise", "workspace:write"],
   })
   const releaseRedaction = registerLedgerRedactionSecrets(
@@ -11184,7 +11184,7 @@ export async function executeRun(input: ExecuteRunInput): Promise<RunExecutionRe
           "--accept-workspace-changes requires an existing compatible run with a pending recovery decision",
           {
             exitCode: EXIT_CODES.invalidUsage,
-            hint: "Inspect the run with `ralph-next status run`; ordinary new runs cannot pre-authorize workspace changes.",
+            hint: "Inspect the run with `ralph status run`; ordinary new runs cannot pre-authorize workspace changes.",
           },
         )
       }
@@ -11194,7 +11194,7 @@ export async function executeRun(input: ExecuteRunInput): Promise<RunExecutionRe
           "No unresolved workspace-change decision is available for explicit continuation",
           {
             exitCode: EXIT_CODES.conflict,
-            hint: "Use `ralph-next status run` to inspect the current run before resuming normally.",
+            hint: "Use `ralph status run` to inspect the current run before resuming normally.",
           },
         )
       }

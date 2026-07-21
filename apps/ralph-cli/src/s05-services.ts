@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs"
 import { isAbsolute, join } from "node:path"
 
-import { resolveRuntimeProfileCandidate } from "@ralph-next/commands"
+import { resolveRuntimeProfileCandidate } from "@ralph/commands"
 import {
   EXIT_CODES,
   type ProfileParameters,
@@ -9,14 +9,14 @@ import {
   type RoleProfileConfig,
   RoleProfileConfigSchema,
   type TelemetryConfig,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import type {
   JudgeBackend,
   JudgeBackendCapabilities,
   JudgeCallHandle,
   JudgeEventSink,
   JudgeRequest,
-} from "@ralph-next/evaluation"
+} from "@ralph/evaluation"
 import {
   builtinKnownExternalOutputAdapters,
   EmbeddedExecutionBackend,
@@ -29,8 +29,8 @@ import {
   type KnownExternalOutputAdapter,
   OpenAiProviderDriver,
   validateExternalCliExecutionConfig,
-} from "@ralph-next/model-drivers"
-import { type FetchLike, OpenAiDriverError } from "@ralph-next/openai-driver"
+} from "@ralph/model-drivers"
+import { type FetchLike, OpenAiDriverError } from "@ralph/openai-driver"
 import {
   type BackendCapabilities,
   type CallHandle,
@@ -42,7 +42,7 @@ import {
   type ExecutionRuntimeDependencies,
   type ExecutionToolPort,
   telemetryPolicyForEffectiveOptions,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   applyDiagnosticRawRetention,
   loadEffectiveConfig,
@@ -50,7 +50,7 @@ import {
   resolveDiagnosticRawRetention,
   runLayout,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   type FallbackPolicy,
   FallbackPolicySchema,
@@ -59,10 +59,10 @@ import {
   type ProviderInfo,
   type RoleProfile,
   type RoutingFailureClass,
-} from "@ralph-next/providers"
-import { WorkerRemoteOperationError } from "@ralph-next/supervisor"
-import { secretValuesFromEnvironment } from "@ralph-next/telemetry"
-import type { PermissionPromptPort } from "@ralph-next/tool-host"
+} from "@ralph/providers"
+import { WorkerRemoteOperationError } from "@ralph/supervisor"
+import { secretValuesFromEnvironment } from "@ralph/telemetry"
+import type { PermissionPromptPort } from "@ralph/tool-host"
 
 import {
   createS04OpenAiInvokerLease,

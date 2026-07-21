@@ -16,8 +16,8 @@ import {
   BunProcessSupervisor,
   type ProcessSettlement,
   TwoPhaseShutdownController,
-} from "@ralph-next/supervisor"
-import { redactText, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+} from "@ralph/supervisor"
+import { redactText, secretValuesFromEnvironment } from "@ralph/telemetry"
 import { z } from "zod"
 import {
   nativeTarget,
@@ -1689,13 +1689,13 @@ async function distReceipt(startedAt: string): Promise<{
   const target = nativeTarget()
   const extension = target.startsWith("bun-windows-") ? ".exe" : ""
   try {
-    bundle = await validateBundleArtifact(resolve(distRoot, "ralph-next.js"), projectRoot)
+    bundle = await validateBundleArtifact(resolve(distRoot, "ralph.js"), projectRoot)
   } catch (error) {
     issues.push(error instanceof Error ? error.message : String(error))
   }
   try {
     standalone = await validateStandaloneArtifact(
-      resolve(distRoot, "standalone", target, `ralph-next${extension}`),
+      resolve(distRoot, "standalone", target, `ralph${extension}`),
       projectRoot,
       target,
     )

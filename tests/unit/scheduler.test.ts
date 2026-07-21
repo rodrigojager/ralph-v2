@@ -1,12 +1,7 @@
 import { describe, expect, test } from "bun:test"
-import { type TaskRecord, TaskRecordSchema, type TaskRuntimeStatus } from "@ralph-next/domain"
-import {
-  initialTaskRecords,
-  SchedulingError,
-  selectTask,
-  taskRefKey,
-} from "@ralph-next/orchestration"
-import { type CompiledPrdGraph, compilePrdGraph, type TaskRef } from "@ralph-next/prd"
+import { type TaskRecord, TaskRecordSchema, type TaskRuntimeStatus } from "@ralph/domain"
+import { initialTaskRecords, SchedulingError, selectTask, taskRefKey } from "@ralph/orchestration"
+import { type CompiledPrdGraph, compilePrdGraph, type TaskRef } from "@ralph/prd"
 
 const TWO_TASK_FIXTURE = "tests/fixtures/execution/two-task-order/PRD.md"
 const CHILD_GRAPH_EXAMPLE = "examples/PRD-v2-exemplo.md"

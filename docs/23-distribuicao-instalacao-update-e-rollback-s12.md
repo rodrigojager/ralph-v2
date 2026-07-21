@@ -4,7 +4,7 @@
 
 Este documento define o contrato técnico de S12. Ele não afirma que artifacts de release foram
 construídos, assinados, publicados, instalados ou suportados. Enquanto a licença própria e os drills
-do candidato estiverem pendentes, o projeto continua privado e `ralph-next` permanece o único nome
+do candidato estiverem pendentes, o projeto continua privado e `ralph` permanece o único nome
 promovível.
 
 A implementação está presente em `packages/distribution` e ligada ao parser/handlers de
@@ -23,9 +23,10 @@ Canais fechados:
 
 - `dev`: checkout/source, nunca update automático;
 - `nightly`: artifacts não promovidos, sem promessa de compatibilidade;
-- `beta`: nome `ralph-next`, rollback obrigatório;
-- `stable`: somente depois da matriz, promotion record completo, assinatura verificável e gate de corte;
-- alias `ralph`: opt-in posterior, nunca substituição silenciosa.
+- `beta`: nome `ralph`, rollback obrigatório;
+- `stable`: somente depois da matriz, promotion record completo, assinatura verificável e gate de corte.
+
+Todos os canais expõem exclusivamente `ralph`; channel não altera a identidade do comando.
 
 A versão e o canal formam um único contrato fail-closed. O primeiro identificador de prerelease é
 case-sensitive e determina a compatibilidade; metadata de build (`+...`) não altera o canal:
@@ -334,13 +335,11 @@ O instalador recebe ou resolve um install root explícito e cria somente:
   current.json
   receipts/
     <generation>-<install-id>.json
-    alias-ralph-v1.json             # somente após opt-in confirmado
   bin/
-    ralph-next[.exe]
-    ralph[.exe]                     # somente após opt-in confirmado
+    ralph[.exe]
   versions/
     <version>/
-      ralph-next[.exe]
+      ralph[.exe]
       build-metadata.json
       launcher-build-metadata.json
       release-manifest.json
@@ -407,17 +406,14 @@ ignorar checksum, misturar state ou substituir outro produto.
 Superfície direta equivalente em human, JSON ou JSONL quando o formato for aceito pelo comando:
 
 ```text
-ralph-next install <install-root> --manifest <release-manifest.json|https-url>
+ralph install <install-root> --manifest <release-manifest.json|https-url>
   [--channel nightly|beta|stable] [--to-version VERSION] [--dry-run]
-ralph-next update --install-root <install-root> [--manifest <manifest>]
+ralph update --install-root <install-root> [--manifest <manifest>]
   [--channel nightly|beta|stable] [--to-version VERSION] [--check] [--dry-run]
-ralph-next update --install-root <install-root> --manifest <older-manifest>
+ralph update --install-root <install-root> --manifest <older-manifest>
   --to-version VERSION --allow-downgrade
-ralph-next rollback --install-root <install-root> [--to-version VERSION] [--dry-run]
-ralph-next uninstall <install-root> [--dry-run]
-ralph-next alias ralph status --install-root <install-root>
-ralph-next alias ralph install --install-root <install-root> --dry-run
-ralph-next alias ralph remove --install-root <install-root> --dry-run
+ralph rollback --install-root <install-root> [--to-version VERSION] [--dry-run]
+ralph uninstall <install-root> [--dry-run]
 ```
 
 `RALPH_INSTALL_ROOT` substitui `--install-root` quando não há argumento posicional. Uma engine
@@ -482,11 +478,7 @@ mesmo install ID. Preserva:
 - configuração global do usuário;
 - credential refs e keychain/vault;
 - caches externos não declarados no receipt;
-- checkout do Ralph clássico e qualquer alias `ralph` não pertencente à v2.
-
-Se o alias opcional foi criado pelo fluxo receipt-bound da v2, seus dois paths passam a integrar o
-receipt corrente e o uninstall pode removê-los. Bytes externos, sem receipt ou adulterados nunca são
-adotados nem removidos automaticamente.
+- checkout e dados do Ralph clássico fora do install root.
 
 Remoção de config/credentials exige flags separadas, confirmação explícita e target enumerado. Um
 uninstall nunca usa path amplo, glob, `$HOME`, `~`, root de drive ou diretório de workspace como
@@ -495,42 +487,20 @@ alvo recursivo.
 A superfície atual não oferece flags de remoção de config/credentials: portanto esses dados são
 sempre preservados. Uma extensão futura só poderá adicioná-las como operações separadas e explícitas.
 
-### Alias `ralph` opt-in
+### Identidade única e substituição da instalação anterior
 
-O alias standalone é uma cópia exata do launcher dentro do mesmo `bin`, nunca uma edição de `PATH`.
-Status e preview são permitidos em qualquer channel, mas apply de instalação exige receipt corrente
-`stable`, o hash exato produzido por `--dry-run` e ausência de colisão. O receipt vincula install ID,
-geração, launcher, alias e hashes. O remove não usa `verify(path)` seguido de `unlink(path)`: move o
-alias e seu receipt para nomes determinísticos de quarentena dentro dos mesmos diretórios gerenciados,
-confirma arquivo regular com um único link, identidade do objeto movido, descritor/path e SHA-256, e
-só então apaga. Uma execução confirmada posterior retoma uma quarentena receipt-bound deixada entre
-rename e unlink; target e quarentena simultâneos, hard link, symlink, hash divergente ou quarentena
-sem receipt permanecem intactos e falham fechados. Update que mude o launcher deixa o alias `stale`,
-exigindo remove e novo preview.
-
-A troca do receipt de controle também é recuperável. A geração `N+1` é publicada por replace
-atômico, de modo que o path imutável fica ausente ou contém JSON completo; se o crash ocorrer antes
-de `current.json`, status e preview vinculam path/hash do receipt pendente e de sua eventual
-quarentena. Um retry de instalação só comita o mesmo `N+1`. Um remove iniciado a partir de
-`install-recovery-required` reconstrói canonicamente o receipt de adição esperado usando `N`,
-geração, paths e `updatedAt`, compara tamanho/SHA-256 e só então o descarta por quarentena. Receipt
-desconhecido, parcial ou pertencente a outra transição nunca é removido por semelhança de nome.
-
-Essa redução de janela não transforma o install root local em sandbox contra outro processo com a
-mesma autoridade de filesystem: APIs portáveis de pathname ainda possuem uma janela mínima entre a
-última conferência de identidade e o unlink. O contrato protege a operação cooperativa receipt-bound,
-preserva substituições observadas e nunca amplia o alvo para `PATH`, profiles, package manager ou um
-Ralph clássico fora de `<install-root>`.
-O protocolo completo e o retorno ao Ralph clássico estão em
-[28 — Drills de release, beta, alias e handoff](28-release-drills-beta-alias-e-handoff-s12.md).
+O launcher standalone já se chama `ralph`; não há alias, nome temporário ou segundo binário público.
+O instalador continua restrito ao install root informado e nunca procura ou remove outro `ralph` pelo
+`PATH`. Por isso a troca de uma instalação clássica é uma operação externa explícita: inventarie o
+comando resolvido, remova-o com seu instalador/package manager original, instale a v2 e confirme que
+a resolução aponta somente para o novo artifact. O protocolo completo está em
+[28 — Drills de release, beta e handoff](28-release-drills-beta-e-handoff-s12.md).
 
 ## Pacote npm
 
 O package publicável contém bundle, launcher JS, schemas, skill, templates, LICENSE e notices. Não
 inclui tests, fixtures pagas, secrets, raw logs, workspace state ou snapshot OpenCode desnecessário.
-O `bin` do pacote continua exclusivamente `ralph-next`: npm, pnpm e Bun nunca recebem nem ativam um
-alias `ralph` implícito. O alias receipt-bound acima pertence somente ao install root standalone e ao
-opt-in posterior ao gate beta e à promoção `stable`.
+O `bin` do pacote é exclusivamente `ralph`; npm, pnpm e Bun não recebem um segundo nome de comando.
 
 Install/update npm não finge controlar atomicidade do package manager. O CLI detecta a origem e o
 nome do pacote, mas não infere qual ferramenta o instalou e, quando ela é desconhecida, não sugere
@@ -551,7 +521,7 @@ quanto no payload explícito `ralph-loop-prd-generator.tar`. Esse tar separado p
 canônica `ralph-loop-prd-generator/` e inclui também `LICENSE` e
 `THIRD_PARTY_NOTICES.md` no próprio root, para não depender de arquivos irmãos quando distribuído
 isoladamente. O npm exige um nome de package explícito e preserva
-somente o bin `ralph-next`.
+somente o bin `ralph`.
 
 O standalone rotula releases não-stable sem promotion record como `packaged-not-tested`; um record
 validado contra R001–R079, support hashes, archives e ambientes exatos pode fazê-lo produzir

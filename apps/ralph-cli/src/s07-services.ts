@@ -6,14 +6,14 @@ import type {
   ContextRotationCommandResult,
   RunControlCommandService,
   RunStopCommandResult,
-} from "@ralph-next/commands"
+} from "@ralph/commands"
 import {
   childRunStatusFromRunStatus,
   EXIT_CODES,
   RalphError,
   type RunStatus,
   RunStatusSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   acquireExecutionLock,
   type RunSupervisorControlPort,
@@ -22,7 +22,7 @@ import {
   type SupervisorContextRotationReceipt,
   type SupervisorStopReceipt,
   transitionStoredRun,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   getChildRunOwnerLink,
   getRun,
@@ -33,7 +33,7 @@ import {
   settleChildRun,
   workspaceLayout,
   writeJsonAtomic,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   inspectRunControlDescriptor,
   MAX_TIMER_DELAY_MS,
@@ -44,7 +44,7 @@ import {
   type RunControlDescriptor,
   sendRunControlRequest,
   startRunControlServer,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 import {
   DurableProcessLifecycleMissingError,
   probeDurableProcessIntent,
@@ -561,7 +561,7 @@ async function cancelDormantRun(request: {
     layout,
     workspaceId: request.workspaceId,
     runId: request.runId,
-    command: "ralph-next stop",
+    command: "ralph stop",
     capabilityScope: ["run:supervise", "workspace:write"],
   })
   try {

@@ -26,7 +26,7 @@ pwsh -File .\scripts\run-bun-hidden.ps1 `
   -Priority BelowNormal `
   run scripts/s10-compatibility.ts `
   --legacy-binary "C:\caminho\ralph.exe" `
-  --next-binary "C:\caminho\ralph-next.exe"
+  --next-binary "C:\caminho\ralph.exe"
 ```
 
 O wrapper usa `UseShellExecute=false`, `CreateNoWindow=true`, `WindowStyle=Hidden`, stdin fechado,
@@ -94,7 +94,7 @@ Bindings registrados:
 
 - source: `2835b2f3350755ab3045ad4f2c11b13497a2dfb8bfcefcdc49430800bc07b1f8`;
 - `ralph 0.2.0`: `ffd6b016713e8754b06ad1c9a2f51d6ba761e7b223bd2083fd1f99c9b0a217ee`;
-- `ralph-next 0.1.0-dev.1`: `ffcb9d0a51f2e3b9c03cf0696d2cdbf9ee5bcff4285eba36ba702be2b454c4c1`.
+- `ralph 0.1.0-dev.1`: `ffcb9d0a51f2e3b9c03cf0696d2cdbf9ee5bcff4285eba36ba702be2b454c4c1`.
 
 Essa evidência fecha S10.09/S10.10 no host e escopo declarados. Ela não afirma provider/auth real,
 package/install de release, assinatura, promoção ou suporte aos outros cinco pares de plataforma.

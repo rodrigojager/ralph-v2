@@ -2,7 +2,7 @@ import { createHash, randomUUID } from "node:crypto"
 import { createReadStream, type Dirent } from "node:fs"
 import { link, lstat, mkdir, open, readdir, readlink, realpath, unlink } from "node:fs/promises"
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path"
-import { processShutdownRegistry } from "@ralph-next/supervisor"
+import { processShutdownRegistry } from "@ralph/supervisor"
 
 export type FileSnapshot = {
   kind: "file" | "symlink"

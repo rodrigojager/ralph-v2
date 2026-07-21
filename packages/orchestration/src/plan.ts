@@ -1,10 +1,5 @@
-import type { EffectiveRunOptions } from "@ralph-next/domain"
-import type {
-  CompiledPrdGraph,
-  ExecutableVerificationSpec,
-  PrdTask,
-  TaskRef,
-} from "@ralph-next/prd"
+import type { EffectiveRunOptions } from "@ralph/domain"
+import type { CompiledPrdGraph, ExecutableVerificationSpec, PrdTask, TaskRef } from "@ralph/prd"
 
 export type PlannedVerification = {
   id: string

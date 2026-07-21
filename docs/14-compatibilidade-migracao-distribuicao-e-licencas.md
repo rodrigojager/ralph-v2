@@ -1,8 +1,11 @@
 # 14 — Compatibilidade, migração, distribuição e licenças
 
-## Estratégia lado a lado
+## Estratégia de substituição controlada
 
-A reescrita nasce como executável/package `ralph-next` dentro do novo projeto. O Ralph atual permanece instalado e intocado durante o desenvolvimento. O nome `ralph` só migra depois que a matriz obrigatória passar e existir caminho de rollback.
+A reescrita usa o executável e package `ralph` desde o primeiro corte. A comparação com a versão
+anterior usa caminhos absolutos e fixtures read-only; duas versões não são publicadas no `PATH` sob
+nomes diferentes. Na instalação da v2, o operador inventaria e remove explicitamente a instalação
+anterior antes de ativar o novo `ralph`.
 
 O checkout antigo é tratado como especificação executável. Testes black-box capturam comandos, flags, arquivos e outputs úteis; não se assume que documentação antiga esteja completa.
 
@@ -33,7 +36,7 @@ Essa classificação descreve a decisão de produto e não serve para esconder f
 
 ## Harness black-box
 
-Fixtures temporárias executam Ralph antigo e `ralph-next` com engines fake, capturando:
+Fixtures temporárias executam Ralph antigo e `ralph` com engines fake, capturando:
 
 - help/exit code/stdout/stderr;
 - arquivos `.ralph` criados;
@@ -78,7 +81,7 @@ no help. O harness sonda cada flag contra o binário v1 real.
 ## Migração de PRD
 
 - v1 roda em compatibility mode;
-- `ralph-next prd validate` diagnostica sem alterar;
+- `ralph prd validate` diagnostica sem alterar;
 - `prd migrate` grava outro arquivo por default;
 - campos inferidos são marcados com warning/TODO humano;
 - nenhum critério é inventado para preencher schema;
@@ -87,7 +90,7 @@ no help. O harness sonda cada flag contra o binário v1 real.
 
 ## Migração de configuração e state
 
-`ralph-next migrate inspect` lê `.ralph` antigo read-only e produz plano:
+`ralph migrate inspect` lê `.ralph` antigo read-only e produz plano:
 
 - opções mapeadas diretamente;
 - opções renomeadas;
@@ -216,15 +219,17 @@ Para substituir o Ralph atual:
 - releases cross-platform instaláveis;
 - guia de migração e rollback;
 - backup do config/state antigo;
-- período beta usando `ralph-next`;
-- alias `ralph` opt-in primeiro;
-- remoção do binário anterior somente por comando explícito.
+- período beta usando `ralph`;
+- remoção explícita do binário anterior antes de instalar a v2;
+- prova de que `Get-Command ralph -All`/`where.exe ralph` ou `type -a ralph` resolve somente a v2.
 
 ## Critérios de aceite
 
-- Antigo e novo podem coexistir sem misturar state.
+- Antigo e novo podem ser comparados por paths absolutos sem misturar state, mas apenas a v2 fica
+  publicada como `ralph` no `PATH` após o corte.
 - Cada comando/flag relevante tem decisão de compatibilidade registrada.
 - Migração faz inspect/preview e preserva backup.
 - Builds têm checksums, licenses/notices e SBOM.
 - Código upstream possui commit e arquivo de origem rastreáveis.
-- O nome final não é tomado antes do gate de compatibilidade/release.
+- O comando final permanece `ralph` em todas as fases; os gates controlam a substituição da
+  instalação, não uma troca de nome.

@@ -7,7 +7,7 @@ import {
   RalphError,
   type SecurityPolicySnapshot,
   SecurityPolicySnapshotSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 export type SecurityDecision = {
   action: "allow" | "deny"

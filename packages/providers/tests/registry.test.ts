@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { ScriptedProviderDriver } from "@ralph-next/test-kit"
+import { ScriptedProviderDriver } from "@ralph/test-kit"
 
 import { ProviderCoreError } from "../src/errors"
 import { LazyProviderRegistry } from "../src/registry"

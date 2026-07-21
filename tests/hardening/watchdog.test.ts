@@ -11,7 +11,7 @@ import {
   WatchdogProfileSchema,
   type WatchdogSignalName,
   type WatchdogSnapshot,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   evaluateWatchdog,
   probePidLiveness,
@@ -20,7 +20,7 @@ import {
   type WatchdogProbeResult,
   type WatchdogScheduledTask,
   type WatchdogScheduler,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const WALL_CLOCK_EPOCH = Date.UTC(2026, 0, 1)

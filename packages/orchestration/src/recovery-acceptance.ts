@@ -3,8 +3,8 @@ import {
   type RecoveryDecisionRequiredEventPayload,
   RecoveryDecisionRequiredEventPayloadSchema,
   RecoveryWorkspaceAcceptanceEventPayloadSchema,
-} from "@ralph-next/domain"
-import type { EventEnvelope } from "@ralph-next/telemetry"
+} from "@ralph/domain"
+import type { EventEnvelope } from "@ralph/telemetry"
 
 export type PendingRecoveryDecision = {
   eventId: string

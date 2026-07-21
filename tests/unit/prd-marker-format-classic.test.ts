@@ -10,7 +10,7 @@ import {
   parsePrdFile,
   parsePrdSource,
   updateTaskMarker,
-} from "@ralph-next/prd"
+} from "@ralph/prd"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const FIXTURES = resolve(import.meta.dir, "../fixtures/prd")

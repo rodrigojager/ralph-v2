@@ -39,7 +39,7 @@ export type BuildMetadata = z.infer<typeof BuildMetadataSchema>
 export const BundleBuildMetadataSchema = z
   .object({
     schemaVersion: z.literal(1),
-    product: z.literal("ralph-next-bundle"),
+    product: z.literal("ralph-bundle"),
     target: z.literal("bun"),
     status: z.literal("built-not-tested"),
     version: z.string().min(1),

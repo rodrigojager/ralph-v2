@@ -4,7 +4,7 @@ import {
   type ToolCallJournal,
   type ToolCallSettlementOutcome,
   type UnsettledToolCallQuery,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 
 export type PreconditionProbeResult = {
   bindingHash: string

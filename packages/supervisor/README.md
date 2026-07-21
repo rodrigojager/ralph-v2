@@ -1,4 +1,4 @@
-# `@ralph-next/supervisor`
+# `@ralph/supervisor`
 
 Bounded, redacted process execution and typed worker isolation for Ralph v2.
 Direct process mode always passes an argv array to the runtime; text is

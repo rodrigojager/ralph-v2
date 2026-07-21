@@ -1,12 +1,12 @@
 import { relative } from "node:path"
-import type { ResourceClaimSetRecord, SandboxCapability, SandboxConfig } from "@ralph-next/domain"
+import type { ResourceClaimSetRecord, SandboxCapability, SandboxConfig } from "@ralph/domain"
 import {
   type ProcessSettlement,
   ProcessSettlementSchema,
   type ProcessSupervisor,
   type SupervisedProcessHandle,
   type SupervisedProcessRequest,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 import { createSandboxProcessPort } from "./command-runtime-ports"
 import {
   cleanupSandboxSession,

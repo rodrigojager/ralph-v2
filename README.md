@@ -1,8 +1,8 @@
 # Ralph v2
 
 Reescrita independente do Ralph CLI em TypeScript/Bun. O primeiro release é o beta
-`0.1.0-beta.2`; o executável continua se chamando `ralph-next` para coexistir com o Ralph clássico
-sem substituir instalação, configuração ou estado existentes.
+`0.1.0-beta.2`; o único executável e comando público é `ralph`. A v2 substitui a instalação do CLI
+anterior no `PATH`, enquanto migração de workspace/configuração continua explícita e reversível.
 
 O source contém as superfícies integradas de S01–S12:
 fundação headless, compilador de planos, execução autoritativa, providers/modelos/credenciais
@@ -47,106 +47,102 @@ O Ralph v2 não é um frontend do OpenCode. A S04 adapta de forma curada partes 
 A superfície pública implementada ou em integração estática é:
 
 ```text
-ralph-next init [--force] [--workspace PATH] [--format human|json]
-ralph-next clean [--force|--dry-run] [--workspace PATH]
-ralph-next once "DESCRIÇÃO AD-HOC" [opções de execução]
-ralph-next once [--task DOCUMENT/TASK] [--prd PATH] [opções de execução]
-ralph-next run [--prd PATH] [--max-tasks N] [--fail-fast] [opções de execução]
-ralph-next loop [--prd PATH] [--max-tasks N] [--fail-fast] [opções de execução]
-ralph-next parallel [--prd PATH] [opções de concorrência]
-ralph-next run --wiggum [--max-iterations N] [--prd PATH] [opções de execução]
-ralph-next status [--workspace PATH] [--format human|json]
-ralph-next status run [--run-id ID] [--workspace PATH] [--format human|json]
-ralph-next resume [RUN_ID] [--accept-workspace-changes]
-ralph-next stop [RUN_ID] [--graceful] [--grace SEC] [--force]
-ralph-next attach [RUN_ID] [--workspace PATH]
-ralph-next replay [RUN_ID] [--workspace PATH]
-ralph-next events [--run-id ID] [--follow] [filtros] [--format human|json|jsonl]
-ralph-next logs tail [--run-id ID] [--source SOURCE] [--follow] [filtros]
-ralph-next verify --run-id ID --task DOCUMENT/TASK [opções de gate]
-ralph-next verify --attempt-id ID [opções de gate]
-ralph-next verify --evidence-bundle-id ID [opções de gate]
-ralph-next judge --run-id ID --task DOCUMENT/TASK [opções de judge]
-ralph-next judge --attempt-id ID [opções de judge]
-ralph-next judge --evidence-bundle-id ID [opções de judge]
-ralph-next judge --verification-id VERIFY_OPERATION_ID [opções de judge]
-ralph-next evidence inspect <ATTEMPT_ID> [--workspace PATH] [--format human|json]
-ralph-next report last [--workspace PATH] [--format human|json|jsonl]
-ralph-next report show <RUN_ID> [--workspace PATH] [--format human|json|jsonl]
-ralph-next tasks list [--all|--pending|--completed|--review] [--prd PATH]
-ralph-next tasks next [--prd PATH]
-ralph-next tasks done <TASK> --reason TEXT --evidence PATH --force
-ralph-next tasks sync --repo OWNER/REPO [--state open|closed|all] [--output PATH]
-ralph-next review retry --run-id ID --task DOCUMENT/TASK
+ralph init [--force] [--workspace PATH] [--format human|json]
+ralph clean [--force|--dry-run] [--workspace PATH]
+ralph once "DESCRIÇÃO AD-HOC" [opções de execução]
+ralph once [--task DOCUMENT/TASK] [--prd PATH] [opções de execução]
+ralph run [--prd PATH] [--max-tasks N] [--fail-fast] [opções de execução]
+ralph loop [--prd PATH] [--max-tasks N] [--fail-fast] [opções de execução]
+ralph parallel [--prd PATH] [opções de concorrência]
+ralph run --wiggum [--max-iterations N] [--prd PATH] [opções de execução]
+ralph status [--workspace PATH] [--format human|json]
+ralph status run [--run-id ID] [--workspace PATH] [--format human|json]
+ralph resume [RUN_ID] [--accept-workspace-changes]
+ralph stop [RUN_ID] [--graceful] [--grace SEC] [--force]
+ralph attach [RUN_ID] [--workspace PATH]
+ralph replay [RUN_ID] [--workspace PATH]
+ralph events [--run-id ID] [--follow] [filtros] [--format human|json|jsonl]
+ralph logs tail [--run-id ID] [--source SOURCE] [--follow] [filtros]
+ralph verify --run-id ID --task DOCUMENT/TASK [opções de gate]
+ralph verify --attempt-id ID [opções de gate]
+ralph verify --evidence-bundle-id ID [opções de gate]
+ralph judge --run-id ID --task DOCUMENT/TASK [opções de judge]
+ralph judge --attempt-id ID [opções de judge]
+ralph judge --evidence-bundle-id ID [opções de judge]
+ralph judge --verification-id VERIFY_OPERATION_ID [opções de judge]
+ralph evidence inspect <ATTEMPT_ID> [--workspace PATH] [--format human|json]
+ralph report last [--workspace PATH] [--format human|json|jsonl]
+ralph report show <RUN_ID> [--workspace PATH] [--format human|json|jsonl]
+ralph tasks list [--all|--pending|--completed|--review] [--prd PATH]
+ralph tasks next [--prd PATH]
+ralph tasks done <TASK> --reason TEXT --evidence PATH --force
+ralph tasks sync --repo OWNER/REPO [--state open|closed|all] [--output PATH]
+ralph review retry --run-id ID --task DOCUMENT/TASK
   --additional-revisions N --reason TEXT [--workspace PATH] [--format human|json]
-ralph-next providers list [--refresh] [--format human|json|jsonl]
-ralph-next providers inspect <PROVIDER> [--refresh] [--format human|json|jsonl]
-ralph-next models list [--provider PROVIDER] [--require-tools]
+ralph providers list [--refresh] [--format human|json|jsonl]
+ralph providers inspect <PROVIDER> [--refresh] [--format human|json|jsonl]
+ralph models list [--provider PROVIDER] [--require-tools]
   [--require-structured-output] [--refresh] [--format human|json|jsonl]
-ralph-next models inspect <PROVIDER/MODEL> [--refresh] [--format human|json|jsonl]
-ralph-next auth connect <PROVIDER> --method <METHOD> [opções seguras de credencial]
-ralph-next auth list [--provider PROVIDER] [--format human|json|jsonl]
-ralph-next auth status [CREDENTIAL] [--provider PROVIDER] [--refresh]
-ralph-next auth revoke <CREDENTIAL> [--format human|json|jsonl]
-ralph-next profiles list [--role executor|judge] [--format human|json|jsonl]
-ralph-next profiles inspect <PROFILE> [--format human|json|jsonl]
-ralph-next profiles configure <PROFILE> --scope global|workspace [opções de perfil]
-ralph-next model smoke --profile <PROFILE> [--refresh] [--format human|json|jsonl]
-ralph-next doctor [--non-interactive] [--workspace PATH] [--format human|json]
-ralph-next install <INSTALL_ROOT> --manifest <PATH|HTTPS> [--channel CHANNEL] [--dry-run]
-ralph-next update --install-root <INSTALL_ROOT> [--manifest <PATH|HTTPS>] [--check|--dry-run]
-ralph-next rollback --install-root <INSTALL_ROOT> [--to-version VERSION] [--dry-run]
-ralph-next uninstall <INSTALL_ROOT> [--dry-run]
-ralph-next alias ralph status --install-root <INSTALL_ROOT>
-ralph-next alias ralph install --install-root <INSTALL_ROOT> --dry-run
-ralph-next alias ralph remove --install-root <INSTALL_ROOT> --dry-run
-ralph-next config explain <key> [--format human|json]
-ralph-next config get <key> [--format human|json]
-ralph-next config list [--effective] [--format human|json]
-ralph-next config preview <key> <value> [opções de execução]
-ralph-next config set <key> <value> --scope workspace|global
-ralph-next config unset <key> --scope workspace|global [--dry-run]
-ralph-next config edit [INPUT.yaml|json] --scope workspace|global [--dry-run]
-ralph-next config import <INPUT.yaml|json> --scope workspace|global [--dry-run]
-ralph-next config export --scope workspace|global|effective
+ralph models inspect <PROVIDER/MODEL> [--refresh] [--format human|json|jsonl]
+ralph auth connect <PROVIDER> --method <METHOD> [opções seguras de credencial]
+ralph auth list [--provider PROVIDER] [--format human|json|jsonl]
+ralph auth status [CREDENTIAL] [--provider PROVIDER] [--refresh]
+ralph auth revoke <CREDENTIAL> [--format human|json|jsonl]
+ralph profiles list [--role executor|judge] [--format human|json|jsonl]
+ralph profiles inspect <PROFILE> [--format human|json|jsonl]
+ralph profiles configure <PROFILE> --scope global|workspace [opções de perfil]
+ralph model smoke --profile <PROFILE> [--refresh] [--format human|json|jsonl]
+ralph doctor [--non-interactive] [--workspace PATH] [--format human|json]
+ralph install <INSTALL_ROOT> --manifest <PATH|HTTPS> [--channel CHANNEL] [--dry-run]
+ralph update --install-root <INSTALL_ROOT> [--manifest <PATH|HTTPS>] [--check|--dry-run]
+ralph rollback --install-root <INSTALL_ROOT> [--to-version VERSION] [--dry-run]
+ralph uninstall <INSTALL_ROOT> [--dry-run]
+ralph config explain <key> [--format human|json]
+ralph config get <key> [--format human|json]
+ralph config list [--effective] [--format human|json]
+ralph config preview <key> <value> [opções de execução]
+ralph config set <key> <value> --scope workspace|global
+ralph config unset <key> --scope workspace|global [--dry-run]
+ralph config edit [INPUT.yaml|json] --scope workspace|global [--dry-run]
+ralph config import <INPUT.yaml|json> --scope workspace|global [--dry-run]
+ralph config export --scope workspace|global|effective
   [--serialization yaml|json] [--output PATH] [--force]
-ralph-next config validate [--workspace PATH] [--format human|json]
-ralph-next adapters list|new|inspect [argumentos do subcomando]
-ralph-next recipes list|new|show [argumentos do subcomando]
-ralph-next rules list|add|clear [argumentos do subcomando]
-ralph-next context inspect|export|rotate [argumentos do subcomando]
-ralph-next checkpoint create|list|show [argumentos do subcomando]
-ralph-next rollback preview|apply [argumentos do subcomando]
-ralph-next lang current|list|set|update [argumentos do subcomando]
-ralph-next prd validate [PRD] [--recursive] [--strict] [--format human|json]
-ralph-next prd inspect [PRD] [--recursive] [--strict] [--format human|json]
-ralph-next prd format [PRD] [--check|--output PATH|--in-place]
-ralph-next prd migrate [PRD] [--output PATH|--in-place] [--report PATH]
-ralph-next migrate inspect <LEGACY_WORKSPACE> [--format human|json]
-ralph-next migrate apply <LEGACY_WORKSPACE> --destination PATH
+ralph config validate [--workspace PATH] [--format human|json]
+ralph adapters list|new|inspect [argumentos do subcomando]
+ralph recipes list|new|show [argumentos do subcomando]
+ralph rules list|add|clear [argumentos do subcomando]
+ralph context inspect|export|rotate [argumentos do subcomando]
+ralph checkpoint create|list|show [argumentos do subcomando]
+ralph rollback preview|apply [argumentos do subcomando]
+ralph lang current|list|set|update [argumentos do subcomando]
+ralph prd validate [PRD] [--recursive] [--strict] [--format human|json]
+ralph prd inspect [PRD] [--recursive] [--strict] [--format human|json]
+ralph prd format [PRD] [--check|--output PATH|--in-place]
+ralph prd migrate [PRD] [--output PATH|--in-place] [--report PATH]
+ralph migrate inspect <LEGACY_WORKSPACE> [--format human|json]
+ralph migrate apply <LEGACY_WORKSPACE> --destination PATH
   [--import-adapters] [--import-recipes]
-ralph-next migrate rollback <ROLLBACK_MANIFEST> --dry-run
-ralph-next migrate rollback <ROLLBACK_MANIFEST> --confirm-plan-hash SHA256
-ralph-next help [--format human|json]
-ralph-next version [--format human|json]
-ralph-next about [--format human|json]
+ralph migrate rollback <ROLLBACK_MANIFEST> --dry-run
+ralph migrate rollback <ROLLBACK_MANIFEST> --confirm-plan-hash SHA256
+ralph help [--format human|json]
+ralph version [--format human|json]
+ralph about [--format human|json]
 ```
 
 No pacote standalone, `current.json` referencia um receipt geracional imutável e é a única
 autoridade atômica de ativação. O uninstall real é delegado a um helper copiado para fora do
 install root, que espera launcher/engine encerrarem e revalida token, hash, receipt e ownership;
-sem essa composição ele falha fechado antes de remover arquivos. `.ralph`, configuração global,
-credenciais e instalações do Ralph clássico permanecem fora do alvo.
+sem essa composição ele falha fechado antes de remover arquivos. `.ralph`, configuração global e
+credenciais permanecem fora do alvo. A remoção de uma instalação antiga do CLI é uma etapa explícita
+e separada antes de instalar a v2 sob o mesmo comando `ralph`.
 
 O contrato local desse lifecycle pode ser reexecutado isoladamente com
 `bun run test:s12:distribution`. Ele não baixa rede real nem publica artifacts; os casos formais de
-release continuam em [`docs/28-release-drills-beta-alias-e-handoff-s12.md`](docs/28-release-drills-beta-alias-e-handoff-s12.md).
+release continuam em [`docs/28-release-drills-beta-e-handoff-s12.md`](docs/28-release-drills-beta-e-handoff-s12.md).
 
-O alias standalone `ralph` é opt-in, receipt-bound e reversível. Status/preview não mutam; o apply de
-instalação exige receipt corrente `stable`, o hash exato do preview e ausência de colisão. Ele não
-edita `PATH`, não substitui outro `ralph` e não é incluído implicitamente no pacote npm. O protocolo
-de beta, ativação, remoção e retorno ao Ralph clássico está em
-[`docs/28-release-drills-beta-alias-e-handoff-s12.md`](docs/28-release-drills-beta-alias-e-handoff-s12.md).
+Não existe alias ou segundo nome de executável para a v2. O procedimento de inventário, remoção da
+instalação anterior, instalação da v2 e verificação da resolução de `ralph` está em
+[`docs/28-release-drills-beta-e-handoff-s12.md`](docs/28-release-drills-beta-e-handoff-s12.md).
 
 Esta checkout compõe estaticamente paths externos, provider-neutral e versionados para signer e
 verifier de release, mas não escolhe adapter, ferramenta, chave, identidade, issuer nem trust root.
@@ -209,15 +205,15 @@ recuperação de incidentes, distribuição, release e contribution gate estão 
 [`docs/25-guia-do-operador-e-desenvolvedor-s12.md`](docs/25-guia-do-operador-e-desenvolvedor-s12.md).
 A cobertura R001–R079, a evidência local já produzida, as provas ainda pendentes e os blockers de release estão em
 [`docs/27-auditoria-estatica-e-validacao-diferida-s11-s12.md`](docs/27-auditoria-estatica-e-validacao-diferida-s11-s12.md).
-Os drills determinísticos de release/beta, diagnostics locais, alias opt-in e retorno ao clássico
-estão em
-[`docs/28-release-drills-beta-alias-e-handoff-s12.md`](docs/28-release-drills-beta-alias-e-handoff-s12.md).
+Os drills determinísticos de release/beta, diagnostics locais e substituição controlada da
+instalação anterior estão em
+[`docs/28-release-drills-beta-e-handoff-s12.md`](docs/28-release-drills-beta-e-handoff-s12.md).
 Esses documentos distinguem implementação, validação local Windows, artifact publicado e smoke real
 opt-in; nenhuma prova local promove por si só esta checkout.
 
 ```text
-bun run ralph-next -- prd validate examples/PRD-v2-exemplo.md --recursive --strict
-bun run ralph-next -- prd inspect examples/PRD-v2-exemplo.md --recursive --format json
+bun run ralph -- prd validate examples/PRD-v2-exemplo.md --recursive --strict
+bun run ralph -- prd inspect examples/PRD-v2-exemplo.md --recursive --format json
 ```
 
 ## Execução autoritativa S03
@@ -242,13 +238,13 @@ Sem um perfil executor válido, a execução normal — inclusive `--executor-pr
 Observabilidade persistida fica disponível pelos comandos:
 
 ```text
-ralph-next status run [--run-id ID]
-ralph-next events [--run-id ID] [--follow] [--format human|json|jsonl]
-ralph-next logs tail [--run-id ID] [--source audit|human|raw-engine|tool|gate|diagnostic]
+ralph status run [--run-id ID]
+ralph events [--run-id ID] [--follow] [--format human|json|jsonl]
+ralph logs tail [--run-id ID] [--source audit|human|raw-engine|tool|gate|diagnostic]
   [--task DOCUMENT/TASK] [--worker-id ID] [--type EVENT] [--level LEVEL]
   [--since ISO] [--limit N] [--follow] [--format human|json|jsonl]
-ralph-next report last
-ralph-next report show <RUN_ID>
+ralph report last
+ralph report show <RUN_ID>
 ```
 
 `status run` projeta run, tarefas, attempts e progresso; `events` consulta o ledger autoritativo; `logs tail` projeta views redigidas e reconstruíveis do mesmo stream; reports ficam no SQLite e em `.ralph/runs/<run-id>/reports/report.json`. Em follow, human escreve linhas, JSONL escreve records e JSON mantém um único array até o encerramento cooperativo. Counters de attempts, model calls, no-change, iterações Wiggum, revisões e restarts de watchdog permanecem separados.
@@ -364,16 +360,16 @@ bun run smoke
 Executar diretamente do source:
 
 ```text
-bun run ralph-next -- version
-bun run ralph-next -- help
-bun run ralph-next -- init --workspace <diretorio> --format json
-bun run ralph-next -- status --workspace <diretorio> --format json
+bun run ralph -- version
+bun run ralph -- help
+bun run ralph -- init --workspace <diretorio> --format json
+bun run ralph -- status --workspace <diretorio> --format json
 ```
 
 Depois de `bun run build`, o standalone nativo fica em:
 
 ```text
-dist/standalone/<bun-target>/ralph-next[.exe]
+dist/standalone/<bun-target>/ralph[.exe]
 ```
 
 O smoke copia esse executável para um diretório temporário externo ao checkout e valida os comandos públicos em um workspace com espaços e Unicode. Builds cruzados gerados por `bun run build:all` são artefatos experimentais: construir em uma plataforma não equivale a testar o executável de outra.
@@ -451,7 +447,7 @@ manualmente.
 
 ```text
 apps/
-  ralph-cli/       entrypoint `ralph-next` e composition root do produto
+  ralph-cli/       entrypoint `ralph` e composition root do produto
   ralph-launcher/  launcher standalone mínimo ligado ao receipt geracional
 packages/
   commands/        parser e handlers públicos

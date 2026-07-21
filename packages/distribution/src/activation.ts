@@ -29,7 +29,7 @@ export function buildCurrentInstallPointer(
   return CurrentInstallPointerSchema.parse({
     schemaVersion: 1,
     installId: receipt.installId,
-    product: "ralph-next",
+    product: "ralph",
     generation: receipt.generation,
     receipt: portableRelative(root, resolve(receiptPath)),
     receiptSha256,

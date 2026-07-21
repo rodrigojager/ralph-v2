@@ -2,24 +2,21 @@ import { lstat, mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { isAbsolute, join, relative, resolve, sep } from "node:path"
 
-import { type JudgeOutput, JudgeOutputSchema } from "@ralph-next/domain"
+import { type JudgeOutput, JudgeOutputSchema } from "@ralph/domain"
 import type {
   JudgeBackend,
   JudgeBackendCapabilities,
   JudgeCallHandle,
   JudgeEventSink,
   JudgeRequest,
-} from "@ralph-next/evaluation"
-import {
-  type ExternalCliRuntimeConfig,
-  ExternalCliRuntimeConfigSchema,
-} from "@ralph-next/providers"
+} from "@ralph/evaluation"
+import { type ExternalCliRuntimeConfig, ExternalCliRuntimeConfigSchema } from "@ralph/providers"
 import type {
   ProcessSettlement,
   ProcessSupervisor,
   SupervisedProcessHandle,
-} from "@ralph-next/supervisor"
-import { workerExecutableContentHash } from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
+import { workerExecutableContentHash } from "@ralph/supervisor"
 import { z } from "zod"
 
 export const JUDGE_OUTPUT_JSON_ADAPTER_ID = "judge-output-json-v1"

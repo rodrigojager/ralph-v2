@@ -2,8 +2,8 @@ import {
   type EffectiveRunOptions,
   type EvaluationPolicy,
   EvaluationPolicySchema,
-} from "@ralph-next/domain"
-import type { PrdTask } from "@ralph-next/prd"
+} from "@ralph/domain"
+import type { PrdTask } from "@ralph/prd"
 
 /** Materializes the command-owned evaluation policy for one compiled task. */
 export function evaluationPolicyForTask(

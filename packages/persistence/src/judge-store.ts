@@ -1,12 +1,7 @@
 import type { Database } from "bun:sqlite"
 import { createHash } from "node:crypto"
-import {
-  EXIT_CODES,
-  type JudgeAssessment,
-  JudgeAssessmentSchema,
-  RalphError,
-} from "@ralph-next/domain"
-import { type EventLevel, redactValue } from "@ralph-next/telemetry"
+import { EXIT_CODES, type JudgeAssessment, JudgeAssessmentSchema, RalphError } from "@ralph/domain"
+import { type EventLevel, redactValue } from "@ralph/telemetry"
 import { appendEventInTransaction, persistenceSecretValues, withLedger } from "./ledger"
 
 const SHA256 = /^[a-f0-9]{64}$/

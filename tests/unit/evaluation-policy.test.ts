@@ -3,8 +3,8 @@ import {
   type CompletionDecision,
   type EvaluationPolicy,
   JudgeAssessmentSchema,
-} from "@ralph-next/domain"
-import { decideAssessedCompletion, decideUnavailableEvaluation } from "@ralph-next/verification"
+} from "@ralph/domain"
+import { decideAssessedCompletion, decideUnavailableEvaluation } from "@ralph/verification"
 
 const HASH = "a".repeat(64)
 

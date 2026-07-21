@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto"
 import { mkdir } from "node:fs/promises"
 import { dirname, join } from "node:path"
-import { type DurableLeaseRecord, EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { type DurableLeaseRecord, EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   acquireDurableLease,
   assertDurableLeaseOwned,
@@ -11,7 +11,7 @@ import {
   releaseDurableLease,
   renewDurableLease,
   type WorkspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import type { ParallelCapacityLeasePort } from "./parallel-scheduler"
 import { captureCurrentProcessIdentity, probeProcessIdentity } from "./process-identity"
 
@@ -136,7 +136,7 @@ export async function createDurableParallelCapacityPort(input: {
             runId: slot.runId,
             workerId: slot.workerId,
             ...owner,
-            command: "ralph-next parallel capacity",
+            command: "ralph parallel capacity",
             scope: ["parallel:execute", `parallel:capacity:${slot.namespace}`],
             leaseDurationMs: LEASE_DURATION_MS,
             staleGraceMs: STALE_GRACE_MS,

@@ -26,7 +26,7 @@ A auditoria dos contratos S01/S02 encontrou decisões que precisam ser congelada
 ### Separação entre `/goal` e o produto
 
 1. `/goal` é somente o mecanismo usado para implementar este repositório.
-2. O binário `ralph-next`, seus arquivos persistidos, seus eventos e seus perfis não conhecem `/goal`.
+2. O binário `ralph`, seus arquivos persistidos, seus eventos e seus perfis não conhecem `/goal`.
 3. O runtime seleciona e executa trabalho exclusivamente a partir de comandos, configuração validada, graph compilado, ledger e policies do Ralph.
 4. Nenhum texto do executor, incluindo `TASK_COMPLETE`, muda task, attempt, run, marker ou policy diretamente.
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "product": "ralph-next",
+  "product": "ralph",
   "version": "0.1.0-beta.2",
   "channel": "beta",
   "matrix": [
@@ -16,7 +16,7 @@
       },
       "limitations": [
         "Windows cannot fsync the containing directory after control-state rename, so crash durability is reduced to file fsync plus atomic rename.",
-        "This beta candidate is distributed as ralph-next; the opt-in ralph alias is not promoted."
+        "This beta candidate is distributed as ralph; the opt-in ralph alias is not promoted."
       ]
     },
     {

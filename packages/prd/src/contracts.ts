@@ -1,4 +1,4 @@
-import { DiagnosticSchema } from "@ralph-next/domain"
+import { DiagnosticSchema } from "@ralph/domain"
 import { z } from "zod"
 
 export const PRD_SCHEMA_VERSION = 2 as const

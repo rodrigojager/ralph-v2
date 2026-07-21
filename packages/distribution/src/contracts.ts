@@ -220,7 +220,7 @@ export type ReleaseTargetSupportPolicy = z.infer<typeof ReleaseTargetSupportPoli
 export const ReleaseSupportPolicySchema = z
   .object({
     schemaVersion: z.literal(1),
-    product: z.literal("ralph-next"),
+    product: z.literal("ralph"),
     version: SemverSchema,
     channel: ReleaseChannelSchema,
     matrix: z.array(ReleaseTargetSupportPolicySchema).length(ReleaseTargetSchema.options.length),
@@ -592,7 +592,7 @@ export type ReleaseSignatureTrustPolicy = z.infer<typeof ReleaseSignatureTrustPo
 export const ReleaseManifestSchema = z
   .object({
     schemaVersion: z.literal(2),
-    product: z.literal("ralph-next"),
+    product: z.literal("ralph"),
     version: SemverSchema,
     channel: ReleaseChannelSchema,
     publishedAt: z.iso.datetime({ offset: true }),
@@ -793,7 +793,7 @@ export type ReleaseManifest = z.infer<typeof ReleaseManifestSchema>
 export const ReleaseBuildMetadataSchema = z
   .object({
     schemaVersion: z.literal(1),
-    product: z.literal("ralph-next").optional(),
+    product: z.literal("ralph").optional(),
     target: ReleaseTargetSchema,
     status: ReleaseEvidenceStatusSchema,
     version: SemverSchema,
@@ -808,7 +808,7 @@ export const ReleaseBuildMetadataSchema = z
 export type ReleaseBuildMetadata = z.infer<typeof ReleaseBuildMetadataSchema>
 
 export const LauncherBuildMetadataSchema = ReleaseBuildMetadataSchema.extend({
-  product: z.literal("ralph-next-launcher"),
+  product: z.literal("ralph-launcher"),
 }).strict()
 export type LauncherBuildMetadata = z.infer<typeof LauncherBuildMetadataSchema>
 
@@ -938,7 +938,7 @@ export const CurrentInstallPointerSchema = z
   .object({
     schemaVersion: z.literal(1),
     installId: z.uuid(),
-    product: z.literal("ralph-next"),
+    product: z.literal("ralph"),
     generation: z.number().int().positive(),
     receipt: PortableRelativePathSchema.refine(
       (value) => value.startsWith("receipts/"),
@@ -961,7 +961,7 @@ export const InstallReceiptSchema = z
   .object({
     schemaVersion: z.literal(1),
     installId: z.uuid(),
-    product: z.literal("ralph-next"),
+    product: z.literal("ralph"),
     generation: z.number().int().positive(),
     installRoot: z.string().min(1).max(32_768),
     origin: InstallOriginSchema,
@@ -1003,34 +1003,6 @@ export const InstallReceiptSchema = z
     }
   })
 export type InstallReceipt = z.infer<typeof InstallReceiptSchema>
-
-/**
- * Ownership receipt for the optional `ralph` launcher copy. The alias is
- * deliberately scoped to one identified standalone install root and never
- * claims, replaces or removes a `ralph` executable outside that root.
- */
-export const RalphAliasReceiptSchema = z
-  .object({
-    schemaVersion: z.literal(1),
-    product: z.literal("ralph-next"),
-    alias: z.literal("ralph"),
-    installId: z.uuid(),
-    installRoot: z.string().min(1).max(32_768),
-    sourceGeneration: z.number().int().positive(),
-    sourceReceiptPath: z.string().min(1).max(32_768),
-    sourceReceiptSha256: Sha256Schema,
-    launcherPath: z.string().min(1).max(32_768),
-    launcherSha256: Sha256Schema,
-    aliasPath: z.string().min(1).max(32_768),
-    aliasSha256: Sha256Schema,
-    createdAt: z.iso.datetime({ offset: true }),
-  })
-  .strict()
-  .refine(
-    (receipt) => receipt.launcherSha256 === receipt.aliasSha256,
-    "The optional ralph alias must be an exact copy of its receipt-bound launcher",
-  )
-export type RalphAliasReceipt = z.infer<typeof RalphAliasReceiptSchema>
 
 export const DistributionOperationSchema = z
   .object({

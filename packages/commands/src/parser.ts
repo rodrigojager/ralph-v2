@@ -19,8 +19,8 @@ import {
   ResumeDiscoverySchema,
   SecurityModeSchema,
   ToolNameSchema,
-} from "@ralph-next/domain"
-import type { EventLevel, LogSource, OutputFormat } from "@ralph-next/telemetry"
+} from "@ralph/domain"
+import type { EventLevel, LogSource, OutputFormat } from "@ralph/telemetry"
 import { type CanonicalCommand, resolveCommandTokens } from "./command-registry"
 import { inheritableRoleProfileFormField, inheritableRoleProfileFormFieldIds } from "./settings"
 
@@ -857,25 +857,6 @@ const ALLOWED_OPTIONS: Record<CliCommand, ReadonlySet<keyof CliOptions>> = {
     "releaseVersion",
   ),
   uninstall: options("format", "noColor", "debug", "nonInteractive", "dryRun", "installRoot"),
-  "alias.ralph.status": options("format", "noColor", "debug", "installRoot"),
-  "alias.ralph.install": options(
-    "format",
-    "noColor",
-    "debug",
-    "nonInteractive",
-    "dryRun",
-    "installRoot",
-    "confirmationPlanHash",
-  ),
-  "alias.ralph.remove": options(
-    "format",
-    "noColor",
-    "debug",
-    "nonInteractive",
-    "dryRun",
-    "installRoot",
-    "confirmationPlanHash",
-  ),
   "profiles.list": options("format", "workspace", "noColor", "debug", "role"),
   "profiles.inspect": options("format", "workspace", "noColor", "debug"),
   "profiles.configure": options(
@@ -1946,7 +1927,7 @@ export function parseCli(argv: readonly string[]): ParsedCli {
     return invalidUsage(
       "RALPH_OPTION_UNKNOWN",
       `Unknown option: ${flag}`,
-      "Run `ralph-next help` for supported options.",
+      "Run `ralph help` for supported options.",
     )
   }
 
@@ -1973,7 +1954,7 @@ export function parseCli(argv: readonly string[]): ParsedCli {
     return invalidUsage(
       "RALPH_COMMAND_UNKNOWN",
       "Unknown command",
-      "Run `ralph-next help` for available commands.",
+      "Run `ralph help` for available commands.",
     )
   }
   positionals.splice(0, resolution.consumed)
@@ -2057,32 +2038,6 @@ export function parseCli(argv: readonly string[]): ParsedCli {
     "--clear-judge-parameters",
     "--judge-parameter",
   )
-
-  if (
-    (command === "alias.ralph.status" ||
-      command === "alias.ralph.install" ||
-      command === "alias.ralph.remove") &&
-    positionals.length !== 0
-  ) {
-    return invalidUsage(
-      "RALPH_ALIAS_ARGUMENT_UNEXPECTED",
-      `${command.replaceAll(".", " ")} does not accept positional arguments; use --install-root`,
-    )
-  }
-  if (command === "alias.ralph.install" || command === "alias.ralph.remove") {
-    if (parsedOptions.dryRun && parsedOptions.confirmationPlanHash) {
-      return invalidUsage(
-        "RALPH_ALIAS_CONFIRMATION_MODE_CONFLICT",
-        `${command.replaceAll(".", " ")} requires exactly one mode: --dry-run without --confirm-plan-hash, or apply with --confirm-plan-hash`,
-      )
-    }
-    if (!parsedOptions.dryRun && !parsedOptions.confirmationPlanHash) {
-      return invalidUsage(
-        "RALPH_ALIAS_CONFIRMATION_MISSING",
-        `${command.replaceAll(".", " ")} apply requires --confirm-plan-hash <exact-preview-hash>; use --dry-run to preview without applying`,
-      )
-    }
-  }
 
   const maximumArguments =
     command === "config.explain" ||

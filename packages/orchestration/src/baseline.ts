@@ -1,13 +1,13 @@
 import { join } from "node:path"
-import type { RunLayout } from "@ralph-next/persistence"
-import { writeJsonAtomic } from "@ralph-next/persistence"
-import { hashCanonicalValue } from "@ralph-next/prd"
+import type { RunLayout } from "@ralph/persistence"
+import { writeJsonAtomic } from "@ralph/persistence"
+import { hashCanonicalValue } from "@ralph/prd"
 import {
   type CaptureWorkspaceOptions,
   captureWorkspaceBaseline,
   verifyWorkspaceBaselineContent,
   type WorkspaceBaseline,
-} from "@ralph-next/verification"
+} from "@ralph/verification"
 import { z } from "zod"
 
 const Sha256Schema = z.string().regex(/^[a-f0-9]{64}$/)

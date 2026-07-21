@@ -16,8 +16,8 @@ import {
   type TelemetryConfig,
   type ToolRuleDecision,
   ToolRulesSchema,
-} from "@ralph-next/domain"
-import { hashCanonicalValue, type PrdDocument, type PrdTask } from "@ralph-next/prd"
+} from "@ralph/domain"
+import { hashCanonicalValue, type PrdDocument, type PrdTask } from "@ralph/prd"
 import { z } from "zod"
 
 const S03_BUILTIN_MAX_TASKS = 1_000

@@ -1,14 +1,14 @@
 import { randomUUID } from "node:crypto"
 import { lstat, mkdir, open, readFile, realpath } from "node:fs/promises"
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path"
-import { type ExecutorOutcome, ExecutorOutcomeSchema } from "@ralph-next/domain"
+import { type ExecutorOutcome, ExecutorOutcomeSchema } from "@ralph/domain"
 import type {
   BackendCapabilities,
   CallHandle,
   ExecutionBackend,
   ExecutionChannel,
   ExecutionRequest,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 
 export type ScriptedFileAction =
   | { type: "write"; path: string; content: string }

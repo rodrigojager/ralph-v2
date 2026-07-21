@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { copyFile, mkdir, readFile } from "node:fs/promises"
 import { relative, resolve } from "node:path"
-import { CompiledPrdGraphSchema, compilePrdGraph } from "@ralph-next/prd"
+import { CompiledPrdGraphSchema, compilePrdGraph } from "@ralph/prd"
 import { parse as parseYaml } from "yaml"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 

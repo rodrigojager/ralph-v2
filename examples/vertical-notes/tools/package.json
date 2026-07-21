@@ -1,5 +1,5 @@
 {
-  "name": "@ralph-next/sample-judge",
+  "name": "@ralph/sample-judge",
   "version": "0.0.0-private",
   "private": true,
   "type": "module",

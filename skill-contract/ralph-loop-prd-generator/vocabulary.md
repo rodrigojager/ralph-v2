@@ -278,8 +278,8 @@ Conflitos obrigatoriamente reportados:
 Contrato final de geração:
 
 ```text
-ralph-next prd validate <root-prd> --recursive --strict
-ralph-next prd inspect <root-prd> --recursive --strict --format json
+ralph prd validate <root-prd> --recursive --strict
+ralph prd inspect <root-prd> --recursive --strict --format json
 ```
 
 A validação recursiva deve terminar sem erro antes de entregar o plano ou iniciar qualquer run.

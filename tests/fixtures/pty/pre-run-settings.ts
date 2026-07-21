@@ -4,7 +4,7 @@ import {
   listRuns,
   readConfigLayer,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import { createTuiServices } from "../../../apps/ralph-cli/src/tui-services"
 import {
   installPtyChildDiagnostics,

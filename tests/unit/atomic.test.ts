@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { open, readdir, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { writeFileAtomic } from "@ralph-next/persistence"
+import { writeFileAtomic } from "@ralph/persistence"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const temporaryDirectories: string[] = []

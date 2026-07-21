@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { readdir } from "node:fs/promises"
 import { join } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   acquireFilesystemLease,
   assertTrustedOpenFile,
@@ -19,7 +19,7 @@ import {
   secretValuesFromEnvironment,
   trustedFileIdentity,
   writeTrustedFileExclusive,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 
 export type RawStreamRetention = {
   readonly maxSegmentBytes: number

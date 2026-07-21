@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import { resolve } from "node:path"
 
-import type { OpenAiEvent } from "@ralph-next/openai-driver"
-import type { ProviderEvent } from "@ralph-next/providers"
+import type { OpenAiEvent } from "@ralph/openai-driver"
+import type { ProviderEvent } from "@ralph/providers"
 
 import { OpenAiProviderStreamAdapter } from "../src/index"
 

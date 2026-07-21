@@ -1,14 +1,14 @@
 import { describe, expect, test } from "bun:test"
 import { writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { resolveEffectiveRunOptions } from "@ralph-next/orchestration"
+import { resolveEffectiveRunOptions } from "@ralph/orchestration"
 import {
   compilePrdGraph,
   formatPrdSource,
   type PrdDocument,
   type PrdTask,
   parsePrdSource,
-} from "@ralph-next/prd"
+} from "@ralph/prd"
 import {
   type EventEnvelope,
   EventEnvelopeConsumerSchema,
@@ -18,7 +18,7 @@ import {
   redactValue,
   replayWorkspaceEvents,
   TokenUsageAggregator,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 import {
   decideToolPermission,
   processExecTool,
@@ -26,7 +26,7 @@ import {
   type ToolRuntimeContext,
   type ToolSession,
   WorkspacePathResolver,
-} from "@ralph-next/tool-host"
+} from "@ralph/tool-host"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 type RandomSource = () => number

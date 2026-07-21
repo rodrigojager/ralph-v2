@@ -25,7 +25,7 @@
       "kind": "productionStandalone",
       "releaseEligible": true,
       "target": "bun-windows-x64-baseline",
-      "artifact": "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+      "artifact": "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph.exe",
       "metadata": "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/build-metadata.json",
       "sha256": "8c1e6250f3a291d0b79ea604ea8c33956d00edbee216be7af9c0bfbf5883fa19",
       "sourceSha256": "21a145e4ec4ecc3799f77c9d2f2922cefcea3c27b09020e801f4db3584e773ed",
@@ -45,7 +45,7 @@
       "id": "product.help",
       "composition": "production",
       "invocation": [
-        "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+        "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph.exe",
         "help",
         "--format",
         "human",
@@ -63,7 +63,7 @@
       "id": "product.fake.init",
       "composition": "production",
       "invocation": [
-        "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+        "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph.exe",
         "init",
         "--format",
         "json",
@@ -82,7 +82,7 @@
       "id": "product.fake.once",
       "composition": "production",
       "invocation": [
-        "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+        "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph.exe",
         "once",
         "--format",
         "json",
@@ -104,7 +104,7 @@
       "id": "product.fake.status-run",
       "composition": "production",
       "invocation": [
-        "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe",
+        "<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph.exe",
         "status",
         "run",
         "--format",

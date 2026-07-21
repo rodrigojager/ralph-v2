@@ -3,14 +3,14 @@
 ## Invariante principal
 
 O migrador nunca transforma `.ralph` v1 em `.ralph` v2 no mesmo diretório. O source permanece
-read-only e o destino é outro diretório não aninhado. Isso permite manter `ralph` e `ralph-next`
-instalados lado a lado e evita que config, state, heartbeat, reports ou credenciais de uma versão
-sejam interpretados pela outra.
+read-only e o destino é outro diretório não aninhado. O harness pode executar as versões por paths
+absolutos separados, mas o comando público instalado é sempre `ralph`. Assim config, state,
+heartbeat, reports ou credenciais de uma versão não são interpretados pela outra.
 
 ## Inspeção read-only
 
 ```powershell
-ralph-next migrate inspect "C:\Projetos\Meu Projeto v1" --format json
+ralph migrate inspect "C:\Projetos\Meu Projeto v1" --format json
 ```
 
 `migrate inspect`:
@@ -33,7 +33,7 @@ O destino pode existir ou ser criado pelo comando, mas não pode conter `.ralph`
 `PRD.migrated.md`.
 
 ```powershell
-ralph-next migrate apply "C:\Projetos\Meu Projeto v1" `
+ralph migrate apply "C:\Projetos\Meu Projeto v1" `
   --destination "C:\Projetos\Meu Projeto v2" `
   --format json
 ```
@@ -41,7 +41,7 @@ ralph-next migrate apply "C:\Projetos\Meu Projeto v1" `
 Imports opcionais continuam inativos:
 
 ```powershell
-ralph-next migrate apply "C:\Projetos\Meu Projeto v1" `
+ralph migrate apply "C:\Projetos\Meu Projeto v1" `
   --destination "C:\Projetos\Meu Projeto v2" `
   --import-adapters `
   --import-recipes
@@ -77,7 +77,7 @@ Mesmo quando `state.json` contém `current_run_id`, `current_task_id`, `run_stat
 Exemplo emitido no resultado:
 
 ```powershell
-ralph-next run --workspace "C:\Projetos\Meu Projeto v2" --prd PRD.migrated.md --new-run
+ralph run --workspace "C:\Projetos\Meu Projeto v2" --prd PRD.migrated.md --new-run
 ```
 
 ## Outputs de auditoria
@@ -100,8 +100,8 @@ Falha durante apply aciona rollback interno somente sobre `.ralph` v2 recém-cri
 
 ```powershell
 $Manifest = "C:\Projetos\Meu Projeto v2\.ralph\migration\<migration-id>\rollback-manifest.json"
-ralph-next migrate rollback $Manifest --dry-run --format json
-ralph-next migrate rollback $Manifest --confirm-plan-hash <SHA256-DO-PREVIEW> --format json
+ralph migrate rollback $Manifest --dry-run --format json
+ralph migrate rollback $Manifest --confirm-plan-hash <SHA256-DO-PREVIEW> --format json
 ```
 
 O preview é read-only e só produz plano quando o manifest:
@@ -136,9 +136,9 @@ acesso à origem v1. Um destino alterado exige novo diagnóstico; o CLI não rel
 Durante beta:
 
 - o binário antigo continua `ralph`;
-- o novo continua `ralph-next`;
+- o novo continua `ralph`;
 - a raiz v1 e a raiz v2 são diretórios separados;
-- global config v2 usa o namespace de plataforma `ralph-next`;
+- global config v2 usa o namespace de plataforma `ralph`;
 - nenhuma instalação, update ou migração remove o binário antigo;
 - trocar o nome final para `ralph` permanece bloqueado até compatibility/release gates e rollback
   instalável.
@@ -146,7 +146,7 @@ Durante beta:
 ## Estado de validação
 
 Além das validações gerais anteriores, o fechamento S10 executou o harness integral com
-`ralph 0.2.0` e `ralph-next 0.1.0-dev.1` explícitos e frescos. O resultado versionado em
+`ralph 0.2.0` e `ralph 0.1.0-dev.1` explícitos e frescos. O resultado versionado em
 `docs/compatibility/s10-report.{json,md}` passou 91/91 checks, sem regressions ou surface regressions.
 O componente de coexistência executou setup legado, inspect/apply/status/config/rollback v2 em roots
 separadas com espaço/Unicode e confirmou hashes imutáveis da origem, config legado, sentinels e dois
@@ -169,7 +169,7 @@ next. Nenhum processo abre janela ou TUI.
 ```powershell
 pwsh -File scripts/s10-migration-coexistence-drill.ps1 `
   -LegacyBinary "C:\bin\ralph.exe" `
-  -NextBinary "C:\bin\ralph-next.exe" `
+  -NextBinary "C:\bin\ralph.exe" `
   -EvidenceDirectory "C:\evidence\ralph-v2"
 ```
 
@@ -182,7 +182,7 @@ pwsh -File scripts/run-bun-hidden.ps1 `
   -LogName s10-compatibility `
   run scripts/s10-compatibility.ts `
   --legacy-binary "C:\bin\ralph.exe" `
-  --next-binary "C:\bin\ralph-next.exe"
+  --next-binary "C:\bin\ralph.exe"
 ```
 
 Esse ciclo foi executado sem edições concorrentes, depois de typecheck e build frescos. O report de

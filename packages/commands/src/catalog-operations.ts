@@ -1,13 +1,13 @@
 import { createHash } from "node:crypto"
 import { lstat, mkdir, readdir, readFile, realpath } from "node:fs/promises"
 import { basename, extname, join, relative, resolve, sep } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   canonicalDirectory,
   inspectWorkspace,
   workspaceLayout,
   writeFileAtomic,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 
 const MAX_CATALOG_FILES = 256
 const MAX_CATALOG_FILE_BYTES = 1024 * 1024
@@ -66,7 +66,7 @@ async function workspaceState(root: string): Promise<{
       "Catalog and rule commands require an initialized Ralph v2 workspace",
       {
         exitCode: EXIT_CODES.blocked,
-        hint: "Run `ralph-next init` in this workspace first.",
+        hint: "Run `ralph init` in this workspace first.",
       },
     )
   }
@@ -266,7 +266,7 @@ function adapterManifest(id: string): string {
   return `${JSON.stringify(
     {
       schemaVersion: 1,
-      kind: "ralph-next-adapter-draft",
+      kind: "ralph-adapter-draft",
       id,
       status: "disabled",
       description: "",
@@ -398,7 +398,7 @@ function localAdapterProjection(
   const unknown = Object.keys(value).filter((key) => !allowed.has(key))
   if (
     value.schemaVersion !== 1 ||
-    value.kind !== "ralph-next-adapter-draft" ||
+    value.kind !== "ralph-adapter-draft" ||
     value.id !== entry.id ||
     value.status !== "disabled" ||
     typeof value.description !== "string" ||

@@ -535,29 +535,6 @@ export const COMMAND_REGISTRY = [
     compatibility: "changed",
   },
   {
-    canonical: "alias.ralph.status",
-    name: "alias ralph status",
-    aliases: [],
-    summary: "Inspect the receipt-bound optional ralph alias without changing PATH or files",
-    compatibility: "changed",
-  },
-  {
-    canonical: "alias.ralph.install",
-    name: "alias ralph install",
-    aliases: [],
-    summary:
-      "Create the stable-only receipt-owned ralph alias after exact preview plan-hash confirmation",
-    compatibility: "changed",
-  },
-  {
-    canonical: "alias.ralph.remove",
-    name: "alias ralph remove",
-    aliases: [],
-    summary:
-      "Remove only the receipt/hash-verified Ralph v2 alias after exact preview plan-hash confirmation",
-    compatibility: "changed",
-  },
-  {
     canonical: "profiles.list",
     name: "profiles list",
     aliases: [],

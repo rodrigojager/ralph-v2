@@ -8,8 +8,8 @@ import {
   type ReleaseManifest,
   ReleaseManifestSchema,
   releaseManifestSigningSha256,
-} from "@ralph-next/distribution"
-import { BunProcessSupervisor } from "@ralph-next/supervisor"
+} from "@ralph/distribution"
+import { BunProcessSupervisor } from "@ralph/supervisor"
 import { sha256File } from "./build-artifact"
 import { copyRegularVerified } from "./release-files"
 
@@ -424,7 +424,7 @@ async function removeSignerTemporaryDirectory(
 ): Promise<void> {
   const canonicalTemporaryRoot = await realpath(resolve(tmpdir()))
   const parent = await realpath(dirname(path))
-  if (parent !== canonicalTemporaryRoot || !basename(path).startsWith("ralph-next-release-sign-")) {
+  if (parent !== canonicalTemporaryRoot || !basename(path).startsWith("ralph-release-sign-")) {
     throw new Error(`Refusing to clean an unexpected release signer temporary directory: ${path}`)
   }
   const before = await lstat(path)
@@ -436,10 +436,7 @@ async function removeSignerTemporaryDirectory(
   ) {
     throw new Error(`Release signer temporary directory changed before cleanup: ${path}`)
   }
-  const quarantine = join(
-    canonicalTemporaryRoot,
-    `.cleanup-ralph-next-release-sign-${randomUUID()}`,
-  )
+  const quarantine = join(canonicalTemporaryRoot, `.cleanup-ralph-release-sign-${randomUUID()}`)
   await rename(path, quarantine)
   const quarantined = await lstat(quarantine)
   if (
@@ -600,7 +597,7 @@ export async function invokeReleaseSigner(input: {
 
   await assertExecutableIdentity(input.configuration)
   const canonicalTemporaryRoot = await realpath(resolve(tmpdir()))
-  const temporaryRoot = await mkdtemp(join(canonicalTemporaryRoot, "ralph-next-release-sign-"))
+  const temporaryRoot = await mkdtemp(join(canonicalTemporaryRoot, "ralph-release-sign-"))
   await chmod(temporaryRoot, 0o700)
   const temporaryInformation = await lstat(temporaryRoot)
   if (!temporaryInformation.isDirectory() || temporaryInformation.isSymbolicLink()) {
@@ -768,7 +765,7 @@ export async function invokeReleaseSubjectSigner(input: {
 
   await assertExecutableIdentity(input.configuration)
   const canonicalTemporaryRoot = await realpath(resolve(tmpdir()))
-  const temporaryRoot = await mkdtemp(join(canonicalTemporaryRoot, "ralph-next-release-sign-"))
+  const temporaryRoot = await mkdtemp(join(canonicalTemporaryRoot, "ralph-release-sign-"))
   await chmod(temporaryRoot, 0o700)
   const temporaryInformation = await lstat(temporaryRoot)
   if (!temporaryInformation.isDirectory() || temporaryInformation.isSymbolicLink()) {

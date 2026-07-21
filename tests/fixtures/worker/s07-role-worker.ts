@@ -2,7 +2,7 @@ import {
   type RalphWorkerRoleAdapter,
   runWorkerEntrypoint,
   type WorkerRole,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 
 async function observableDelay(signal: AbortSignal): Promise<void> {
   await Bun.sleep(240)

@@ -4,7 +4,7 @@ import {
   type ProfileFormRequest,
   type ProfileFormResponse,
   type SettingsFieldMetadata,
-} from "@ralph-next/commands"
+} from "@ralph/commands"
 import {
   applyProfileFormFieldValue,
   clearProfileFormField,

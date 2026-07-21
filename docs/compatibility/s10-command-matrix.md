@@ -106,7 +106,7 @@ Bindings da execução:
 
 - source: `2835b2f3350755ab3045ad4f2c11b13497a2dfb8bfcefcdc49430800bc07b1f8`;
 - `ralph 0.2.0`: `ffd6b016713e8754b06ad1c9a2f51d6ba761e7b223bd2083fd1f99c9b0a217ee`;
-- `ralph-next 0.1.0-dev.1`: `ffcb9d0a51f2e3b9c03cf0696d2cdbf9ee5bcff4285eba36ba702be2b454c4c1`.
+- `ralph 0.1.0-dev.1`: `ffcb9d0a51f2e3b9c03cf0696d2cdbf9ee5bcff4285eba36ba702be2b454c4c1`.
 
 S10.09 e S10.10 estão fechadas no escopo Windows x64/local declarado. O script PowerShell focado
 permanece uma alternativa operacional; provider/auth real, create-PR remoto, install de release e

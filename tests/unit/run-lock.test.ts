@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { RalphError } from "@ralph-next/domain"
-import { acquireExecutionLock, type ExecutionLock } from "@ralph-next/orchestration"
+import { RalphError } from "@ralph/domain"
+import { acquireExecutionLock, type ExecutionLock } from "@ralph/orchestration"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const temporaryDirectories: string[] = []

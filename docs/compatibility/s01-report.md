@@ -8,9 +8,9 @@ captures are stored in `s01-report.json`; no command runs in the legacy checkout
 - Mode: `legacy-vs-next`
 - Harness host: `win32/x64`
 - Bun: `1.3.14`
-- ralph-next invocation: `binary`
-- ralph-next evidence: `<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe`
-- ralph-next SHA-256: `8430E875F49084B94DF0740547EB6DAA3C177E892614B45E53A2BB15C2AB76AF`
+- ralph invocation: `binary`
+- ralph evidence: `<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph.exe`
+- ralph SHA-256: `8430E875F49084B94DF0740547EB6DAA3C177E892614B45E53A2BB15C2AB76AF`
 
 ### Installed legacy Ralph
 
@@ -40,7 +40,7 @@ Regression is a separate assessment derived from the recorded invariant evidence
 | Scenario | Classification | Assessment | Invariants | Rationale | Observable differences |
 | --- | --- | --- | --- | --- | --- |
 | help | changed | pass | 6/6 | Both help probes are valid; v2 deliberately exposes its independently implemented command surface, including accepted slices beyond this S01 baseline. | stdout differs, stdout line endings differ |
-| version | changed | pass | 6/6 | Both version probes satisfy their contracts; the ralph-next name and independent v2 version are deliberate changes. | stdout differs, stdout line endings differ |
+| version | changed | pass | 6/6 | Both version probes satisfy their contracts; the ralph name and independent v2 version are deliberate changes. | stdout differs, stdout line endings differ |
 | status | compatible | pass | 6/6 | Both commands report a complete uninitialized status and leave the directory untouched. | stdout differs, stdout line endings differ |
 | init | changed | pass | 11/11 | Both init commands satisfy their schemas; v2 deliberately uses identified SQLite state and creates no PRD. | stdout differs, stdout line endings differ, created file layout differs |
 | status-descendant | changed | pass | 8/8 | Both parent workspaces are valid; v2 deliberately resolves its identified ancestor while legacy remains uninitialized in the descendant. | stdout differs, stdout line endings differ, created file layout differs |

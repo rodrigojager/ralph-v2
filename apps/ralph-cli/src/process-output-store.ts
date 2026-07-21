@@ -10,9 +10,9 @@ import {
   ensureRunLayout,
   runLayout,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { BunProcessSupervisor, type ProcessOutputStore } from "@ralph-next/supervisor"
-import { redactText } from "@ralph-next/telemetry"
+} from "@ralph/persistence"
+import { BunProcessSupervisor, type ProcessOutputStore } from "@ralph/supervisor"
+import { redactText } from "@ralph/telemetry"
 
 const PROCESS_RAW_RECORD_DATA_BYTES = 16_384
 

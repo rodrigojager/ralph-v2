@@ -3,7 +3,7 @@ import { afterEach, describe, expect, test } from "bun:test"
 import { mkdir, readFile, rm } from "node:fs/promises"
 import { dirname } from "node:path"
 
-import { RalphError } from "@ralph-next/domain"
+import { RalphError } from "@ralph/domain"
 import {
   type AcquireDurableLeaseInput,
   acquireDurableLease,
@@ -23,7 +23,7 @@ import {
   renewDurableLease,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
@@ -144,7 +144,7 @@ function leaseInput(
     resourceKey: "workspace-writer",
     workspaceId,
     ...leaseOwner,
-    command: "ralph-next run --resume auto",
+    command: "ralph run --resume auto",
     scope: ["workspace:write", "run:supervise", "workspace:write"],
     leaseDurationMs: 1_000,
     staleGraceMs: 500,

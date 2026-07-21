@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { cp, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { executeRun, resolveEffectiveRunOptions } from "@ralph-next/orchestration"
+import { executeRun, resolveEffectiveRunOptions } from "@ralph/orchestration"
 import {
   getEvidenceBundle,
   initializeWorkspace,
   listAttempts,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
-import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
+import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph/test-kit"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const temporaryDirectories: string[] = []

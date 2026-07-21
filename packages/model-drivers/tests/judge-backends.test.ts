@@ -1,14 +1,14 @@
 import { describe, expect, test } from "bun:test"
 
-import type { JudgeRequest } from "@ralph-next/evaluation"
-import { JudgeEvaluationBundleSchema } from "@ralph-next/evaluation"
+import type { JudgeRequest } from "@ralph/evaluation"
+import { JudgeEvaluationBundleSchema } from "@ralph/evaluation"
 import {
   EmbeddedJudgeBackend,
   ExternalCliJudgeBackend,
   ExternalCliJudgeInputSchema,
   JUDGE_OUTPUT_JSON_ADAPTER_ID,
   parseExternalJudgeOutput,
-} from "@ralph-next/model-drivers"
+} from "@ralph/model-drivers"
 import type {
   CredentialDriver,
   ModelInfo,
@@ -16,13 +16,13 @@ import type {
   ProviderEventSink,
   ProviderInfo,
   ProviderModelRequest,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import type {
   ProcessSettlement,
   ProcessSupervisor,
   SupervisedProcessHandle,
   SupervisedProcessRequest,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 
 const HASH = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 const NOW = "2026-07-18T12:00:00.000Z"

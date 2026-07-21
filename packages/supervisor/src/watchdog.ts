@@ -21,7 +21,7 @@ import {
   WatchdogSnapshotSchema,
   type WatchdogState,
   watchdogRestartBudgetView,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 export type EvaluateWatchdogInput = {
   profile: WatchdogProfile

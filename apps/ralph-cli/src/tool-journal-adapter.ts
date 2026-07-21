@@ -4,9 +4,9 @@ import type {
   ToolCallIntentRecord,
   ToolCallJournal,
   ToolCallSettlementRecord,
-} from "@ralph-next/persistence"
-import { hashToolCallPayload } from "@ralph-next/persistence"
-import { redactValue } from "@ralph-next/telemetry"
+} from "@ralph/persistence"
+import { hashToolCallPayload } from "@ralph/persistence"
+import { redactValue } from "@ralph/telemetry"
 import {
   type ReserveToolCallInput,
   type ReserveToolCallResult,
@@ -18,7 +18,7 @@ import {
   type ToolRecoveryClassification,
   type ToolSettlement,
   ToolSettlementSchema,
-} from "@ralph-next/tool-host"
+} from "@ralph/tool-host"
 
 export type DurableToolJournalScope = {
   runId: string

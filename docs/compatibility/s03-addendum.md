@@ -6,7 +6,7 @@ It proves the packaged S03 orchestration surface and does not overwrite or reint
 
 ## Artifact boundary
 
-- Production artifact: `<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph-next.exe`
+- Production artifact: `<PROJECT_ROOT>/dist/standalone/bun-windows-x64-baseline/ralph.exe`
 - Production target: `bun-windows-x64-baseline`
 - Production SHA-256: `8c1e6250f3a291d0b79ea604ea8c33956d00edbee216be7af9c0bfbf5883fa19`
 - Current source fingerprint: `21a145e4ec4ecc3799f77c9d2f2922cefcea3c27b09020e801f4db3584e773ed`

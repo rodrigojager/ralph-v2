@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { mkdir, readdir, readFile, rename, rm, symlink, unlink, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
-import { executeCli } from "@ralph-next/commands"
-import type { RalphError } from "@ralph-next/domain"
+import { executeCli } from "@ralph/commands"
+import type { RalphError } from "@ralph/domain"
 import {
   findWorkspaceRoot,
   initializeWorkspace,
@@ -12,7 +12,7 @@ import {
   readEvents,
   readWorkspaceConfig,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const VERSION = "0.1.0-s01-test"

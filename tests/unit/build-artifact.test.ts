@@ -34,7 +34,7 @@ async function projectFixture(): Promise<{ root: string; binary: string; source:
 
   const directory = join(root, "dist", "standalone", nativeTarget())
   await mkdir(directory, { recursive: true })
-  const binary = join(directory, process.platform === "win32" ? "ralph-next.exe" : "ralph-next")
+  const binary = join(directory, process.platform === "win32" ? "ralph.exe" : "ralph")
   await writeFile(binary, "standalone fixture bytes")
   const metadata = {
     schemaVersion: 1,

@@ -1,5 +1,5 @@
 import { isAbsolute } from "node:path"
-import { BunProcessSupervisor, type ProcessSupervisor } from "@ralph-next/supervisor"
+import { BunProcessSupervisor, type ProcessSupervisor } from "@ralph/supervisor"
 import type { GitCommandPort } from "./git-runtime"
 import type { SandboxProcessPort } from "./sandbox-runtime"
 

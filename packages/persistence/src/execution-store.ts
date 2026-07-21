@@ -39,8 +39,8 @@ import {
   TaskRuntimeStatusSchema,
   type WatchdogEvaluation,
   WatchdogEvaluationSchema,
-} from "@ralph-next/domain"
-import type { EventInput, EventLevel } from "@ralph-next/telemetry"
+} from "@ralph/domain"
+import type { EventInput, EventLevel } from "@ralph/telemetry"
 import {
   assertEvidenceBundleContentHash,
   type EvidenceObjectReceipt,

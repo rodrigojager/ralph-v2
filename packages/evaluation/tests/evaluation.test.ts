@@ -7,7 +7,7 @@ import {
   EvidenceBundleSchema,
   type JudgeOutput,
   JudgeRubricSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   buildJudgeEvaluationBundle,
   buildJudgePrompt,
@@ -20,7 +20,7 @@ import {
   type JudgeRequest,
   type JudgeTextAttachmentInput,
   JudgeTextAttachmentSchema,
-} from "@ralph-next/evaluation"
+} from "@ralph/evaluation"
 
 const HASH = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 const NOW = "2026-07-18T12:00:00.000Z"

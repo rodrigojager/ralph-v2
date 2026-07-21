@@ -1,17 +1,13 @@
 import { describe, expect, test } from "bun:test"
 
-import type {
-  ExecutionChannel,
-  ExecutionRequest,
-  ExecutionToolResult,
-} from "@ralph-next/orchestration"
+import type { ExecutionChannel, ExecutionRequest, ExecutionToolResult } from "@ralph/orchestration"
 import type {
   ProviderDriver,
   ProviderEventSink,
   ProviderModelRequest,
   ProviderModelResult,
   ProviderToolCall,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 
 import { EmbeddedExecutionBackend } from "../src/index"
 

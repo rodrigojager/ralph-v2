@@ -5,13 +5,13 @@ import {
   registerLedgerRedactionSecrets,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   hashCanonical,
   type ToolAuthorization,
   type ToolCallRecord,
   type ToolSettlement,
-} from "@ralph-next/tool-host"
+} from "@ralph/tool-host"
 import { createTestDirectory, removeTestDirectory } from "../../../tests/helpers/temp-directory"
 import { DurableToolJournal } from "../src/tool-journal-adapter"
 

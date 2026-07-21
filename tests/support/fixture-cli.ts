@@ -2,9 +2,9 @@
 
 import { readFileSync } from "node:fs"
 import { isAbsolute, resolve } from "node:path"
-import { runCli } from "@ralph-next/commands"
-import type { ExecutionBackendResolver } from "@ralph-next/orchestration"
-import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph-next/test-kit"
+import { runCli } from "@ralph/commands"
+import type { ExecutionBackendResolver } from "@ralph/orchestration"
+import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph/test-kit"
 import packageJson from "../../package.json" with { type: "json" }
 
 function scriptedExecutions(environment: NodeJS.ProcessEnv): ScriptedExecution[] {

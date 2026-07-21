@@ -1,13 +1,13 @@
 import { hostname as localHostname } from "node:os"
-import { type DurableLeaseRecord, EXIT_CODES, RalphError } from "@ralph-next/domain"
-import type { LeaseOwnerProbeResult } from "@ralph-next/persistence"
+import { type DurableLeaseRecord, EXIT_CODES, RalphError } from "@ralph/domain"
+import type { LeaseOwnerProbeResult } from "@ralph/persistence"
 import {
   captureProcessIdentity,
   type PidLiveness,
   type ProcessIdentity,
   probePidLiveness,
   processStartToken,
-} from "@ralph-next/supervisor/process-identity"
+} from "@ralph/supervisor/process-identity"
 
 export { type PidLiveness, type ProcessIdentity, probePidLiveness, processStartToken }
 

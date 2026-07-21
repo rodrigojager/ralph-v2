@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { lstat, readFile, realpath } from "node:fs/promises"
 import { basename, dirname, join, relative, resolve, sep } from "node:path"
-import { ContextManifestSchema, EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { ContextManifestSchema, EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   canonicalDirectory,
   getRun,
@@ -14,7 +14,7 @@ import {
   runLayout,
   workspaceLayout,
   writeFileAtomic,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 
 const MAX_CONTEXT_MANIFEST_BYTES = 2 * 1024 * 1024
 const CHECKPOINT_FILE_PREVIEW = 100

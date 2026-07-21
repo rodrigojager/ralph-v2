@@ -20,7 +20,7 @@ skill ralph-loop-prd-generator
   escreve root + todos os children
                 │
                 ▼
-ralph-next prd validate --recursive --strict
+ralph prd validate --recursive --strict
                 │
                 ▼
 Ralph CLI independente compila, executa e atualiza markers
@@ -35,7 +35,7 @@ A skill distribuível deve consumir, nesta ordem:
 1. [`schemas/prd-document.schema.json`](../../schemas/prd-document.schema.json) e [`schemas/compiled-prd-graph.schema.json`](../../schemas/compiled-prd-graph.schema.json), gerados dos validators runtime;
 2. [vocabulário canônico](vocabulary.md), que documenta a representação Markdown desses schemas;
 3. [template PRD v2](PRD-v2.template.md), que é um documento standalone estruturalmente válido;
-4. `ralph-next prd validate`, que é a autoridade final sobre a saída concreta.
+4. `ralph prd validate`, que é a autoridade final sobre a saída concreta.
 
 Schema, parser, formatter, exemplos e skill não podem manter gramáticas independentes. Se este contrato divergir do validator da mesma versão, a skill deve parar e relatar incompatibilidade em vez de adivinhar uma correção.
 
@@ -125,13 +125,13 @@ não é uma afirmação de correção semântica. O runtime não escolhe esse ar
 Depois de escrever root e children:
 
 ```text
-ralph-next prd validate <root-prd> --recursive --strict
+ralph prd validate <root-prd> --recursive --strict
 ```
 
 Para diagnosticar a representação compilada:
 
 ```text
-ralph-next prd inspect <root-prd> --recursive --strict --format json
+ralph prd inspect <root-prd> --recursive --strict --format json
 ```
 
 A skill deve corrigir diagnostics de schema, aliases, estrutura CommonMark, IDs, paths, dependencies, cycles, parent mismatch, evidence mode, artifact e budget. Ela nunca contorna erro removendo child, critério ou limite necessário sem retornar à fonte de verdade.

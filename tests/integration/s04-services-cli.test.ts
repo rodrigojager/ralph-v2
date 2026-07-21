@@ -2,9 +2,9 @@ import { afterEach, describe, expect, test } from "bun:test"
 import { mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { executeCli } from "@ralph-next/commands"
-import { FakeSecretStore, secretInputFromValue } from "@ralph-next/credentials"
-import type { FetchLike } from "@ralph-next/openai-driver"
+import { executeCli } from "@ralph/commands"
+import { FakeSecretStore, secretInputFromValue } from "@ralph/credentials"
+import type { FetchLike } from "@ralph/openai-driver"
 import {
   CachedModelCatalog,
   CURATED_CATALOG_SEED,
@@ -12,7 +12,7 @@ import {
   InMemoryModelCatalogCache,
   type ModelCatalog,
   StaticCatalogSource,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import { type ChatGptAccountFlow, createS04Services } from "../../apps/ralph-cli/src/s04-services"
 
 const NOW = Date.parse("2026-07-18T16:00:00.000Z")

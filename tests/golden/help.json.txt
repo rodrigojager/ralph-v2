@@ -3,9 +3,9 @@
   "ok": true,
   "command": "help",
   "data": {
-    "product": "ralph-next",
+    "product": "ralph",
     "version": "9.8.7-test",
-    "usage": "ralph-next <command> [options]",
+    "usage": "ralph <command> [options]",
     "commands": [
       {
         "canonical": "init",
@@ -536,27 +536,6 @@
         "name": "uninstall",
         "aliases": [],
         "summary": "Remove only receipt-owned standalone files while preserving config, credentials and workspaces",
-        "compatibility": "changed"
-      },
-      {
-        "canonical": "alias.ralph.status",
-        "name": "alias ralph status",
-        "aliases": [],
-        "summary": "Inspect the receipt-bound optional ralph alias without changing PATH or files",
-        "compatibility": "changed"
-      },
-      {
-        "canonical": "alias.ralph.install",
-        "name": "alias ralph install",
-        "aliases": [],
-        "summary": "Create the stable-only receipt-owned ralph alias after exact preview plan-hash confirmation",
-        "compatibility": "changed"
-      },
-      {
-        "canonical": "alias.ralph.remove",
-        "name": "alias ralph remove",
-        "aliases": [],
-        "summary": "Remove only the receipt/hash-verified Ralph v2 alias after exact preview plan-hash confirmation",
         "compatibility": "changed"
       },
       {
@@ -1148,7 +1127,7 @@
       },
       {
         "syntax": "--confirm-plan-hash SHA256",
-        "summary": "Confirm checkpoint/migration rollback or optional-alias mutation with the exact matching preview hash"
+        "summary": "Confirm checkpoint or migration rollback with the exact matching preview hash"
       },
       {
         "syntax": "--retry-delay SEC",

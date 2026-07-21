@@ -1,28 +1,28 @@
 {
-  "name": "ralph-next",
+  "name": "ralph",
   "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",
   "bin": {
-    "ralph-next": "./src/main.ts"
+    "ralph": "./src/main.ts"
   },
   "dependencies": {
-    "@ralph-next/commands": "workspace:*",
-    "@ralph-next/credentials": "workspace:*",
-    "@ralph-next/domain": "workspace:*",
-    "@ralph-next/distribution": "workspace:*",
-    "@ralph-next/evaluation": "workspace:*",
-    "@ralph-next/model-drivers": "workspace:*",
-    "@ralph-next/openai-driver": "workspace:*",
-    "@ralph-next/orchestration": "workspace:*",
-    "@ralph-next/persistence": "workspace:*",
-    "@ralph-next/prd": "workspace:*",
-    "@ralph-next/providers": "workspace:*",
-    "@ralph-next/supervisor": "workspace:*",
-    "@ralph-next/telemetry": "workspace:*",
-    "@ralph-next/tool-host": "workspace:*",
-    "@ralph-next/tui": "workspace:*",
-    "@ralph-next/verification": "workspace:*",
+    "@ralph/commands": "workspace:*",
+    "@ralph/credentials": "workspace:*",
+    "@ralph/domain": "workspace:*",
+    "@ralph/distribution": "workspace:*",
+    "@ralph/evaluation": "workspace:*",
+    "@ralph/model-drivers": "workspace:*",
+    "@ralph/openai-driver": "workspace:*",
+    "@ralph/orchestration": "workspace:*",
+    "@ralph/persistence": "workspace:*",
+    "@ralph/prd": "workspace:*",
+    "@ralph/providers": "workspace:*",
+    "@ralph/supervisor": "workspace:*",
+    "@ralph/telemetry": "workspace:*",
+    "@ralph/tool-host": "workspace:*",
+    "@ralph/tui": "workspace:*",
+    "@ralph/verification": "workspace:*",
     "zod": "4.4.3"
   }
 }

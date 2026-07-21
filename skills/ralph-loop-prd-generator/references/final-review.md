@@ -52,8 +52,8 @@ Ler os Markdown como um mantenedor que não viu a conversa:
 Executar no workspace do projeto:
 
 ```text
-ralph-next prd validate <root-prd> --recursive --strict
-ralph-next prd inspect <root-prd> --recursive --strict --format json
+ralph prd validate <root-prd> --recursive --strict
+ralph prd inspect <root-prd> --recursive --strict --format json
 ```
 
 No inspect, conferir:
@@ -69,7 +69,7 @@ No inspect, conferir:
 Corrigir todos os diagnostics no Markdown e repetir. Não remover requisito, limite, child ou critério
 necessário apenas para silenciar o validator. Retornar à fonte de verdade quando houver conflito.
 
-Se o usuário proibir execução, se `ralph-next` não estiver disponível ou se a versão do validator
+Se o usuário proibir execução, se `ralph` não estiver disponível ou se a versão do validator
 for incompatível, não afirmar que o graph é válido. Registrar claramente:
 
 ```text

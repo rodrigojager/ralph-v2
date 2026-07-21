@@ -56,10 +56,10 @@ novo rerun da suíte consolidada.
 ## Verificação mínima
 
 ```text
-ralph-next once --no-judge --prd <fixture>
-ralph-next once --self-review --judge-threshold 75 --prd <fixture>
-ralph-next once --judge external --judge-profile <fake-judge> --judge-threshold 85 --max-revisions 2 --prd <fixture>
-ralph-next evidence inspect <attempt-id> --format json
+ralph once --no-judge --prd <fixture>
+ralph once --self-review --judge-threshold 75 --prd <fixture>
+ralph once --judge external --judge-profile <fake-judge> --judge-threshold 85 --max-revisions 2 --prd <fixture>
+ralph evidence inspect <attempt-id> --format json
 ```
 
 S06.12 foi fechada pela matriz dedicada: task selector exige `--run-id`; positional sem prefixo

@@ -42,9 +42,9 @@ O usuário consegue listar providers/modelos, configurar perfis separados, conec
 ## Verificação mínima
 
 ```text
-ralph-next providers list --format json
-ralph-next auth connect <provider> --method <method>
-ralph-next auth status --format json
-ralph-next models list --provider <provider>
-ralph-next model smoke --profile <profile> --format json
+ralph providers list --format json
+ralph auth connect <provider> --method <method>
+ralph auth status --format json
+ralph models list --provider <provider>
+ralph model smoke --profile <profile> --format json
 ```

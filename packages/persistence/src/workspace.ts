@@ -7,8 +7,8 @@ import {
   type WorkspaceIdentity,
   WorkspaceIdentitySchema,
   type WorkspaceStatus,
-} from "@ralph-next/domain"
-import { replayWorkspaceEvents } from "@ralph-next/telemetry"
+} from "@ralph/domain"
+import { replayWorkspaceEvents } from "@ralph/telemetry"
 import { writeJsonAtomic } from "./atomic"
 import { loadEffectiveConfig, readWorkspaceConfig, writeDefaultConfig } from "./config"
 import {
@@ -240,7 +240,7 @@ async function preflightWorkspace(root: string): Promise<void> {
       {
         exitCode: EXIT_CODES.conflict,
         file: layout.ralph,
-        hint: "Keep legacy state intact and inspect it with `ralph-next migrate inspect <legacy-workspace>` before choosing a separate v2 destination.",
+        hint: "Keep legacy state intact and inspect it with `ralph migrate inspect <legacy-workspace>` before choosing a separate v2 destination.",
       },
     )
   }
@@ -339,7 +339,7 @@ async function initializeWorkspaceLocked(
       {
         exitCode: EXIT_CODES.blocked,
         file: layout.ralph,
-        hint: "Inspect the directory, then run `ralph-next init --force` to recreate only missing v2 files.",
+        hint: "Inspect the directory, then run `ralph init --force` to recreate only missing v2 files.",
         details: { missingPaths },
       },
     )
@@ -446,7 +446,7 @@ export async function inspectWorkspace(
     throw new RalphError("RALPH_WORKSPACE_INCOMPLETE", "Ralph v2 workspace is incomplete", {
       exitCode: EXIT_CODES.blocked,
       file: layout.ralph,
-      hint: "Inspect the directory, then run `ralph-next init --force` to recreate only missing v2 files.",
+      hint: "Inspect the directory, then run `ralph init --force` to recreate only missing v2 files.",
       details: { missingPaths },
     })
   }

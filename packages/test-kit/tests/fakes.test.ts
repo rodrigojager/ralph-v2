@@ -4,17 +4,17 @@ import {
   secretInputFromValue,
   startBrowserOAuth,
   startDeviceOAuth,
-} from "@ralph-next/credentials"
-import { JudgeOutputSchema } from "@ralph-next/domain"
-import type { JudgeRequest } from "@ralph-next/evaluation"
-import { parseExternalProtocolOutput } from "@ralph-next/model-drivers"
+} from "@ralph/credentials"
+import { JudgeOutputSchema } from "@ralph/domain"
+import type { JudgeRequest } from "@ralph/evaluation"
+import { parseExternalProtocolOutput } from "@ralph/model-drivers"
 import {
   type ProviderEvent,
   ProviderModelRequestSchema,
   ProviderModelResultSchema,
   type ProviderToolCall,
-} from "@ralph-next/providers"
-import type { SupervisedProcessRequest } from "@ralph-next/supervisor"
+} from "@ralph/providers"
+import type { SupervisedProcessRequest } from "@ralph/supervisor"
 import {
   ControlledTestClock,
   deterministicOAuthRandom,

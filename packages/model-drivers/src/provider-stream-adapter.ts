@@ -1,4 +1,4 @@
-import type { OpenAiEvent, OpenAiFinishReason, OpenAiToolCall } from "@ralph-next/openai-driver"
+import type { OpenAiEvent, OpenAiFinishReason, OpenAiToolCall } from "@ralph/openai-driver"
 import {
   type CatalogResolution,
   type ModelAccess,
@@ -9,8 +9,8 @@ import {
   type TokenUsage,
   TokenUsageSchema,
   type UsageMetric,
-} from "@ralph-next/providers"
-import { applyPriceSnapshot, redactText, redactValue } from "@ralph-next/telemetry"
+} from "@ralph/providers"
+import { applyPriceSnapshot, redactText, redactValue } from "@ralph/telemetry"
 
 import { IncrementalTextRedactor } from "./incremental-redactor"
 

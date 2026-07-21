@@ -13,7 +13,7 @@ import {
   RalphError,
   type RoleProfileConfig,
   RoleProfileConfigSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import type {
   JudgeBackend,
   JudgeBackendEvent,
@@ -21,7 +21,7 @@ import type {
   JudgeCallHandle,
   JudgeEventSink,
   JudgeRequest,
-} from "@ralph-next/evaluation"
+} from "@ralph/evaluation"
 import {
   type BackendCapabilities,
   type CallHandle,
@@ -38,19 +38,19 @@ import {
   type ExecutionToolContext,
   type ExecutionToolPort,
   type ExecutionToolReconciliationContext,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   inspectWorkspace,
   listChildRunTree,
   loadEffectiveConfig,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { hashCanonicalValue } from "@ralph-next/prd"
+} from "@ralph/persistence"
+import { hashCanonicalValue } from "@ralph/prd"
 import {
   FallbackPolicySchema,
   ProviderToolCallSchema,
   ProviderToolDefinitionSchema,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import {
   ChildRunObservationCallSchema,
   ChildRunProjectEventCallSchema,
@@ -79,7 +79,7 @@ import {
   type WorkerSupervisorObserver,
   workerCommandCapabilityFingerprint,
   workerExecutableContentHash,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 import {
   createBuiltinToolRegistry,
   type PermissionPromptPort,
@@ -93,12 +93,12 @@ import {
   ToolRegistry,
   type ToolRuntimeContext,
   ToolSettlementOutcomeSchema,
-} from "@ralph-next/tool-host"
+} from "@ralph/tool-host"
 import {
   type GateExecutionContext,
   type GateExecutionOutcome,
   GateExecutorRegistry,
-} from "@ralph-next/verification"
+} from "@ralph/verification"
 import {
   assertDurableProcessOwnerLaunchAvailable,
   executeDurableProcessParentCall,

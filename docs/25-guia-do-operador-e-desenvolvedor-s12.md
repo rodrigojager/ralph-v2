@@ -54,15 +54,15 @@ antigos. Replay deve produzir a mesma projeção dentro do schema suportado.
 ### Fake kit e composition root de testes
 
 O fake de execução é uma dependência de desenvolvimento exportada por
-`@ralph-next/test-kit`; ele não é provider, profile nem backend registrado pelo produto. A API
+`@ralph/test-kit`; ele não é provider, profile nem backend registrado pelo produto. A API
 concreta é `ScriptedExecutionBackend`, construída com uma fila de `ScriptedExecution`. Cada item
 pode declarar `expectedTask`, ações relativas `write|append`, `outcome`, `delayMs`, `failure` ou
 `failureAfterActions`:
 
 ```ts
-import { runCli } from "@ralph-next/commands"
-import type { ExecutionBackendResolver } from "@ralph-next/orchestration"
-import { ScriptedExecutionBackend, type ScriptedExecution } from "@ralph-next/test-kit"
+import { runCli } from "@ralph/commands"
+import type { ExecutionBackendResolver } from "@ralph/orchestration"
+import { ScriptedExecutionBackend, type ScriptedExecution } from "@ralph/test-kit"
 
 const steps: ScriptedExecution[] = [
   {
@@ -94,7 +94,7 @@ requisições recebidas para assertions do composition root.
 As ações aceitam somente paths relativos dentro do workspace. Paths absolutos, escape por ancestral
 ou symlink, o próprio target quando é symlink, `.git`, `.ralph` e paths protegidos são recusados. O
 fake pode produzir arquivos e eventos de prova, mas não recebe ledger, não atualiza marker e não
-persiste conclusão. O entrypoint normal não importa nem registra `@ralph-next/test-kit`; portanto
+persiste conclusão. O entrypoint normal não importa nem registra `@ralph/test-kit`; portanto
 `--executor-profile fake` precisa continuar
 indisponível no produto e nos artifacts de release. Acrescentar novos comportamentos ao kit exige
 manter essa separação e cobrir a composição de teste, a rejeição no produto e os limites de path.
@@ -223,8 +223,7 @@ planned -> staged -> verified -> activated
 Versões sob `versions/<semver>` são imutáveis. Download ocorre em staging identificado por
 operation ID; materialização e pointer usam rename/replace durável. Um crash é reconciliado pelo
 journal, sem adivinhar arquivos por glob. Uninstall remove somente paths do receipt pertencentes ao
-mesmo install ID e preserva `.ralph`, config, credentials, checkout clássico e aliases externos. O
-alias opcional da v2 só entra nesse conjunto depois de opt-in receipt-bound confirmado.
+mesmo install ID e preserva `.ralph`, config, credentials, checkout clássico e executáveis externos.
 
 ## 9. Release e provenance
 
@@ -345,10 +344,11 @@ Ao integrar um adapter concreto:
 
 - `dev`: source checkout;
 - `nightly`: integração contínua sem promessa de suporte;
-- `beta`: `ralph-next`, rollback obrigatório;
+- `beta`: `ralph`, rollback obrigatório;
 - `stable`: subconjunto `included` explicitamente escolhido, demais seis-target entries
-  `not-promoted` com motivo, e gates completos;
-- `ralph`: alias opt-in somente depois do período beta.
+  `not-promoted` com motivo, e gates completos.
+
+Todos os canais publicam o mesmo comando `ralph`; não existe alias de transição.
 
 O binding de versão é obrigatório: `dev` requer prerelease iniciado por `dev`; `nightly` aceita
 prerelease iniciado por `nightly` ou `dev`; `beta` requer `beta`; `stable` proíbe prerelease.
@@ -359,11 +359,10 @@ Metadata `+...` não muda o canal. No npm, os únicos bindings de `dist-tag` sã
 Rollback de engine troca somente o pointer para uma versão receipt-bound compatível. Rollback de
 workspace é outra operação, com preview/hash/expiração. Nunca misture os dois.
 
-O alias `ralph` é uma operação standalone separada: preview é inerte; install exige receipt corrente
-`stable`, confirmação do hash do plano e paths sem colisão; remove confere ownership e bytes. Nenhum
-fluxo edita `PATH` ou adiciona o alias ao pacote npm. Campanha beta, diagnostics locais e retorno
-exato ao Ralph clássico seguem o worksheet
-[28 — Drills de release, beta, alias e handoff](28-release-drills-beta-alias-e-handoff-s12.md).
+O corte para a v2 inventaria a instalação clássica, remove-a explicitamente por seu mecanismo de
+origem, instala o novo `ralph` e verifica toda a resolução do `PATH`. Campanha beta, diagnostics
+locais e rollback seguem o worksheet
+[28 — Drills de release, beta e handoff](28-release-drills-beta-e-handoff-s12.md).
 
 ## 11. Matriz de validação
 
@@ -446,7 +445,7 @@ Registre em um único documento:
 - known issues e limitações;
 - rollback da engine, workspace e vendor refresh;
 - campanha beta, diagnostics/privacy/retention e triagem;
-- TUI runtime, migration/rollback e retorno ao Ralph clássico;
-- decisão, receipt e preview do alias `ralph`.
+- TUI runtime, migration/rollback e substituição controlada do Ralph clássico;
+- inventário do comando antigo e prova de resolução exclusiva do novo `ralph`.
 
 Sem esses dados, o artifact pode ser um build de desenvolvimento, mas não uma release promovida.

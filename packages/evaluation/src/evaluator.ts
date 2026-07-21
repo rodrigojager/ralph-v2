@@ -8,7 +8,7 @@ import {
   JudgeAssessmentSchema,
   type JudgeOutput,
   JudgeOutputSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 import {
   buildJudgePrompt,

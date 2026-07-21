@@ -3,12 +3,12 @@ import { randomUUID } from "node:crypto"
 import { lstat, mkdtemp, readFile, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { basename, dirname, join, resolve } from "node:path"
-import type { CredentialRef } from "@ralph-next/credentials"
+import type { CredentialRef } from "@ralph/credentials"
 import {
   CachedModelCatalog,
   createCuratedCatalogSource,
   InMemoryModelCatalogCache,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import {
   type AuthorizationNotice,
   createS04Services,

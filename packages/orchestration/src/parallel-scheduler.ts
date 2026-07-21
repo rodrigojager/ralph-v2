@@ -3,7 +3,7 @@ import {
   RalphError,
   type ResourceClaimSetRecord,
   type ResourceClaimSpec,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 export type ParallelTaskStatus =
   | "pending"

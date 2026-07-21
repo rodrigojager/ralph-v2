@@ -1,12 +1,7 @@
 import { lstat, realpath, rm } from "node:fs/promises"
 import { isAbsolute, relative, resolve, sep } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
-import {
-  inspectWorkspace,
-  listRuns,
-  listWorkspaceFiles,
-  workspaceLayout,
-} from "@ralph-next/persistence"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
+import { inspectWorkspace, listRuns, listWorkspaceFiles, workspaceLayout } from "@ralph/persistence"
 
 export type CleanWorkspaceResult = {
   readonly schemaVersion: 1
@@ -83,7 +78,7 @@ export async function cleanV2Workspace(input: {
       "clean requires --force after reviewing the preview",
       {
         exitCode: EXIT_CODES.policyDenied,
-        hint: "Run `ralph-next clean --dry-run`, then repeat with --force.",
+        hint: "Run `ralph clean --dry-run`, then repeat with --force.",
       },
     )
   }

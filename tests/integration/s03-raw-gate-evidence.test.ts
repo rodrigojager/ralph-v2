@@ -6,16 +6,16 @@ import {
   executeRun,
   type RunOptionOverrides,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   initializeWorkspace,
   listAttempts,
   listGateResults,
   readEvents,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
-import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
+import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph/test-kit"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const VERSION = "0.1.0-s03-raw-gate-evidence-test"

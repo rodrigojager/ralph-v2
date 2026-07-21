@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { mkdir, writeFile } from "node:fs/promises"
 import { dirname, resolve } from "node:path"
-import { executeCli, runCli } from "@ralph-next/commands"
-import { globalConfigPath, initializeWorkspace, workspaceLayout } from "@ralph-next/persistence"
-import { type OutputWriters, writeCommandExecution } from "@ralph-next/telemetry"
+import { executeCli, runCli } from "@ralph/commands"
+import { globalConfigPath, initializeWorkspace, workspaceLayout } from "@ralph/persistence"
+import { type OutputWriters, writeCommandExecution } from "@ralph/telemetry"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const VERSION = "9.8.7-test"
@@ -56,7 +56,7 @@ describe("stdout/stderr output contracts", () => {
     const capture = captureWriters()
     const exitCode = await runCli(["version"], context(root), capture.writers)
     expect(exitCode).toBe(0)
-    expect(capture.stdout()).toBe(`ralph-next ${VERSION}\n`)
+    expect(capture.stdout()).toBe(`ralph ${VERSION}\n`)
     expect(capture.stderr()).toBe("")
   })
 
@@ -67,7 +67,7 @@ describe("stdout/stderr output contracts", () => {
     expect(exitCode).toBe(2)
     expect(capture.stdout()).toBe("")
     expect(capture.stderr()).toContain("ERROR RALPH_COMMAND_UNKNOWN")
-    expect(capture.stderr()).toContain("Run `ralph-next help`")
+    expect(capture.stderr()).toContain("Run `ralph help`")
   })
 
   test("writes JSON errors as one CommandResult on stdout and keeps stderr empty", async () => {

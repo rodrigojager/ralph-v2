@@ -3,7 +3,7 @@ import { createHash, randomUUID } from "node:crypto"
 import { mkdir, mkdtemp, readdir, readFile, realpath, rm, stat, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { basename, dirname, join, resolve } from "node:path"
-import { type CommandContext, executeCli } from "@ralph-next/commands"
+import { type CommandContext, executeCli } from "@ralph/commands"
 import {
   CurrentInstallPointerSchema,
   type DeferredUninstallRequest,
@@ -19,7 +19,7 @@ import {
   serializeDistributionControlFile,
   uninstallStandalone,
   updateStandalone,
-} from "@ralph-next/distribution"
+} from "@ralph/distribution"
 import { createTestDirectory, removeTestDirectory } from "../../../tests/helpers/temp-directory"
 import {
   AllowlistedFixtureTransport,
@@ -40,10 +40,7 @@ afterEach(async () => {
     uninstallTemporaryDirectories.splice(0).map(async (path) => {
       const target = resolve(path)
       const temporaryRoot = await realpath(resolve(tmpdir()))
-      if (
-        dirname(target) !== temporaryRoot ||
-        !basename(target).startsWith("ralph-next-uninstall-")
-      ) {
+      if (dirname(target) !== temporaryRoot || !basename(target).startsWith("ralph-uninstall-")) {
         throw new Error(`Refusing to clean an unexpected uninstall fixture path: ${target}`)
       }
       await rm(target, { recursive: true, force: true })
@@ -579,7 +576,7 @@ describe("S12.02 standalone distribution local contract", () => {
 
     let scheduledRequest: DeferredUninstallRequest | undefined
     const scheduledDirectory = await realpath(
-      await mkdtemp(join(await realpath(resolve(tmpdir())), "ralph-next-uninstall-")),
+      await mkdtemp(join(await realpath(resolve(tmpdir())), "ralph-uninstall-")),
     )
     uninstallTemporaryDirectories.push(scheduledDirectory)
     const scheduled = await uninstallStandalone({
@@ -617,7 +614,7 @@ describe("S12.02 standalone distribution local contract", () => {
     const state = await inspectStandaloneInstall(installRoot)
     const pointer = await readPointer(installRoot)
     const helperDirectory = await realpath(
-      await mkdtemp(join(await realpath(resolve(tmpdir())), "ralph-next-uninstall-")),
+      await mkdtemp(join(await realpath(resolve(tmpdir())), "ralph-uninstall-")),
     )
     uninstallTemporaryDirectories.push(helperDirectory)
     const request = DeferredUninstallRequestSchema.parse({

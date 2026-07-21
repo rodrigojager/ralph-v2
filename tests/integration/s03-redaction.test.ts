@@ -2,17 +2,17 @@ import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises"
 import { dirname, join, resolve } from "node:path"
-import { type CommandContext, runCli } from "@ralph-next/commands"
-import { ExecutorOutcomeSchema } from "@ralph-next/domain"
+import { type CommandContext, runCli } from "@ralph/commands"
+import { ExecutorOutcomeSchema } from "@ralph/domain"
 import type {
   BackendCapabilities,
   CallHandle,
   ExecutionBackend,
   ExecutionChannel,
   ExecutionRequest,
-} from "@ralph-next/orchestration"
-import { initializeWorkspace, workspaceLayout } from "@ralph-next/persistence"
-import type { OutputWriters } from "@ralph-next/telemetry"
+} from "@ralph/orchestration"
+import { initializeWorkspace, workspaceLayout } from "@ralph/persistence"
+import type { OutputWriters } from "@ralph/telemetry"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const VERSION = "0.1.0-s03-redaction-test"

@@ -13,18 +13,18 @@ import {
   type RoleProfileConfig,
   RoleProfileConfigSchema,
   TelemetryConfigSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   type JudgeBackendEvent,
   JudgeEvaluationBundleSchema,
   type JudgeRequest,
-} from "@ralph-next/evaluation"
-import { ExternalCliExecutionError, ExternalCliJudgeError } from "@ralph-next/model-drivers"
-import { OpenAiDriverError } from "@ralph-next/openai-driver"
-import type { ContextTruncation, ExecutionChannel } from "@ralph-next/orchestration"
-import { rawPersistenceEnabled, resolveDiagnosticRawRetention } from "@ralph-next/persistence"
-import { PrdTaskSchema, VerificationSpecSchema } from "@ralph-next/prd"
-import { ProviderToolCallSchema, ProviderToolDefinitionSchema } from "@ralph-next/providers"
+} from "@ralph/evaluation"
+import { ExternalCliExecutionError, ExternalCliJudgeError } from "@ralph/model-drivers"
+import { OpenAiDriverError } from "@ralph/openai-driver"
+import type { ContextTruncation, ExecutionChannel } from "@ralph/orchestration"
+import { rawPersistenceEnabled, resolveDiagnosticRawRetention } from "@ralph/persistence"
+import { PrdTaskSchema, VerificationSpecSchema } from "@ralph/prd"
+import { ProviderToolCallSchema, ProviderToolDefinitionSchema } from "@ralph/providers"
 import {
   type BuiltinWorkerAdapterFactory,
   BunProcessSupervisor,
@@ -39,8 +39,8 @@ import {
   WorkerOperationError,
   type WorkerProfileSnapshot,
   type WorkerRoleAdapterContext,
-} from "@ralph-next/supervisor"
-import { secretValuesFromEnvironment } from "@ralph-next/telemetry"
+} from "@ralph/supervisor"
+import { secretValuesFromEnvironment } from "@ralph/telemetry"
 import {
   createBuiltinToolRegistry,
   type ProcessExecutorPort,
@@ -51,11 +51,8 @@ import {
   ToolPolicySchema,
   type ToolSession,
   WorkspacePathResolver,
-} from "@ralph-next/tool-host"
-import {
-  createDefaultGateExecutorRegistry,
-  type GateExecutionOutcome,
-} from "@ralph-next/verification"
+} from "@ralph/tool-host"
+import { createDefaultGateExecutorRegistry, type GateExecutionOutcome } from "@ralph/verification"
 import { executeChildWorkerRuntime } from "./child-worker-runtime"
 import { DurableProcessResultSchema } from "./durable-process-owner"
 import { createS04Services } from "./s04-services"

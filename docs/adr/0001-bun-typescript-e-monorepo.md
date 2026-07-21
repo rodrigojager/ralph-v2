@@ -17,14 +17,14 @@ Uma estrutura monolítica facilitaria o primeiro arquivo, mas tornaria nebulosa 
 2. Fixar `packageManager`, versões diretas e `bun.lock`; CI instala com `bun install --frozen-lockfile`.
 3. Usar TypeScript em modo estrito, com typecheck sem emissão e sem transformar o domínio inteiro em um framework de effects.
 4. Organizar a fundação em workspaces mínimos:
-   - `apps/ralph-cli`: entrypoint e bootstrap do executável `ralph-next`;
+   - `apps/ralph-cli`: entrypoint e bootstrap do executável `ralph`;
    - `packages/commands`: parsing e handlers públicos;
    - `packages/domain`: schemas runtime, tipos e regras compartilhadas;
    - `packages/persistence`: workspace, config, ledger, migrations e outbox;
    - `packages/telemetry`: eventos, output e redaction.
 5. Adicionar packages futuros somente na slice que entrega um comportamento vertical que os utiliza.
 6. Manter contratos públicos próprios do Ralph. Tipos internos de Bun ou de qualquer upstream não viram schema persistido sem adaptação/versionamento.
-7. Tratar `ralph-next` como nome de desenvolvimento/beta. O nome `ralph` permanece reservado até o gate de compatibilidade e release.
+7. Tratar `ralph` como nome de desenvolvimento/beta. O nome `ralph` permanece reservado até o gate de compatibilidade e release.
 8. Manter uma matriz fechada `win32|linux|darwin` × `x64|arm64`; host/arquitetura fora dela e flags de build desconhecidas ou ambíguas são erros, nunca fallback para Linux/x64 ou build nativo silencioso.
 
 ## Direção de dependências na S01

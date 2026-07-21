@@ -428,7 +428,7 @@ function commandContracts(
     }
   }
   if (kind === "native-platform") {
-    const binary = `dist/standalone/${target}/ralph-next${os === "windows" ? ".exe" : ""}`
+    const binary = `dist/standalone/${target}/ralph${os === "windows" ? ".exe" : ""}`
     return {
       install: { executable: "bun", arguments: ["install", "--frozen-lockfile"] },
       architecture: {
@@ -720,7 +720,7 @@ function validateBuildMetadata(
     typeof sourceSha256 === "string" &&
     SHA256_PATTERN.test(sourceSha256) &&
     artifactEvidence?.sha256 === declaredSha256
-  if (expected.kind === "bundle" && value?.product !== "ralph-next-bundle") {
+  if (expected.kind === "bundle" && value?.product !== "ralph-bundle") {
     issues.push(`bundle metadata has an unexpected product: ${evidence.path}`)
   }
   if (!valid) {
@@ -1114,16 +1114,14 @@ for (const metadata of bundleMetadata) {
     {
       kind: "bundle",
       target: "bun",
-      artifact: "dist/ralph-next.js",
+      artifact: "dist/ralph.js",
       version: packageVersion,
     },
     filesByPath,
     issues,
   )
 }
-const standaloneArtifact = `dist/standalone/${actualTarget}/ralph-next${
-  os === "windows" ? ".exe" : ""
-}`
+const standaloneArtifact = `dist/standalone/${actualTarget}/ralph${os === "windows" ? ".exe" : ""}`
 for (const metadata of standaloneMetadata) {
   standaloneSourceSha256 = validateBuildMetadata(
     metadata,

@@ -1,4 +1,4 @@
-import { type CommandResult, EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { type CommandResult, EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   type CatalogResolution,
   type ModelCatalog,
@@ -10,7 +10,7 @@ import {
   ProviderCoreError,
   type ProviderInfo,
   resolveModelParameters,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 
 export type CatalogHandlerResult<T> = {
   result: CommandResult<T>

@@ -23,7 +23,7 @@ import {
   roleProfileFormMetadata,
   type SettingsFieldMetadata,
   type SettingsPreRunInvocation,
-} from "@ralph-next/commands"
+} from "@ralph/commands"
 import {
   type ChildUsageSummary,
   DEFAULT_CONFIG,
@@ -33,7 +33,7 @@ import {
   type RoleProfileConfig,
   type RoleProfileConfigLayer,
   RoleProfileConfigSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   getRun,
   getRunReport,
@@ -50,8 +50,8 @@ import {
   readEventHighWater,
   readRunEventBatch,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import type { ModelCatalog, ProviderInfo } from "@ralph-next/providers"
+} from "@ralph/persistence"
+import type { ModelCatalog, ProviderInfo } from "@ralph/providers"
 import {
   type EventEnvelope,
   ingestUsageEvent,
@@ -59,7 +59,7 @@ import {
   TokenUsageAggregator,
   type UsageAggregate,
   type UsageBreakdown,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 import {
   createEmptyRunUiSnapshot,
   createProviderPaletteController,
@@ -87,7 +87,7 @@ import {
   resolveRalphTuiTheme,
   truncateDisplayWidth,
   tuiText,
-} from "@ralph-next/tui"
+} from "@ralph/tui"
 import {
   applyProfileFormFieldValue,
   clearProfileFormField,
@@ -2334,8 +2334,8 @@ function providerPalettePort(options: {
               : {}),
             cliCommand:
               method.method === "environment"
-                ? `ralph-next auth connect ${provider.id} --method environment --environment <NAME>`
-                : `ralph-next auth connect ${provider.id} --method ${method.method}`,
+                ? `ralph auth connect ${provider.id} --method environment --environment <NAME>`
+                : `ralph auth connect ${provider.id} --method ${method.method}`,
           }
         }),
       })),
@@ -2359,7 +2359,7 @@ function providerPalettePort(options: {
           ...(model.price.unit ? { unit: model.price.unit } : {}),
           ...(model.price.reason ? { reason: model.price.reason } : {}),
         },
-        cliInspectCommand: `ralph-next models inspect ${model.provider}/${model.id}`,
+        cliInspectCommand: `ralph models inspect ${model.provider}/${model.id}`,
       })),
       credentials: credentialRefs.map((credential) => ({
         id: credential.id,
@@ -2370,7 +2370,7 @@ function providerPalettePort(options: {
         ...(credential.accountHint ? { accountHint: credential.accountHint } : {}),
         ...(credential.expiresAt ? { expiresAt: credential.expiresAt } : {}),
         status: statusByCredential.get(credential.id) ?? "unknown",
-        cliRevokeCommand: `ralph-next auth revoke ${credential.id}`,
+        cliRevokeCommand: `ralph auth revoke ${credential.id}`,
       })),
       roleProfiles: {
         executor: roleProfile("executor", executorProfileId),
@@ -2514,7 +2514,7 @@ function providerPalettePort(options: {
       )
       if (!method || !tuiAuthMethodSupported(method.method, options.credentials)) {
         throw new Error(
-          `Authentication method requires its direct CLI flow: ralph-next auth connect ${provider.id} --method ${request.method}`,
+          `Authentication method requires its direct CLI flow: ralph auth connect ${provider.id} --method ${request.method}`,
         )
       }
       const connectRequest = {
@@ -2533,7 +2533,7 @@ function providerPalettePort(options: {
         }
         if (!options.credentials.connectWithSecretInput) {
           throw new Error(
-            `This runtime requires the masked CLI flow: ralph-next auth connect ${provider.id} --method api-key`,
+            `This runtime requires the masked CLI flow: ralph auth connect ${provider.id} --method api-key`,
           )
         }
         credential = await options.credentials.connectWithSecretInput(
@@ -2568,7 +2568,7 @@ function providerPalettePort(options: {
         ...(credential.accountHint ? { accountHint: credential.accountHint } : {}),
         ...(credential.expiresAt ? { expiresAt: credential.expiresAt } : {}),
         status: "connected",
-        cliRevokeCommand: `ralph-next auth revoke ${credential.id}`,
+        cliRevokeCommand: `ralph auth revoke ${credential.id}`,
       }
     },
     async revoke({ credentialId }) {

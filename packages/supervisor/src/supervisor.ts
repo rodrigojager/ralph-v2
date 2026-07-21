@@ -2,7 +2,7 @@ import { createHash } from "node:crypto"
 import { readFileSync, realpathSync, type Stats, statSync } from "node:fs"
 import { lstat, realpath } from "node:fs/promises"
 import { isAbsolute, resolve } from "node:path"
-import { redactText, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+import { redactText, secretValuesFromEnvironment } from "@ralph/telemetry"
 import {
   type ProcessOutputChunk,
   type ProcessOutputStore,

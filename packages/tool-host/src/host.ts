@@ -1,4 +1,4 @@
-import { redactValue } from "@ralph-next/telemetry"
+import { redactValue } from "@ralph/telemetry"
 import { z } from "zod"
 import type {
   ArtifactPublisherPort,

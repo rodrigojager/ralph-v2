@@ -9,14 +9,10 @@ import {
   readRawStream,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph, parsePrdSource } from "@ralph-next/prd"
-import { type EventEnvelope, replayWorkspaceEvents } from "@ralph-next/telemetry"
-import {
-  type RunUiEventEnvelope,
-  RunUiEventStore,
-  type RunUiRenderScheduler,
-} from "@ralph-next/tui"
+} from "@ralph/persistence"
+import { compilePrdGraph, parsePrdSource } from "@ralph/prd"
+import { type EventEnvelope, replayWorkspaceEvents } from "@ralph/telemetry"
+import { type RunUiEventEnvelope, RunUiEventStore, type RunUiRenderScheduler } from "@ralph/tui"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const NOW = "2026-07-19T12:00:00.000Z"

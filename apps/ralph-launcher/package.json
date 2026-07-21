@@ -1,9 +1,9 @@
 {
-  "name": "@ralph-next/launcher",
+  "name": "@ralph/launcher",
   "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@ralph-next/distribution": "workspace:*"
+    "@ralph/distribution": "workspace:*"
   }
 }

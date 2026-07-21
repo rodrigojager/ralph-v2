@@ -3,17 +3,17 @@ import { cp, mkdtemp, readFile, realpath, rm, unlink, writeFile } from "node:fs/
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 
-import { type CommandContext, runCli } from "@ralph-next/commands"
-import { FakeSecretStore, secretInputFromValue } from "@ralph-next/credentials"
-import { RoleProfileConfigSchema } from "@ralph-next/domain"
-import type { FetchLike } from "@ralph-next/openai-driver"
-import { initializeWorkspace, workspaceLayout } from "@ralph-next/persistence"
+import { type CommandContext, runCli } from "@ralph/commands"
+import { FakeSecretStore, secretInputFromValue } from "@ralph/credentials"
+import { RoleProfileConfigSchema } from "@ralph/domain"
+import type { FetchLike } from "@ralph/openai-driver"
+import { initializeWorkspace, workspaceLayout } from "@ralph/persistence"
 import {
   CachedModelCatalog,
   createCuratedCatalogSource,
   InMemoryModelCatalogCache,
-} from "@ralph-next/providers"
-import { EventEnvelopeSchema, type OutputWriters } from "@ralph-next/telemetry"
+} from "@ralph/providers"
+import { EventEnvelopeSchema, type OutputWriters } from "@ralph/telemetry"
 import { stringify } from "yaml"
 
 import { createS04Services } from "../../apps/ralph-cli/src/s04-services"

@@ -1,12 +1,8 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { join } from "node:path"
-import {
-  AttemptCountersSchema,
-  type EffectiveRunOptions,
-  GitBaselineSchema,
-} from "@ralph-next/domain"
-import type { BackendEvent, ExecutionToolContext } from "@ralph-next/orchestration"
-import { resolveEffectiveRunOptions } from "@ralph-next/orchestration"
+import { AttemptCountersSchema, type EffectiveRunOptions, GitBaselineSchema } from "@ralph/domain"
+import type { BackendEvent, ExecutionToolContext } from "@ralph/orchestration"
+import { resolveEffectiveRunOptions } from "@ralph/orchestration"
 import {
   createAttempt,
   createModelCall,
@@ -15,9 +11,9 @@ import {
   materializeRunTasks,
   runLayout,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import type { ProviderJsonObject } from "@ralph-next/providers"
-import { ToolSettlementSchema } from "@ralph-next/tool-host"
+} from "@ralph/persistence"
+import type { ProviderJsonObject } from "@ralph/providers"
+import { ToolSettlementSchema } from "@ralph/tool-host"
 import { createTestDirectory, removeTestDirectory } from "../../../tests/helpers/temp-directory"
 import {
   boundedSettlementOutput,

@@ -159,20 +159,20 @@ jobs:
           --input artifacts/ci/test-classification.json
           --input .github/ci/junit-skip-waivers.json
           --input dist/bundle-build-metadata.json
-          --input dist/ralph-next.js
-          --input dist/ralph-next.js.map
+          --input dist/ralph.js
+          --input dist/ralph.js.map
           --input dist/standalone
 
       - name: Upload native build evidence
         if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: ralph-next-quality-${{ runner.os }}-${{ runner.arch }}
+          name: ralph-quality-${{ runner.os }}-${{ runner.arch }}
           path: |
             artifacts/ci/**
             .github/ci/junit-skip-waivers.json
-            dist/ralph-next.js
-            dist/ralph-next.js.map
+            dist/ralph.js
+            dist/ralph.js.map
             dist/bundle-build-metadata.json
             dist/standalone/**
           include-hidden-files: true
@@ -311,7 +311,7 @@ jobs:
           --output artifacts/ci/steps/smoke.json
           --
           bun run smoke
-          --binary dist/standalone/${{ matrix.target }}/ralph-next${{ matrix.extension }}
+          --binary dist/standalone/${{ matrix.target }}/ralph${{ matrix.extension }}
 
       - name: Check patch whitespace
         run: >-
@@ -338,20 +338,20 @@ jobs:
           --input artifacts/ci/test-classification.json
           --input .github/ci/junit-skip-waivers.json
           --input dist/bundle-build-metadata.json
-          --input dist/ralph-next.js
-          --input dist/ralph-next.js.map
+          --input dist/ralph.js
+          --input dist/ralph.js.map
           --input dist/standalone/${{ matrix.target }}
 
       - name: Upload classified native evidence
         if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: ralph-next-native-${{ matrix.platform }}-${{ matrix.architecture }}
+          name: ralph-native-${{ matrix.platform }}-${{ matrix.architecture }}
           path: |
             artifacts/ci/**
             .github/ci/junit-skip-waivers.json
-            dist/ralph-next.js
-            dist/ralph-next.js.map
+            dist/ralph.js
+            dist/ralph.js.map
             dist/bundle-build-metadata.json
             dist/standalone/${{ matrix.target }}/**
           include-hidden-files: true
@@ -480,7 +480,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: ralph-next-security-${{ runner.os }}-${{ runner.arch }}
+          name: ralph-security-${{ runner.os }}-${{ runner.arch }}
           path: |
             artifacts/ci/**
             .github/ci/junit-skip-waivers.json

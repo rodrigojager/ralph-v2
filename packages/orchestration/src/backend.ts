@@ -4,14 +4,10 @@ import type {
   EffectiveRunOptions,
   ExecutorOutcome,
   TelemetryConfig,
-} from "@ralph-next/domain"
-import type { PrdTask } from "@ralph-next/prd"
-import type {
-  ProviderToolCall,
-  ProviderToolDefinition,
-  RoleProfileLimits,
-} from "@ralph-next/providers"
-import type { ProcessSupervisor } from "@ralph-next/supervisor"
+} from "@ralph/domain"
+import type { PrdTask } from "@ralph/prd"
+import type { ProviderToolCall, ProviderToolDefinition, RoleProfileLimits } from "@ralph/providers"
+import type { ProcessSupervisor } from "@ralph/supervisor"
 import type { ContextManifestBundle } from "./context"
 import type { ToolReconciliationResult } from "./tool-reconciliation"
 

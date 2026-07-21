@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 
-import type { OpenAiFunctionTool, OpenAiToolCall } from "@ralph-next/openai-driver"
-import type { ProviderJsonObject, ProviderToolDefinition } from "@ralph-next/providers"
+import type { OpenAiFunctionTool, OpenAiToolCall } from "@ralph/openai-driver"
+import type { ProviderJsonObject, ProviderToolDefinition } from "@ralph/providers"
 
 const PROVIDER_FUNCTION_NAME = /^[A-Za-z0-9_-]{1,64}$/
 const MAX_SCHEMA_DEPTH = 10

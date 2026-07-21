@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { cp, readFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { ContextBudgetSchema, GitBaselineSchema } from "@ralph-next/domain"
+import { ContextBudgetSchema, GitBaselineSchema } from "@ralph/domain"
 import {
   type BackendEvent,
   buildContextManifest,
   type ExecutionChannel,
   type ExecutionRequest,
-} from "@ralph-next/orchestration"
-import { compilePrdGraph } from "@ralph-next/prd"
-import { ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/orchestration"
+import { compilePrdGraph } from "@ralph/prd"
+import { ScriptedExecutionBackend } from "@ralph/test-kit"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const FIXTURE = resolve("tests", "fixtures", "execution", "single-pass")

@@ -8,7 +8,7 @@ import {
   GitWorktreeRecordSchema,
   type GitWorktreeStatus,
   RalphError,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { appendEventInTransaction, withLedger } from "./ledger"
 
 type GitWorktreeRow = {

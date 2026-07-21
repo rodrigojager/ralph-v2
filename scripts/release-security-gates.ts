@@ -2,7 +2,7 @@ import { createHash } from "node:crypto"
 import { lstat, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
-import { BunProcessSupervisor, type ProcessSettlement } from "@ralph-next/supervisor"
+import { BunProcessSupervisor, type ProcessSettlement } from "@ralph/supervisor"
 import { sha256File } from "./build-artifact"
 import {
   gitleaksTrackedSourceScanArguments,

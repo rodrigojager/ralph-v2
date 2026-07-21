@@ -3,15 +3,15 @@ import { createHash } from "node:crypto"
 import { realpathSync } from "node:fs"
 import { cp, mkdir, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { type CommandContext, executeCli } from "@ralph-next/commands"
-import { type JudgeOutput, RecoveryManifestSchema } from "@ralph-next/domain"
-import type { JudgeBackend, JudgeEventSink, JudgeRequest } from "@ralph-next/evaluation"
+import { type CommandContext, executeCli } from "@ralph/commands"
+import { type JudgeOutput, RecoveryManifestSchema } from "@ralph/domain"
+import type { JudgeBackend, JudgeEventSink, JudgeRequest } from "@ralph/evaluation"
 import {
   buildContextManifest,
   executeRun,
   type RunOptionOverrides,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   appendEvent,
   getCompletionTransaction,
@@ -28,8 +28,8 @@ import {
   upsertRunTask,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph, hashCanonicalValue } from "@ralph-next/prd"
+} from "@ralph/persistence"
+import { compilePrdGraph, hashCanonicalValue } from "@ralph/prd"
 import {
   executeTypedWorkerOperation,
   spawnTypedWorker,
@@ -39,8 +39,8 @@ import {
   type WorkerRole,
   workerCommandCapabilityFingerprint,
   workerExecutableContentHash,
-} from "@ralph-next/supervisor"
-import { ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/supervisor"
+import { ScriptedExecutionBackend } from "@ralph/test-kit"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const VERSION = "0.1.0-s07-worker-resume"
@@ -1298,16 +1298,16 @@ describe("S07.06 auditable workspace recovery", () => {
       },
     })
     expect(inspected.execution.human).toContain(
-      `Recovery inspect: ralph-next status run --run-id ${run.id}`,
+      `Recovery inspect: ralph status run --run-id ${run.id}`,
     )
     expect(inspected.execution.human).toContain(
-      `Recovery continue: ralph-next resume ${run.id} --accept-workspace-changes`,
+      `Recovery continue: ralph resume ${run.id} --accept-workspace-changes`,
     )
     expect(inspected.execution.human).toContain(
-      `Recovery checkpoint: ralph-next checkpoint create --run-id ${run.id}`,
+      `Recovery checkpoint: ralph checkpoint create --run-id ${run.id}`,
     )
     expect(inspected.execution.human).toContain(
-      "Recovery rollback: ralph-next rollback preview <checkpoint-id>",
+      "Recovery rollback: ralph rollback preview <checkpoint-id>",
     )
 
     const recoveryCheckpointResult = await executeCli(

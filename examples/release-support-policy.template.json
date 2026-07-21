@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "product": "ralph-next",
+  "product": "ralph",
   "version": "0.0.0-template",
   "channel": "nightly",
   "matrix": [

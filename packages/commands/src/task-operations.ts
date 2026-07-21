@@ -1,14 +1,14 @@
 import { createHash } from "node:crypto"
 import { lstat, readFile, realpath } from "node:fs/promises"
 import { isAbsolute, relative, resolve, sep } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   appendEvent,
   flushOutbox,
   inspectWorkspace,
   loadEffectiveConfig,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   type CompiledPrdGraph,
   compilePrdGraph,
@@ -16,7 +16,7 @@ import {
   type PrdTask,
   type TaskRef,
   updateTaskMarker,
-} from "@ralph-next/prd"
+} from "@ralph/prd"
 
 const MAX_MANUAL_EVIDENCE_BYTES = 64 * 1_048_576
 
@@ -250,7 +250,7 @@ export async function completeOperationalTask(input: {
       "tasks done requires an initialized Ralph v2 workspace so the override can be audited",
       {
         exitCode: EXIT_CODES.blocked,
-        hint: "Run `ralph-next init`, then repeat the manual completion command.",
+        hint: "Run `ralph init`, then repeat the manual completion command.",
       },
     )
   }

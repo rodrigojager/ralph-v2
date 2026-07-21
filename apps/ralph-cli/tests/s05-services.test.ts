@@ -1,29 +1,29 @@
 import { afterEach, describe, expect, test } from "bun:test"
 
-import { FakeSecretStore, secretInputFromValue } from "@ralph-next/credentials"
+import { FakeSecretStore, secretInputFromValue } from "@ralph/credentials"
 import {
   cloneDefaultConfig,
   type EffectiveConfig,
   type EffectiveRunOptions,
   type RoleProfileConfig,
   RoleProfileConfigSchema,
-} from "@ralph-next/domain"
-import type { JudgeRequest } from "@ralph-next/evaluation"
-import { JUDGE_OUTPUT_JSON_ADAPTER_ID } from "@ralph-next/model-drivers"
-import type { FetchLike } from "@ralph-next/openai-driver"
+} from "@ralph/domain"
+import type { JudgeRequest } from "@ralph/evaluation"
+import { JUDGE_OUTPUT_JSON_ADAPTER_ID } from "@ralph/model-drivers"
+import type { FetchLike } from "@ralph/openai-driver"
 import type {
   BackendEvent,
   ExecutionChannel,
   ExecutionRequest,
   ExecutionToolResult,
-} from "@ralph-next/orchestration"
-import { initializeWorkspace } from "@ralph-next/persistence"
+} from "@ralph/orchestration"
+import { initializeWorkspace } from "@ralph/persistence"
 import {
   CachedModelCatalog,
   createCuratedCatalogSource,
   InMemoryModelCatalogCache,
   type ProviderToolCall,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import { createTestDirectory, removeTestDirectory } from "../../../tests/helpers/temp-directory"
 import { createS04Services } from "../src/s04-services"
 import { createS05Services } from "../src/s05-services"

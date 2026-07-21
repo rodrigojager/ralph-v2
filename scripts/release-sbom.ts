@@ -323,7 +323,7 @@ export async function createReleaseSbom(input: {
     workspacesByName.set(workspace.name, workspace)
   }
   const workspacesFromSource = await sourceWorkspaces(projectRoot)
-  const workspaceQueue = ["ralph-next", "@ralph-next/launcher"]
+  const workspaceQueue = ["ralph", "@ralph/launcher"]
   const visitedWorkspaces = new Set<string>()
   const requiredExternalNames = new Set<string>()
   const optionalExternalNames = new Set<string>()
@@ -471,7 +471,7 @@ export async function createReleaseSbom(input: {
     : undefined
   if (bunRuntime) components.push(bunRuntime)
 
-  const applicationName = input.applicationName ?? "ralph-next"
+  const applicationName = input.applicationName ?? "ralph"
   const applicationRef = npmPurl(applicationName, input.version)
   const application: CycloneDxComponent = {
     type: "application",

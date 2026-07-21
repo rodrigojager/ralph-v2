@@ -3,16 +3,16 @@ import { createHash } from "node:crypto"
 import { cp, readFile, rename, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 
-import { type CommandContext, executeCli, runCli } from "@ralph-next/commands"
+import { type CommandContext, executeCli, runCli } from "@ralph/commands"
 import {
   commandOperationReportHash,
   type JudgeOutput,
   type JudgmentCommandReport,
   JudgmentCommandReportSchema,
   type VerificationCommandReport,
-} from "@ralph-next/domain"
-import type { JudgeBackend, JudgeEventSink, JudgeRequest } from "@ralph-next/evaluation"
-import { materializeAdHocExecutionSource } from "@ralph-next/orchestration"
+} from "@ralph/domain"
+import type { JudgeBackend, JudgeEventSink, JudgeRequest } from "@ralph/evaluation"
+import { materializeAdHocExecutionSource } from "@ralph/orchestration"
 import {
   finishCommandOperation,
   getEvidenceBundle,
@@ -24,8 +24,8 @@ import {
   readEvents,
   readEvidenceBundleObject,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/persistence"
+import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph/test-kit"
 import { stringify } from "yaml"
 
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"

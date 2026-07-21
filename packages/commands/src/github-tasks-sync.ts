@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto"
 import { lstat, readFile } from "node:fs/promises"
 import { basename, dirname, relative, resolve, sep } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
-import { canonicalDirectory, writeFileAtomic } from "@ralph-next/persistence"
-import { parsePrdSource } from "@ralph-next/prd"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
+import { canonicalDirectory, writeFileAtomic } from "@ralph/persistence"
+import { parsePrdSource } from "@ralph/prd"
 
 export type GitHubIssueState = "open" | "closed" | "all"
 
@@ -152,7 +152,7 @@ export function createGitHubIssueCommandService(options: {
             redirect: "error",
             headers: {
               Accept: "application/vnd.github+json",
-              "User-Agent": "ralph-next-tasks-sync",
+              "User-Agent": "ralph-tasks-sync",
               "X-GitHub-Api-Version": "2022-11-28",
               ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },

@@ -1,15 +1,15 @@
 {
-  "name": "@ralph-next/test-kit",
+  "name": "@ralph/test-kit",
   "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@ralph-next/credentials": "workspace:*",
-    "@ralph-next/domain": "workspace:*",
-    "@ralph-next/evaluation": "workspace:*",
-    "@ralph-next/orchestration": "workspace:*",
-    "@ralph-next/providers": "workspace:*",
-    "@ralph-next/supervisor": "workspace:*"
+    "@ralph/credentials": "workspace:*",
+    "@ralph/domain": "workspace:*",
+    "@ralph/evaluation": "workspace:*",
+    "@ralph/orchestration": "workspace:*",
+    "@ralph/providers": "workspace:*",
+    "@ralph/supervisor": "workspace:*"
   }
 }

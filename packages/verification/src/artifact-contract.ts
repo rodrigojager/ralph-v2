@@ -1,5 +1,5 @@
 import { lstat } from "node:fs/promises"
-import type { VerificationSpec } from "@ralph-next/prd"
+import type { VerificationSpec } from "@ralph/prd"
 import { resolveSafeWorkspaceTarget } from "./path-safety"
 import { validateFileSha256, validateJsonDocumentAgainstSchema } from "./schema-gate"
 

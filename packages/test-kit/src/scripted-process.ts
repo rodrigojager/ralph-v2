@@ -1,5 +1,5 @@
-import { type ExecutorOutcome, ExecutorOutcomeSchema } from "@ralph-next/domain"
-import { type ProviderToolCall, ProviderToolCallSchema } from "@ralph-next/providers"
+import { type ExecutorOutcome, ExecutorOutcomeSchema } from "@ralph/domain"
+import { type ProviderToolCall, ProviderToolCallSchema } from "@ralph/providers"
 import type {
   PidLiveness,
   ProcessIdentity,
@@ -8,7 +8,7 @@ import type {
   ProcessSupervisor,
   SupervisedProcessHandle,
   SupervisedProcessRequest,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 
 export type ScriptedProcessOutput = {
   stream: "stdout" | "stderr"

@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { ExecutorOutcomeSchema, type JudgeOutput } from "@ralph-next/domain"
-import type { JudgeBackend, JudgeEventSink, JudgeRequest } from "@ralph-next/evaluation"
+import { ExecutorOutcomeSchema, type JudgeOutput } from "@ralph/domain"
+import type { JudgeBackend, JudgeEventSink, JudgeRequest } from "@ralph/evaluation"
 import {
   type BackendCapabilities,
   type CallHandle,
@@ -14,7 +14,7 @@ import {
   executeRun,
   type RunOptionOverrides,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   getEvidenceBundle,
   initializeWorkspace,
@@ -30,10 +30,10 @@ import {
   readEvents,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
-import type { ProviderToolCall } from "@ralph-next/providers"
-import { ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
+import type { ProviderToolCall } from "@ralph/providers"
+import { ScriptedExecutionBackend } from "@ralph/test-kit"
 import { createRalphExecutionToolPort } from "../../apps/ralph-cli/src/tool-execution-port"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 

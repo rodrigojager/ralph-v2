@@ -26,7 +26,9 @@ Os fluxos úteis do Ralph atual têm equivalente, alias ou decisão explícita. 
 - [x] S10.06 implementar `context inspect|export|rotate`, `rules`, `checkpoint(s)`, `clean` seguro, `doctor`, `about`, `version`, `lang`, `install` e `update` conforme estágio, com preview para mutações e capability diagnostics.
 - [x] S10.07 construir `migrate inspect` read-only para PRD/config/state/adapters antigos, mapeando options, secret refs, active state e itens não suportados em report human/JSON sem tocar origem/destino.
 - [x] S10.08 implementar `migrate apply` para destino v2 separado com backup, temp writes, validation e rollback manifesto; não converter run ativo como concluído e selecionar a primeira task não finalizada somente após markers validados.
-- [x] S10.09 provar coexistência `ralph` antigo/`ralph-next`, diretórios/configs/credential refs separados, paths com espaços, aliases e rollback; adicionar guia com comandos exatos e aviso antes da troca de nome.
+- [x] S10.09 provar comparação por paths absolutos entre Ralph antigo e v2, diretórios/configs/
+  credential refs separados, paths com espaços, aliases de comandos internos e rollback; adicionar
+  guia com remoção explícita da instalação antiga antes de publicar a v2 como `ralph`.
 - [x] S10.10 executar compatibility harness completo, classificar cada divergência, corrigir regressões obrigatórias e publicar matriz atualizada com evidência real; manter opções de skips/fast/no-change/retry/fail-fast/parallel/Git/security existentes.
 
 ## Critérios de conclusão
@@ -35,20 +37,21 @@ Os fluxos úteis do Ralph atual têm equivalente, alias ou decisão explícita. 
 - Help, JSON e exit codes são estáveis e testados.
 - Migração começa por inspect e não sobrescreve origem.
 - Secrets antigos viram referências, nunca texto copiado para config.
-- Ralph antigo e novo executam lado a lado.
+- Ralph antigo e novo podem ser executados pelo harness por paths absolutos; somente a v2 permanece
+  instalada como `ralph` depois do corte.
 - Toda incompatibilidade restante está explicitamente documentada e aprovada.
 
 ## Verificação mínima
 
 ```text
-ralph-next help --format json
-ralph-next config explain evaluation.threshold --format json
-ralph-next tasks list --format json
-ralph-next doctor --format json
-ralph-next migrate inspect <legacy-workspace> --format json
-ralph-next migrate apply <legacy-workspace> --destination <temp-workspace>
-ralph-next migrate rollback <rollback-manifest.json> --dry-run --format json
-ralph-next migrate rollback <rollback-manifest.json> --confirm-plan-hash <sha256> --format json
+ralph help --format json
+ralph config explain evaluation.threshold --format json
+ralph tasks list --format json
+ralph doctor --format json
+ralph migrate inspect <legacy-workspace> --format json
+ralph migrate apply <legacy-workspace> --destination <temp-workspace>
+ralph migrate rollback <rollback-manifest.json> --dry-run --format json
+ralph migrate rollback <rollback-manifest.json> --confirm-plan-hash <sha256> --format json
 ```
 
 ## Estado de implementação e validação local
@@ -119,7 +122,7 @@ ralph-next migrate rollback <rollback-manifest.json> --confirm-plan-hash <sha256
   slice;
 - S10.09 e S10.10 foram fechadas por `docs/compatibility/s10-report.{json,md}`: execução de
   `2026-07-20T15:37:43.103Z`, 91/91 checks, zero regressions e zero surface regressions, com
-  `ralph 0.2.0` e `ralph-next 0.1.0-beta.2` reais, source `f757b820...`, binário next
+  `ralph 0.2.0` e `ralph 0.1.0-beta.2` reais, source `f757b820...`, binário next
   `8c7ef683...` e ambos os binários imutáveis. Coexistência, mensagens reais PT/EN do legado,
   inspect/apply/rollback e suites vinculadas ficaram verdes. A matriz multiplataforma,
   provider/auth real e install de release continuam em S11/S12 e não são inflados por essa prova

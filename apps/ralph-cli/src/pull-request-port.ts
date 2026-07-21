@@ -1,9 +1,9 @@
 import { constants } from "node:fs"
 import { lstat, open, realpath } from "node:fs/promises"
 import { dirname, isAbsolute, resolve } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
-import { createPullRequestRequestBinding, type PullRequestPort } from "@ralph-next/orchestration"
-import { BunProcessSupervisor } from "@ralph-next/supervisor"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
+import { createPullRequestRequestBinding, type PullRequestPort } from "@ralph/orchestration"
+import { BunProcessSupervisor } from "@ralph/supervisor"
 import { z } from "zod"
 
 const MAXIMUM_ADAPTER_CONFIG_BYTES = 1_048_576

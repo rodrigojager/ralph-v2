@@ -1,4 +1,4 @@
-import type { CommandSpec, VerificationSpec } from "@ralph-next/prd"
+import type { CommandSpec, VerificationSpec } from "@ralph/prd"
 import type { GateExecutionContext, GateExecutionOutcome } from "./gate-contracts"
 import { pathWithinPortableScope, portablePath } from "./path-safety"
 import { runStructuredCommand } from "./process"

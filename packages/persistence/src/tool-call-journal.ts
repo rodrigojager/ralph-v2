@@ -1,7 +1,7 @@
 import type { Database } from "bun:sqlite"
 import { createHash } from "node:crypto"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
-import { redactValue } from "@ralph-next/telemetry"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
+import { redactValue } from "@ralph/telemetry"
 import { appendEventInTransaction, persistenceSecretValues, withLedger } from "./ledger"
 
 export const TOOL_CALL_RISKS = [

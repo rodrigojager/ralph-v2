@@ -1,4 +1,4 @@
-import { RalphError } from "@ralph-next/domain"
+import { RalphError } from "@ralph/domain"
 import type {
   ModelInvokeOptions,
   OpenAiEvent,
@@ -6,8 +6,8 @@ import type {
   OpenAiModelRequest,
   OpenAiOpaqueReasoningItem,
   ResponseConsumption,
-} from "@ralph-next/openai-driver"
-import { OpenAiDriverError } from "@ralph-next/openai-driver"
+} from "@ralph/openai-driver"
+import { OpenAiDriverError } from "@ralph/openai-driver"
 import {
   type ModelAccess,
   type ModelInfo,
@@ -21,8 +21,8 @@ import {
   ProviderModelRequestSchema,
   type ProviderModelResult,
   ProviderModelResultSchema,
-} from "@ralph-next/providers"
-import { redactText, redactValue } from "@ralph-next/telemetry"
+} from "@ralph/providers"
+import { redactText, redactValue } from "@ralph/telemetry"
 
 import { OpenAiRawCaptureRedactor } from "./incremental-redactor"
 import { OpenAiStrictToolCodec } from "./openai-strict-tools"

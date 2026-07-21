@@ -12,8 +12,8 @@ import {
   SandboxSessionRecordSchema,
   type SandboxSpec,
   SandboxSpecSchema,
-} from "@ralph-next/domain"
-import { createSandboxSessionRecord, transitionSandboxSessionRecord } from "@ralph-next/persistence"
+} from "@ralph/domain"
+import { createSandboxSessionRecord, transitionSandboxSessionRecord } from "@ralph/persistence"
 import { assertAutomaticCommandIsNonDestructive } from "./security-runtime"
 
 export type SandboxCommandResult = {

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { open, readFile, rm, stat } from "node:fs/promises"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
-import { writeFileAtomic } from "@ralph-next/persistence"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
+import { writeFileAtomic } from "@ralph/persistence"
 import {
   type MarkerUpdate,
   MarkerUpdateSchema,

@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite"
 import { afterEach, describe, expect, test } from "bun:test"
 import { mkdir } from "node:fs/promises"
 import { dirname } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   ATTEMPT_EFFECTIVE_OPTIONS_MIGRATION_SQL,
   createSqliteToolCallJournal,
@@ -23,7 +23,7 @@ import {
   TOOL_CALL_JOURNAL_MIGRATION_SQL,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const NOW = "2026-07-18T14:00:00.000Z"

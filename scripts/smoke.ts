@@ -2,18 +2,10 @@ import { chmod, copyFile, mkdir, mkdtemp, readdir, readFile, rm } from "node:fs/
 import { tmpdir } from "node:os"
 import { basename, join, resolve } from "node:path"
 import { isDeepStrictEqual } from "node:util"
-import { CredentialRefSchema, CredentialStatusSchema } from "@ralph-next/credentials"
-import {
-  CommandResultSchema,
-  RoleProfileConfigSchema,
-  WorkspaceStatusSchema,
-} from "@ralph-next/domain"
-import {
-  FallbackPolicySchema,
-  ModelParametersSchema,
-  RoleProfileSchema,
-} from "@ralph-next/providers"
-import { secretValuesFromEnvironment } from "@ralph-next/telemetry"
+import { CredentialRefSchema, CredentialStatusSchema } from "@ralph/credentials"
+import { CommandResultSchema, RoleProfileConfigSchema, WorkspaceStatusSchema } from "@ralph/domain"
+import { FallbackPolicySchema, ModelParametersSchema, RoleProfileSchema } from "@ralph/providers"
+import { secretValuesFromEnvironment } from "@ralph/telemetry"
 import { z } from "zod"
 import { nativeTarget, validateStandaloneArtifact } from "./build-artifact"
 import {
@@ -587,7 +579,7 @@ function binaryFromArgs(argv: readonly string[], projectRoot: string): string {
     return resolve(path)
   }
   const extension = process.platform === "win32" ? ".exe" : ""
-  return join(projectRoot, "dist", "standalone", nativeTarget(), `ralph-next${extension}`)
+  return join(projectRoot, "dist", "standalone", nativeTarget(), `ralph${extension}`)
 }
 
 async function observe(

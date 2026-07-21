@@ -1,9 +1,5 @@
-import type { OAuthClock } from "@ralph-next/credentials"
-import type {
-  WatchdogClock,
-  WatchdogScheduledTask,
-  WatchdogScheduler,
-} from "@ralph-next/supervisor"
+import type { OAuthClock } from "@ralph/credentials"
+import type { WatchdogClock, WatchdogScheduledTask, WatchdogScheduler } from "@ralph/supervisor"
 
 export type ControlledTestClockOptions = {
   monotonicMs?: number

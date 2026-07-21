@@ -1,5 +1,5 @@
-import type { JudgeKind } from "@ralph-next/evaluation"
-import { ProviderEventSchema } from "@ralph-next/providers"
+import type { JudgeKind } from "@ralph/evaluation"
+import { ProviderEventSchema } from "@ralph/providers"
 
 const MAX_OUTPUT_REFERENCES = 64
 const MAX_OUTPUT_REFERENCE_LENGTH = 32_768

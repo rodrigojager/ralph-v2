@@ -1,10 +1,6 @@
 import { describe, expect, test } from "bun:test"
-import { type ProviderToolDefinition, ProviderToolDefinitionSchema } from "@ralph-next/providers"
-import {
-  createBuiltinToolRegistry,
-  type ToolDefinition,
-  ToolPolicySchema,
-} from "@ralph-next/tool-host"
+import { type ProviderToolDefinition, ProviderToolDefinitionSchema } from "@ralph/providers"
+import { createBuiltinToolRegistry, type ToolDefinition, ToolPolicySchema } from "@ralph/tool-host"
 
 import { OpenAiStrictToolCodec, validateOpenAiStrictSchema } from "../src/index"
 

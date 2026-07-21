@@ -27,7 +27,7 @@ import {
   resolveEffectiveRunOptions,
   runSandboxCommand,
   taskResourceClaim,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   getEvidenceBundle,
   initializeWorkspace,
@@ -42,10 +42,10 @@ import {
   loadEffectiveConfig,
   readEvents,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { type CompiledPrdGraph, compilePrdGraph, type TaskRef } from "@ralph-next/prd"
-import { BunProcessSupervisor } from "@ralph-next/supervisor"
-import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/persistence"
+import { type CompiledPrdGraph, compilePrdGraph, type TaskRef } from "@ralph/prd"
+import { BunProcessSupervisor } from "@ralph/supervisor"
+import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph/test-kit"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 // These black-box recovery cases execute several nested runs and filesystem

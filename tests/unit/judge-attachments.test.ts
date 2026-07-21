@@ -8,10 +8,10 @@ import {
   type EvidenceBundle,
   EvidenceBundleSchema,
   JudgeRubricSchema,
-} from "@ralph-next/domain"
-import { buildJudgeEvaluationBundle } from "@ralph-next/evaluation"
-import { materializeJudgeTextAttachments } from "@ralph-next/orchestration"
-import { type FrozenContent, persistContentAddressedBytes } from "@ralph-next/verification"
+} from "@ralph/domain"
+import { buildJudgeEvaluationBundle } from "@ralph/evaluation"
+import { materializeJudgeTextAttachments } from "@ralph/orchestration"
+import { type FrozenContent, persistContentAddressedBytes } from "@ralph/verification"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const HASH = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"

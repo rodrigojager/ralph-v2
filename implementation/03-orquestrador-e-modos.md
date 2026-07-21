@@ -42,10 +42,10 @@ Uma fixture com PRD e fake executor é processada do início ao fim: o Ralph esc
 ## Verificação mínima
 
 ```text
-ralph-next once --prd <fixture> --executor-profile fake
-ralph-next loop --prd <fixture-two-tasks> --executor-profile fake
-ralph-next run --wiggum --max-iterations 2 --prd <fixture>
-ralph-next report last --format json
+ralph once --prd <fixture> --executor-profile fake
+ralph loop --prd <fixture-two-tasks> --executor-profile fake
+ralph run --wiggum --max-iterations 2 --prd <fixture>
+ralph report last --format json
 ```
 
 Os comandos acima descrevem a composition root de teste do subplano. O binário normal não registra `fake`; o E2E usa o perfil isolado `fixture-executor` e o mesmo command/orchestration core do produto.

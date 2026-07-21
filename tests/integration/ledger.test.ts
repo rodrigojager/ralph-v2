@@ -8,8 +8,8 @@ import {
   registerLedgerRedactionSecrets,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { EventEnvelopeSchema, replayWorkspaceEvents } from "@ralph-next/telemetry"
+} from "@ralph/persistence"
+import { EventEnvelopeSchema, replayWorkspaceEvents } from "@ralph/telemetry"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const temporaryDirectories: string[] = []

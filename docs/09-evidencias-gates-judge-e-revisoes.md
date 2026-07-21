@@ -73,7 +73,7 @@ Um gate marcado obrigatório no PRD não pode ser ignorado por default global. O
 
 ## Operações standalone de evidência
 
-`ralph-next verify` e `ralph-next judge` reutilizam os contratos deste capítulo sem fingir que são
+`ralph verify` e `ralph judge` reutilizam os contratos deste capítulo sem fingir que são
 attempts novas do executor:
 
 - `verify` exige evidence de execução persistida, recupera o baseline durável da task, captura o

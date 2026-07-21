@@ -1,18 +1,18 @@
 {
-  "name": "@ralph-next/orchestration",
+  "name": "@ralph/orchestration",
   "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@ralph-next/domain": "workspace:*",
-    "@ralph-next/evaluation": "workspace:*",
-    "@ralph-next/persistence": "workspace:*",
-    "@ralph-next/prd": "workspace:*",
-    "@ralph-next/providers": "workspace:*",
-    "@ralph-next/supervisor": "workspace:*",
-    "@ralph-next/telemetry": "workspace:*",
-    "@ralph-next/verification": "workspace:*",
+    "@ralph/domain": "workspace:*",
+    "@ralph/evaluation": "workspace:*",
+    "@ralph/persistence": "workspace:*",
+    "@ralph/prd": "workspace:*",
+    "@ralph/providers": "workspace:*",
+    "@ralph/supervisor": "workspace:*",
+    "@ralph/telemetry": "workspace:*",
+    "@ralph/verification": "workspace:*",
     "zod": "4.4.3"
   }
 }

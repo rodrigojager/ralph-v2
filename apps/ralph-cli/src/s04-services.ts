@@ -7,7 +7,7 @@ import type {
   ModelSmokeCommandRequest,
   ModelSmokeCommandService,
   ModelSmokeServiceResult,
-} from "@ralph-next/commands"
+} from "@ralph/commands"
 import {
   type BrowserOpener,
   type CredentialConnectionBroker,
@@ -34,8 +34,8 @@ import {
   secretInputFromValue,
   startBrowserOAuth,
   systemBrowserOpener,
-} from "@ralph-next/credentials"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+} from "@ralph/credentials"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   CHATGPT_OAUTH_CALLBACK_PORT,
   CHATGPT_OAUTH_ORIGINATOR,
@@ -55,13 +55,13 @@ import {
   pollDeviceAuthorization,
   refreshAccessToken,
   startDeviceAuthorization,
-} from "@ralph-next/openai-driver"
+} from "@ralph/openai-driver"
 import {
   applyDiagnosticRawRetention,
   globalConfigPath,
   rawPersistenceEnabled,
   resolveDiagnosticRawRetention,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   type CatalogResolution,
   CatalogResolutionSchema,
@@ -78,7 +78,7 @@ import {
   type TokenUsage,
   TokenUsageSchema,
   type UsageMetric,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import {
   acquireFilesystemLease,
   applyPriceSnapshot,
@@ -86,7 +86,7 @@ import {
   type FilesystemLease,
   openTrustedFile,
   readTrustedFile,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 import { createTerminalProfileForm, type TerminalProfileFormOptions } from "./profile-form"
 
 const CHATGPT_SCOPES = ["openid", "profile", "email", "offline_access"] as const

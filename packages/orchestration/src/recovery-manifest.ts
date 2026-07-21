@@ -1,14 +1,14 @@
 import { join } from "node:path"
-import { type RecoveryManifest, RecoveryManifestSchema } from "@ralph-next/domain"
-import type { RunLayout } from "@ralph-next/persistence"
-import { hashCanonicalValue } from "@ralph-next/prd"
-import { processShutdownRegistry } from "@ralph-next/supervisor"
+import { type RecoveryManifest, RecoveryManifestSchema } from "@ralph/domain"
+import type { RunLayout } from "@ralph/persistence"
+import { hashCanonicalValue } from "@ralph/prd"
+import { processShutdownRegistry } from "@ralph/supervisor"
 import {
   compareWorkspaceBaselines,
   persistContentAddressedBytes,
   type WorkspaceBaseline,
   type WorkspaceChanges,
-} from "@ralph-next/verification"
+} from "@ralph/verification"
 
 export const DEFAULT_MAX_RECOVERY_FILES = 512
 export const DEFAULT_MAX_RECOVERY_MANIFEST_BYTES = 224 * 1_024

@@ -2,7 +2,7 @@
 
 ## Estado deste guia
 
-Este guia descreve a superfície pretendida de `ralph-next` e separa três estados:
+Este guia descreve a superfície pretendida de `ralph` e separa três estados:
 
 - **implementado estaticamente**: existe composição no source, mas sua execução ainda precisa ser
   validada;
@@ -10,8 +10,8 @@ Este guia descreve a superfície pretendida de `ralph-next` e separa três estad
 - **opt-in real**: exige conta, credencial, quota ou infraestrutura externa e nunca é inferido de um
   mock.
 
-Enquanto a validação executável e o gate beta não forem concluídos, use o nome `ralph-next`. O
-comando não substitui o Ralph clássico, não apaga sua instalação e não cria o alias `ralph`.
+O nome do comando é sempre `ralph`. Como a versão anterior usa o mesmo nome, remova sua instalação
+explicitamente antes de instalar a v2; o Ralph não apaga automaticamente um executável externo.
 
 Todos os exemplos de CLI abaixo mantêm cada comando em uma única linha. Assim, podem ser copiados
 sem trocar o caractere de continuação entre PowerShell, `cmd.exe` e shells POSIX; substitua apenas os
@@ -32,7 +32,7 @@ Uma execução usa:
 5. opções de execução persistidas de forma imutável na run;
 6. o mesmo event ledger para headless, TUI, attach, replay, logs e reports.
 
-## 2. Instalação lado a lado
+## 2. Instalação e substituição do CLI anterior
 
 ### Checkout de desenvolvimento
 
@@ -41,9 +41,9 @@ produto; os comandos de teste/build pertencem ao guia de desenvolvimento.
 
 ```text
 bun install --frozen-lockfile
-bun run ralph-next -- version
-bun run ralph-next -- help
-bun run ralph-next -- update --check
+bun run ralph -- version
+bun run ralph -- help
+bun run ralph -- update --check
 ```
 
 Uma instalação `dev-checkout` não se autoatualiza. `update --check` deve explicar a origem e indicar
@@ -55,15 +55,15 @@ Uma release standalone usa um launcher estável e versões imutáveis sob um ins
 pretendido é:
 
 ```text
-ralph-next install --manifest <HTTPS-OU-ARQUIVO-LOCAL> --install-root <DIRETORIO> --dry-run
-ralph-next install --manifest <HTTPS-OU-ARQUIVO-LOCAL> --install-root <DIRETORIO>
-ralph-next update --install-root <DIRETORIO> --check
-ralph-next update --install-root <DIRETORIO> --dry-run
-ralph-next update --install-root <DIRETORIO>
-ralph-next rollback --install-root <DIRETORIO> --dry-run
-ralph-next rollback --install-root <DIRETORIO>
-ralph-next uninstall --install-root <DIRETORIO> --dry-run
-ralph-next uninstall --install-root <DIRETORIO>
+ralph install --manifest <HTTPS-OU-ARQUIVO-LOCAL> --install-root <DIRETORIO> --dry-run
+ralph install --manifest <HTTPS-OU-ARQUIVO-LOCAL> --install-root <DIRETORIO>
+ralph update --install-root <DIRETORIO> --check
+ralph update --install-root <DIRETORIO> --dry-run
+ralph update --install-root <DIRETORIO>
+ralph rollback --install-root <DIRETORIO> --dry-run
+ralph rollback --install-root <DIRETORIO>
+ralph uninstall --install-root <DIRETORIO> --dry-run
+ralph uninstall --install-root <DIRETORIO>
 ```
 
 `rollback preview|apply` pertence ao rollback de checkpoint/workspace descrito na seção 12; sem
@@ -77,41 +77,29 @@ de trocar `current.json`. Ele não sobrescreve a engine em execução.
 
 ### npm
 
-O pacote npm, quando publicado, preserva exclusivamente o bin `ralph-next`. O próprio package manager continua
-responsável por atomicidade e rollback. O CLI não executa um update npm silencioso e nunca promove
-nem instala implicitamente o alias `ralph`. O wrapper distribuído identifica o nome do pacote; por isso
-`ralph-next update --check` devolve uma orientação fail-closed para o package manager antes de pedir
+O pacote npm, quando publicado, preserva exclusivamente o bin `ralph`. O próprio package manager continua
+responsável por atomicidade e rollback. O CLI não executa um update npm silencioso. O wrapper
+distribuído identifica o nome do pacote; por isso
+`ralph update --check` devolve uma orientação fail-closed para o package manager antes de pedir
 um install root, mas não executa essa orientação. Como o tarball pode ter sido instalado por npm,
 pnpm ou Bun, o Ralph não escolhe um deles por heurística nem sugere sintaxe quando o gerenciador é
 desconhecido: você deve usar a mesma ferramenta que possui a instalação atual.
 
-### Alias standalone opcional depois do beta
+### Substituir uma instalação anterior que já usa `ralph`
 
-Durante o beta, continue usando `ralph-next`; status e preview do alias não mutam arquivos:
-
-```text
-ralph-next alias ralph status --install-root <DIRETORIO>
-ralph-next alias ralph install --install-root <DIRETORIO> --dry-run
-```
-
-Somente depois do gate e com receipt corrente `stable`, o usuário pode reapresentar o `Plan SHA-256`
-exato em `--confirm-plan-hash`. O apply falha nos demais channels, não altera `PATH` e não substitui
-uma colisão. Remoção também exige preview/confirm e deve ser iniciada pelo `ralph-next[.exe]` absoluto.
-Se um crash deixar uma quarentena de remoção receipt-bound, `status` a expõe como
-`remove-recovery-required`, o hash do novo preview inclui seus paths/hashes e uma instalação nova
-permanece bloqueada até o remove confirmado concluir. Quarentena inválida não é adotada nem apagada.
-O mesmo preview expõe um receipt de controle `N+1` deixado antes da troca de `current.json`; o retry
-retoma exatamente esse receipt, enquanto o caminho inverso só o descarta depois de reconstrução e
-SHA-256 idênticos.
-O protocolo copiável, a prova de resolução do comando e o retorno exato ao Ralph clássico estão em
-[28 — Drills de release, beta, alias e handoff](28-release-drills-beta-alias-e-handoff-s12.md).
+Antes de instalar a v2, inventarie todas as resoluções do comando com `Get-Command ralph -All` e
+`where.exe ralph` no Windows, ou `type -a ralph` no POSIX. Registre o path e a versão da instalação
+anterior, remova-a com o mesmo instalador/package manager que a criou e só então instale a v2.
+Depois, repita a inspeção e execute `ralph version`; não considere a troca concluída se mais de uma
+origem inesperada continuar precedendo o novo binário. O protocolo copiável está em
+[28 — Drills de release, beta e handoff](28-release-drills-beta-e-handoff-s12.md).
 
 ## 3. Criar e reconhecer um workspace
 
 ```text
-ralph-next init --workspace <PROJETO> --format json
-ralph-next status --workspace <PROJETO>
-ralph-next doctor --workspace <PROJETO>
+ralph init --workspace <PROJETO> --format json
+ralph status --workspace <PROJETO>
+ralph doctor --workspace <PROJETO>
 ```
 
 `setup` é alias de `init`. Um `.ralph` não identificado ou legado é uma fronteira: `init --force`
@@ -134,19 +122,19 @@ especificação ou PRD legado e deve escrever antes da execução:
 O runtime do Ralph nunca cria ou expande PRDs. Confira o resultado com:
 
 ```text
-ralph-next prd validate <PRD-ROOT> --recursive --strict
-ralph-next prd inspect <PRD-ROOT> --recursive --strict --format json
-ralph-next tasks list --prd <PRD-ROOT>
-ralph-next tasks next --prd <PRD-ROOT>
+ralph prd validate <PRD-ROOT> --recursive --strict
+ralph prd inspect <PRD-ROOT> --recursive --strict --format json
+ralph tasks list --prd <PRD-ROOT>
+ralph tasks next --prd <PRD-ROOT>
 ```
 
 PRDs clássicos são aceitos apenas pelas superfícies de compatibilidade/migração. Prefira gerar outro
 arquivo e revisar o relatório:
 
 ```text
-ralph-next prd validate <PRD-LEGADO>
-ralph-next prd migrate <PRD-LEGADO> --output <PRD-V2>
-ralph-next prd validate <PRD-V2> --recursive --strict
+ralph prd validate <PRD-LEGADO>
+ralph prd migrate <PRD-LEGADO> --output <PRD-V2>
+ralph prd validate <PRD-V2> --recursive --strict
 ```
 
 ## 5. Configurar executor e judge independentemente
@@ -154,10 +142,10 @@ ralph-next prd validate <PRD-V2> --recursive --strict
 ### Descobrir providers e modelos
 
 ```text
-ralph-next providers list
-ralph-next providers inspect <ID>
-ralph-next models list --provider <ID>
-ralph-next models inspect <PROVIDER>/<MODEL>
+ralph providers list
+ralph providers inspect <ID>
+ralph models list --provider <ID>
+ralph models inspect <PROVIDER>/<MODEL>
 ```
 
 Catálogo não equivale a driver disponível. O status do provider/model informa se há execução
@@ -168,15 +156,15 @@ embutida, apenas metadata ou suporte ainda desconhecido.
 Nunca passe o valor da chave na linha de comando.
 
 ```text
-<LEITURA-SEGURA-DA-CHAVE> | ralph-next auth connect <ID> --method api-key --secret-stdin --label <NOME>
-ralph-next auth list
-ralph-next auth status <REF>
+<LEITURA-SEGURA-DA-CHAVE> | ralph auth connect <ID> --method api-key --secret-stdin --label <NOME>
+ralph auth list
+ralph auth status <REF>
 ```
 
 Para variável de ambiente, persista somente o nome:
 
 ```text
-ralph-next auth connect <ID> --method environment --environment <NOME_DA_VARIAVEL> --label <NOME>
+ralph auth connect <ID> --method environment --environment <NOME_DA_VARIAVEL> --label <NOME>
 ```
 
 ### Conta ChatGPT para Codex
@@ -185,8 +173,8 @@ Quando o snapshot protocolar estiver elegível, o fluxo de conta é embutido e n
 o executável `codex`:
 
 ```text
-ralph-next auth connect openai --method oauth-browser
-ralph-next auth connect openai --method device-code --headless
+ralph auth connect openai --method oauth-browser
+ralph auth connect openai --method device-code --headless
 ```
 
 Suporte real a Plus/Pro só pode ser alegado depois de smoke opt-in com conta elegível. Tokens ficam
@@ -195,11 +183,11 @@ no credential store do sistema; config e logs carregam apenas referências redig
 ### Perfis embutidos
 
 ```text
-ralph-next profiles configure executor-main --role executor --backend embedded --provider openai --model <MODELO> --credential <REF> --scope workspace
-ralph-next profiles configure judge-main --role judge --backend embedded --provider <PROVIDER> --model <MODELO> --credential <REF> --scope global
+ralph profiles configure executor-main --role executor --backend embedded --provider openai --model <MODELO> --credential <REF> --scope workspace
+ralph profiles configure judge-main --role judge --backend embedded --provider <PROVIDER> --model <MODELO> --credential <REF> --scope global
 
-ralph-next profiles inspect executor-main
-ralph-next profiles inspect judge-main
+ralph profiles inspect executor-main
+ralph profiles inspect judge-main
 ```
 
 Executor e judge podem usar providers, modelos, credenciais, variantes e fallbacks diferentes.
@@ -214,7 +202,7 @@ O backend externo é opcional. Ele serve para um processo confiado pelo usuário
 subordinado ao command model:
 
 ```text
-ralph-next profiles configure executor-cli --role executor --backend external-cli --cli-executable <EXECUTAVEL> --cli-arg <ARGUMENTO> --cli-adapter protocol --cli-streaming false --cli-tool-calling ralph --cli-cancellation true --cli-usage unavailable --cli-mutation read-only --scope workspace
+ralph profiles configure executor-cli --role executor --backend external-cli --cli-executable <EXECUTAVEL> --cli-arg <ARGUMENTO> --cli-adapter protocol --cli-streaming false --cli-tool-calling ralph --cli-cancellation true --cli-usage unavailable --cli-mutation read-only --scope workspace
 ```
 
 O adapter `protocol` v1 recebe JSON bounded por stdin e devolve um único resultado JSON; por isso
@@ -234,7 +222,7 @@ Mapeie secrets por referência de ambiente, nunca como argumento:
 ### Somente determinística
 
 ```text
-ralph-next run --prd <PRD> --executor-profile executor-main --evaluation deterministic-only
+ralph run --prd <PRD> --executor-profile executor-main --evaluation deterministic-only
 ```
 
 O Ralph usa diff/artifacts/gates aplicáveis e não fabrica nota.
@@ -242,7 +230,7 @@ O Ralph usa diff/artifacts/gates aplicáveis e não fabrica nota.
 ### Self-review opcional
 
 ```text
-ralph-next run --prd <PRD> --executor-profile executor-main --self-review
+ralph run --prd <PRD> --executor-profile executor-main --self-review
 ```
 
 A revisão é uma nova chamada read-only com o mesmo schema/rubrica do judge, não a mensagem de
@@ -251,7 +239,7 @@ conclusão do executor.
 ### Judge externo independente
 
 ```text
-ralph-next run --prd <PRD> --executor-profile executor-main --judge-profile judge-main --evaluation external --judge-threshold 85 --judge-max-revisions 2 --judge-call-retries 2 --judge-exhausted manual-review
+ralph run --prd <PRD> --executor-profile executor-main --judge-profile judge-main --evaluation external --judge-threshold 85 --judge-max-revisions 2 --judge-call-retries 2 --judge-exhausted manual-review
 ```
 
 O judge devolve score 0–100, pontos adequados, problemas/ausências e findings. Threshold, retries de
@@ -264,18 +252,18 @@ Quando for preciso repetir somente a prova determinística, sem chamar executor 
 marker, selecione exatamente uma evidência persistida:
 
 ```text
-ralph-next verify --run-id <RUN_ID> --task <DOCUMENT/TASK>
-ralph-next verify --attempt-id <ATTEMPT_ID>
-ralph-next verify --evidence-bundle-id <EVIDENCE_BUNDLE_ID>
+ralph verify --run-id <RUN_ID> --task <DOCUMENT/TASK>
+ralph verify --attempt-id <ATTEMPT_ID>
+ralph verify --evidence-bundle-id <EVIDENCE_BUNDLE_ID>
 ```
 
 O `judge` standalone também é read-only. Ele pode avaliar a evidência de uma attempt/bundle ou a
 evidência nova produzida por uma operação `verify` concluída:
 
 ```text
-ralph-next judge --evidence-bundle-id <EVIDENCE_BUNDLE_ID> --evaluation external --judge-profile judge-main
-ralph-next judge --verification-id <VERIFY_OPERATION_ID> --evaluation external --judge-profile judge-main
-ralph-next judge --attempt-id <ATTEMPT_ID> --evaluation self --executor-profile executor-main
+ralph judge --evidence-bundle-id <EVIDENCE_BUNDLE_ID> --evaluation external --judge-profile judge-main
+ralph judge --verification-id <VERIFY_OPERATION_ID> --evaluation external --judge-profile judge-main
+ralph judge --attempt-id <ATTEMPT_ID> --evaluation self --executor-profile executor-main
 ```
 
 Seleção por task exige `--run-id`; `--attempt-id`, `--evidence-bundle-id` e `--verification-id`
@@ -285,14 +273,14 @@ revision attempt, não editam código e não concluem marker.
 ### Manual
 
 ```text
-ralph-next run --prd <PRD> --evaluation manual
+ralph run --prd <PRD> --evaluation manual
 ```
 
 Uma task aguardando revisão não é marcada concluída. Overrides manuais exigem motivo e evidência
 auditável:
 
 ```text
-ralph-next tasks done <TASK-ID> --prd <PRD> --evidence <ARQUIVO> --reason <MOTIVO> --force
+ralph tasks done <TASK-ID> --prd <PRD> --evidence <ARQUIVO> --reason <MOTIVO> --force
 ```
 
 ## 7. Formas de execução
@@ -300,17 +288,17 @@ ralph-next tasks done <TASK-ID> --prd <PRD> --evidence <ARQUIVO> --reason <MOTIV
 ### Preview sem modelo ou escrita
 
 ```text
-ralph-next once --prd <PRD> --dry-run
-ralph-next run --prd <PRD> --dry-run
-ralph-next parallel --prd <PRD> --dry-run
+ralph once --prd <PRD> --dry-run
+ralph run --prd <PRD> --dry-run
+ralph parallel --prd <PRD> --dry-run
 ```
 
 ### Uma task
 
 ```text
-ralph-next once --prd <PRD>
-ralph-next once --task <TASK-ID> --prd <PRD>
-ralph-next once "implemente uma pequena funcionalidade ponta a ponta"
+ralph once --prd <PRD>
+ralph once --task <TASK-ID> --prd <PRD>
+ralph once "implemente uma pequena funcionalidade ponta a ponta"
 ```
 
 O argumento posicional de `once` é sempre uma descrição ad hoc. Para selecionar uma task do PRD,
@@ -320,14 +308,14 @@ tentativas, evidência e report, pode ser retomada por `resume`, e nunca cria/ed
 ### Loop bounded
 
 ```text
-ralph-next run --prd <PRD> --max-tasks 5
-ralph-next loop --prd <PRD> --max-tasks 5 --fail-fast
+ralph run --prd <PRD> --max-tasks 5
+ralph loop --prd <PRD> --max-tasks 5 --fail-fast
 ```
 
 ### Ralph Wiggum
 
 ```text
-ralph-next run --prd <PRD> --wiggum --max-iterations 3 --max-model-calls 12
+ralph run --prd <PRD> --wiggum --max-iterations 3 --max-model-calls 12
 ```
 
 Cada iteração relê o PRD somente depois de conferir o hash; ela não restaura memória conversacional
@@ -342,7 +330,7 @@ próxima task.
 ### Paralelo
 
 ```text
-ralph-next parallel --prd <PRD> --max-parallel 3 --max-global-parallel 6 --parallel-group <GRUPO> --git-worktrees --integration merge --fail-fast
+ralph parallel --prd <PRD> --max-parallel 3 --max-global-parallel 6 --parallel-group <GRUPO> --git-worktrees --integration merge --fail-fast
 ```
 
 Somente tasks sem dependência e sem claims conflitantes podem iniciar juntas. Worktrees/branches são
@@ -351,9 +339,9 @@ isolados; conflitos pausam para ação explícita e nunca provocam reset/clean d
 ### Execução rápida e skips
 
 ```text
-ralph-next run --prd <PRD> --skip-tests --skip-lint
-ralph-next run --prd <PRD> --skip-gates <ID>
-ralph-next run --prd <PRD> --fast
+ralph run --prd <PRD> --skip-tests --skip-lint
+ralph run --prd <PRD> --skip-gates <ID>
+ralph run --prd <PRD> --fast
 ```
 
 Skip é pedido auditável, não sucesso. Gate `required` exige também override explícito quando a policy
@@ -362,10 +350,10 @@ permitir e pode produzir no máximo `completed_with_override`.
 ## 8. TUI, popups e headless
 
 ```text
-ralph-next run --prd <PRD> --ui tui
-ralph-next run --prd <PRD> --ui auto
-ralph-next run --prd <PRD> --ui plain
-ralph-next run --prd <PRD> --ui none --format jsonl --non-interactive
+ralph run --prd <PRD> --ui tui
+ralph run --prd <PRD> --ui auto
+ralph run --prd <PRD> --ui plain
+ralph run --prd <PRD> --ui none --format jsonl --non-interactive
 ```
 
 Antes de uma nova run, a TUI pode abrir a paleta de configuração e aplicar um draft ao snapshot que
@@ -404,11 +392,11 @@ somente o nome da variável, nunca seu valor. Revogação exige confirmação. O
 continuam disponíveis:
 
 ```text
-ralph-next auth connect <PROVIDER> --method api-key
-ralph-next auth connect <PROVIDER> --method environment --environment <NOME>
-ralph-next auth revoke <CREDENTIAL-ID>
-ralph-next profiles configure <PROFILE> --scope workspace --clear-credential --clear-variant --clear-parameters --set-default <DEMAIS_OPCOES_DO_PERFIL>
-ralph-next profiles configure <PROFILE> --scope workspace --inherit-profile-field credential --inherit-profile-field parameters
+ralph auth connect <PROVIDER> --method api-key
+ralph auth connect <PROVIDER> --method environment --environment <NOME>
+ralph auth revoke <CREDENTIAL-ID>
+ralph profiles configure <PROFILE> --scope workspace --clear-credential --clear-variant --clear-parameters --set-default <DEMAIS_OPCOES_DO_PERFIL>
+ralph profiles configure <PROFILE> --scope workspace --inherit-profile-field credential --inherit-profile-field parameters
 ```
 
 Cada folha do profile usa a mesma semântica na TUI, TTY e CLI: `inherit` remove somente o override
@@ -431,11 +419,11 @@ trocados por links são rejeitados, e offsets live usam uma LRU de tamanho fixo.
 Para manutenção e transporte headless da configuração:
 
 ```text
-ralph-next config unset evaluation.threshold --scope workspace --dry-run
-ralph-next config edit prepared-config.yaml --scope workspace --non-interactive --dry-run
-ralph-next config import prepared-config.yaml --scope workspace --dry-run
-ralph-next config export --scope effective --serialization yaml
-ralph-next config export --scope workspace --serialization json --output config-export.json
+ralph config unset evaluation.threshold --scope workspace --dry-run
+ralph config edit prepared-config.yaml --scope workspace --non-interactive --dry-run
+ralph config import prepared-config.yaml --scope workspace --dry-run
+ralph config export --scope effective --serialization yaml
+ralph config export --scope workspace --serialization json --output config-export.json
 ```
 
 Remova `--dry-run` somente depois de revisar os paths do preview. Import/edit aceitam configuração
@@ -453,9 +441,9 @@ mutações valem para novas runs, não para snapshots existentes.
 ## 9. Segurança, tools, Git e sandbox
 
 ```text
-ralph-next run --prd <PRD> --security safe
-ralph-next run --prd <PRD> --security auto --ask-tool process.exec
-ralph-next run --prd <PRD> --security dangerous --allow-shell --force
+ralph run --prd <PRD> --security safe
+ralph run --prd <PRD> --security auto --ask-tool process.exec
+ralph run --prd <PRD> --security dangerous --allow-shell --force
 ```
 
 Escopos podem ser reduzidos com `--read-path`, `--write-path`, `--allow-tool`, `--deny-tool`,
@@ -466,8 +454,8 @@ receipt, path canônico ou invariantes do PRD.
 Sandbox é capability explícita:
 
 ```text
-ralph-next run --prd <PRD> --sandbox --sandbox-provider process
-ralph-next run --prd <PRD> --sandbox --sandbox-provider docker --sandbox-image <IMAGEM-FIXADA>
+ralph run --prd <PRD> --sandbox --sandbox-provider process
+ralph run --prd <PRD> --sandbox --sandbox-provider docker --sandbox-image <IMAGEM-FIXADA>
 ```
 
 Ausência de sandbox real é reportada como unavailable/skip, nunca como isolamento comprovado.
@@ -478,11 +466,11 @@ Por default, o Ralph descobre deterministicamente uma run compatível não termi
 com:
 
 ```text
-ralph-next resume --run-id <ID>
-ralph-next run --prd <PRD> --resume required
-ralph-next run --prd <PRD> --resume never
-ralph-next run --prd <PRD> --new-run
-ralph-next stop --run-id <ID> --graceful --grace 30
+ralph resume --run-id <ID>
+ralph run --prd <PRD> --resume required
+ralph run --prd <PRD> --resume never
+ralph run --prd <PRD> --new-run
+ralph stop --run-id <ID> --graceful --grace 30
 ```
 
 `--new-run` e uma política `--resume` explícita são alternativas mutuamente exclusivas; combine
@@ -499,12 +487,12 @@ combinados e limites de restart/hard timeout.
 ## 11. Observar uma run
 
 ```text
-ralph-next status run --run-id <ID>
-ralph-next attach --run-id <ID>
-ralph-next replay --run-id <ID>
-ralph-next events --run-id <ID> --follow --format jsonl
-ralph-next logs tail --run-id <ID> --source diagnostic --follow
-ralph-next report show <ID>
+ralph status run --run-id <ID>
+ralph attach --run-id <ID>
+ralph replay --run-id <ID>
+ralph events --run-id <ID> --follow --format jsonl
+ralph logs tail --run-id <ID> --source diagnostic --follow
+ralph report show <ID>
 ```
 
 Fechar a TUI não cancela a run. `attach` acompanha eventos novos; `replay` congela o high-water e não
@@ -515,11 +503,11 @@ muda estado.
 Checkpoint de workspace é separado do rollback da instalação:
 
 ```text
-ralph-next checkpoint create --path <ARQUIVO> --inventory-root <DIRETORIO>
-ralph-next checkpoint list
-ralph-next checkpoint show <ID>
-ralph-next rollback preview <ID> --expires-in 300
-ralph-next rollback apply <ID> --confirm-plan-hash <SHA256>
+ralph checkpoint create --path <ARQUIVO> --inventory-root <DIRETORIO>
+ralph checkpoint list
+ralph checkpoint show <ID>
+ralph rollback preview <ID> --expires-in 300
+ralph rollback apply <ID> --confirm-plan-hash <SHA256>
 ```
 
 O preview gera um hash de plano de curta duração. Apply só modifica paths identificados e não usa
@@ -528,10 +516,10 @@ O preview gera um hash de plano de curta duração. Apply só modifica paths ide
 ## 13. Migração do Ralph v1
 
 ```text
-ralph-next migrate inspect <V1>
-ralph-next migrate apply <V1> --destination <V2>
-ralph-next migrate rollback <V2>/.ralph/migration/<ID>/rollback-manifest.json --dry-run
-ralph-next migrate rollback <V2>/.ralph/migration/<ID>/rollback-manifest.json --confirm-plan-hash <SHA256>
+ralph migrate inspect <V1>
+ralph migrate apply <V1> --destination <V2>
+ralph migrate rollback <V2>/.ralph/migration/<ID>/rollback-manifest.json --dry-run
+ralph migrate rollback <V2>/.ralph/migration/<ID>/rollback-manifest.json --confirm-plan-hash <SHA256>
 ```
 
 `inspect` é estritamente read-only e não recebe destino. Em `apply`, o destino é separado. Segredos
@@ -587,10 +575,10 @@ stdout fica reservado ao contrato e diagnostics vão para stderr. IDs, event typ
 flags e config keys permanecem em inglês; texto humano/TUI suporta `pt-BR` e `en`.
 
 ```text
-ralph-next lang list
-ralph-next lang set pt-BR --scope workspace
-ralph-next config get lang
-ralph-next config validate
+ralph lang list
+ralph lang set pt-BR --scope workspace
+ralph config get lang
+ralph config validate
 ```
 
 Nenhuma saída autorizada inclui segredo ou chain-of-thought privada.

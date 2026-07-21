@@ -5,7 +5,7 @@ import {
   RalphError,
   type RoleProfileConfig,
   RoleProfileConfigSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   type CredentialRef,
   CredentialRefSchema,
@@ -22,7 +22,7 @@ import {
   RoleProfileSchema,
   resolveModelParameters,
   validateModelCatalogSnapshotIntegrity,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 
 export type RuntimeProfileResolution = {
   profiles: Readonly<Record<string, RoleProfile>>

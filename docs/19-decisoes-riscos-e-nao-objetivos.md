@@ -18,7 +18,7 @@
 14. TUI e headless consomem eventos próprios versionados.
 15. Barra representa apenas tasks duravelmente concluídas sobre total e usa a largura disponível como 100%.
 16. Toda configuração visual possui equivalente CLI/config.
-17. O executável começa como `ralph-next` e só assume `ralph` após gate.
+17. O executável começa como `ralph` e só assume `ralph` após gate.
 18. Opções efetivas de um run persistido são snapshot imutável: attach/replay apenas inspeciona; a TUI aplica overrides ao draft pré-run ou salva defaults para runs futuros.
 
 ## Pontos deliberadamente configuráveis
@@ -155,7 +155,7 @@ O Ralph não obriga linguagem, framework, banco, cloud, test runner ou infraestr
 
 **Risco:** tentar reproduzir todo OpenCode e todo Ralph antes de entregar valor.
 
-**Mitigação:** S01–S12 verticais, `ralph-next`, lista de não objetivos e gate contra módulo sem fluxo observável.
+**Mitigação:** S01–S12 verticais, `ralph`, lista de não objetivos e gate contra módulo sem fluxo observável.
 
 ## Não objetivos da v2 inicial
 

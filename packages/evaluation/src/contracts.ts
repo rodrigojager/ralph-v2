@@ -3,7 +3,7 @@ import type {
   EffectiveRunOptions,
   EvaluationProfileSnapshot,
   JudgeOutput,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 import type { JudgeEvaluationBundle } from "./bundle"
 

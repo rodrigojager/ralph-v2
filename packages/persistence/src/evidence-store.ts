@@ -9,7 +9,7 @@ import {
   EXIT_CODES,
   evidenceBundleCanonicalJson,
   RalphError,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { writeFileAtomic } from "./atomic"
 import type { RunLayout } from "./execution-store"
 

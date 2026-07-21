@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { cloneDefaultConfig, type EffectiveConfig } from "@ralph-next/domain"
+import { cloneDefaultConfig, type EffectiveConfig } from "@ralph/domain"
 import {
   effectiveOptionsAreResumeCompatible,
   effectiveOptionsHash,
@@ -7,8 +7,8 @@ import {
   evaluationPolicyForTask,
   RunOptionsResolutionError,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
-import { compilePrdGraph } from "@ralph-next/prd"
+} from "@ralph/orchestration"
+import { compilePrdGraph } from "@ralph/prd"
 
 const FIXTURE = "tests/fixtures/prd/v2/valid-en.md"
 

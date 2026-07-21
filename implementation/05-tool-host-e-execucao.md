@@ -42,8 +42,8 @@ Um modelo real ou backend CLI externo consegue executar a fixture vertical de S0
 ## Verificação mínima
 
 ```text
-ralph-next once --prd <fixture> --executor-profile <embedded-profile>
-ralph-next once --prd <fixture> --executor-profile <external-cli-profile>
-ralph-next events --format jsonl
+ralph once --prd <fixture> --executor-profile <embedded-profile>
+ralph once --prd <fixture> --executor-profile <external-cli-profile>
+ralph events --format jsonl
 bun test packages/tool-host packages/model-drivers packages/supervisor
 ```

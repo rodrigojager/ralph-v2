@@ -11,7 +11,7 @@ import {
   type TaskRecord,
   TaskRecordSchema,
   type TaskRuntimeStatus,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   type RunTaskRecord,
   type AttemptRecord as StoredAttemptRecord,
@@ -19,7 +19,7 @@ import {
   updateAttempt,
   updateRun,
   upsertRunTask,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 
 export function domainTaskRecord(record: RunTaskRecord): TaskRecord {
   return TaskRecordSchema.parse({

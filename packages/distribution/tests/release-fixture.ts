@@ -12,7 +12,7 @@ import {
   releaseSupportPolicySha256,
   releaseTargetFor,
   releaseTargetInstallDurability,
-} from "@ralph-next/distribution"
+} from "@ralph/distribution"
 
 const LOCAL_CONTRACT_LIMITATION =
   "Local contract fixture only; this is not release, signer, license, or target-support evidence."
@@ -68,8 +68,8 @@ export async function createReleaseFixture(
     : undefined
   const sourceFingerprintSha256 = sha256(bytes(`local-contract-source:${options.version}`))
   const extension = target.startsWith("bun-windows-") ? ".exe" : ""
-  const launcherPath = `payloads/ralph-next-launcher${extension}`
-  const enginePath = `payloads/ralph-next-engine${extension}`
+  const launcherPath = `payloads/ralph-launcher${extension}`
+  const enginePath = `payloads/ralph-engine${extension}`
   const bytesByUrl = new Map<string, Uint8Array>()
 
   const writePayload = async (
@@ -102,7 +102,7 @@ export async function createReleaseFixture(
       `${JSON.stringify(
         {
           schemaVersion: 1,
-          product: "ralph-next",
+          product: "ralph",
           target,
           status: "built-not-tested",
           version: options.engineMetadataVersion ?? options.version,
@@ -125,7 +125,7 @@ export async function createReleaseFixture(
       `${JSON.stringify(
         {
           schemaVersion: 1,
-          product: "ralph-next-launcher",
+          product: "ralph-launcher",
           target,
           status: "built-not-tested",
           version: options.version,
@@ -152,7 +152,7 @@ export async function createReleaseFixture(
     bytes("# Local contract fixture\n\nNo release or license assertion is made.\n"),
     "text/markdown",
   )
-  const applicationPurl = `pkg:npm/ralph-next@${encodeURIComponent(options.version)}`
+  const applicationPurl = `pkg:npm/ralph@${encodeURIComponent(options.version)}`
   const sbom = await writePayload(
     "support/SBOM.cdx.json",
     bytes(
@@ -167,7 +167,7 @@ export async function createReleaseFixture(
             component: {
               type: "application",
               "bom-ref": applicationPurl,
-              name: "ralph-next",
+              name: "ralph",
               version: options.version,
               purl: applicationPurl,
               licenses: [{ expression: "NOASSERTION" }],
@@ -224,7 +224,7 @@ export async function createReleaseFixture(
 
   const supportPolicy = ReleaseSupportPolicySchema.parse({
     schemaVersion: 1,
-    product: "ralph-next",
+    product: "ralph",
     version: options.version,
     channel: "nightly",
     matrix: ReleaseTargetSchema.options.map((candidate) => ({
@@ -240,7 +240,7 @@ export async function createReleaseFixture(
   })
   const manifest = ReleaseManifestSchema.parse({
     schemaVersion: 2,
-    product: "ralph-next",
+    product: "ralph",
     version: options.version,
     channel: "nightly",
     publishedAt: FIXTURE_TIMESTAMP,

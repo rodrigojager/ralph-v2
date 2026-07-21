@@ -3,9 +3,9 @@ import { cp, mkdtemp, readFile, realpath, rm, unlink, writeFile } from "node:fs/
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 
-import { FakeSecretStore, secretInputFromValue } from "@ralph-next/credentials"
-import { type RoleProfileConfig, RoleProfileConfigSchema } from "@ralph-next/domain"
-import type { FetchLike } from "@ralph-next/openai-driver"
+import { FakeSecretStore, secretInputFromValue } from "@ralph/credentials"
+import { type RoleProfileConfig, RoleProfileConfigSchema } from "@ralph/domain"
+import type { FetchLike } from "@ralph/openai-driver"
 import {
   type ExecutionBackend,
   type ExecutionBackendResolver,
@@ -13,7 +13,7 @@ import {
   executeRun,
   loadTaskBaseline,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   findResumableRun,
   getToolCallIntentByProviderIdentity,
@@ -28,18 +28,18 @@ import {
   readEvents,
   runLayout,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
+} from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
 import {
   CachedModelCatalog,
   createCuratedCatalogSource,
   InMemoryModelCatalogCache,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import {
   captureWorkspaceBaseline,
   compareWorkspaceBaselines,
   type WorkspaceBaseline,
-} from "@ralph-next/verification"
+} from "@ralph/verification"
 import { stringify } from "yaml"
 
 import { createS04Services } from "../../apps/ralph-cli/src/s04-services"

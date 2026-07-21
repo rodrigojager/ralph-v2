@@ -1,5 +1,5 @@
 import { isAbsolute, parse, relative, resolve, sep } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 import { type InstallReceipt, InstallReceiptSchema } from "./contracts"
 
 export interface StandaloneInstallLayout {
@@ -46,7 +46,7 @@ export function resolveStandaloneInstallLayout(
     receipts: resolve(root, "receipts"),
     currentPointer: resolve(root, "current.json"),
     bin,
-    launcher: resolve(bin, platform === "win32" ? "ralph-next.exe" : "ralph-next"),
+    launcher: resolve(bin, platform === "win32" ? "ralph.exe" : "ralph"),
     versions: resolve(root, "versions"),
     staging: resolve(root, "staging"),
     rollback: resolve(root, "rollback"),

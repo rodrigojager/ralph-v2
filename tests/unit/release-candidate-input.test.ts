@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test } from "bun:test"
 import { link, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { resolve } from "node:path"
-import { releaseManifestSigningSha256 } from "@ralph-next/distribution"
+import { releaseManifestSigningSha256 } from "@ralph/distribution"
 import { createReleaseFixture } from "../../packages/distribution/tests/release-fixture"
 import {
   effectiveReleaseCandidateDigest,

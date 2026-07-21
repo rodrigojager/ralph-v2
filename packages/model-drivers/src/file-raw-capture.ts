@@ -6,7 +6,7 @@ import {
   assertTrustedOpenFile,
   type FilesystemLease,
   openTrustedFile,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 
 import type {
   RawModelCallDescriptor,

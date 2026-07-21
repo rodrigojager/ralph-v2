@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { parseMarkdownFragment, parsePrdSource, parseVerification } from "@ralph-next/prd"
+import { parseMarkdownFragment, parsePrdSource, parseVerification } from "@ralph/prd"
 
 describe("S06 PRD gate declarations", () => {
   test("parses human-readable schema, git and hashed artifact declarations", () => {

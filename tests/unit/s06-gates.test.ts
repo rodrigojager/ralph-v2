@@ -2,13 +2,13 @@ import { afterEach, describe, expect, test } from "bun:test"
 import { createHash } from "node:crypto"
 import { writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { type VerificationSpec, VerificationSpecSchema } from "@ralph-next/prd"
+import { type VerificationSpec, VerificationSpecSchema } from "@ralph/prd"
 import {
   collectArtifactEvidence,
   createDefaultGateExecutorRegistry,
   runVerification,
   runVerifications,
-} from "@ralph-next/verification"
+} from "@ralph/verification"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const temporaryDirectories: string[] = []

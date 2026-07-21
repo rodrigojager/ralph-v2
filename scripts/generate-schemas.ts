@@ -8,7 +8,7 @@ import {
   ReleasePromotionRecordSchema,
   ReleaseSupportPolicySchema,
   StandaloneReleaseCandidateReceiptSchema,
-} from "@ralph-next/distribution"
+} from "@ralph/distribution"
 import {
   AttemptRecordSchema,
   CommandOperationSchema,
@@ -47,14 +47,14 @@ import {
   WatchdogSnapshotSchema,
   WorkspaceIdentitySchema,
   WorkspaceStatusSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   ClassicPrdDocumentSchema,
   CompiledPrdGraphSchema,
   MarkerUpdateSchema,
   PrdDocumentSchema,
   PrdMigrationReportSchema,
-} from "@ralph-next/prd"
+} from "@ralph/prd"
 import {
   CredentialRefSchema,
   ModelCatalogSnapshotSchema,
@@ -67,8 +67,8 @@ import {
   ProviderToolDefinitionSchema,
   RoleProfileSchema,
   TokenUsageSchema,
-} from "@ralph-next/providers"
-import { EventEnvelopeConsumerSchema } from "@ralph-next/telemetry"
+} from "@ralph/providers"
+import { EventEnvelopeConsumerSchema } from "@ralph/telemetry"
 import { z } from "zod"
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..")

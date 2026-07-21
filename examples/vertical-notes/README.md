@@ -37,9 +37,9 @@ separados da integração automatizada:
 ```text
 cd examples/vertical-notes
 git init
-ralph-next init
-ralph-next prd validate PRD.md --recursive --strict
-ralph-next prd inspect PRD.md --recursive --strict --format json
+ralph init
+ralph prd validate PRD.md --recursive --strict
+ralph prd inspect PRD.md --recursive --strict --format json
 ```
 
 O judge externo sempre roda em um diretório temporário vazio: caminhos relativos ao sample não
@@ -81,15 +81,15 @@ global nem `npm link` para este drill.
 Depois importe a configuração por preview e aplicação atômica:
 
 ```text
-ralph-next config import config/fake-judge.config.yaml --scope workspace --dry-run
-ralph-next config import config/fake-judge.config.yaml --scope workspace
-ralph-next config validate
+ralph config import config/fake-judge.config.yaml --scope workspace --dry-run
+ralph config import config/fake-judge.config.yaml --scope workspace
+ralph config validate
 ```
 
 Selecione um executor real ja configurado. O judge fake e independente e read-only:
 
 ```text
-ralph-next run --prd PRD.md --executor-profile <EXECUTOR_PROFILE> --judge-profile sample-fake-judge --evaluation external --judge-threshold 85 --max-revisions 2 --ui tui
+ralph run --prd PRD.md --executor-profile <EXECUTOR_PROFILE> --judge-profile sample-fake-judge --evaluation external --judge-threshold 85 --max-revisions 2 --ui tui
 ```
 
 O fake judge retorna 72 enquanto `note-create-flow` ainda não possui uma tentativa anterior marcada
@@ -104,8 +104,8 @@ model e credential reference pela CLI/TUI, conectar a credencial pelo fluxo `aut
 um smoke read-only explicito antes de substituir o perfil do fake:
 
 ```text
-ralph-next profiles configure sample-real-judge --scope workspace --role judge --backend embedded --provider <PROVIDER_ID> --model <MODEL_ID> --credential <CREDENTIAL_REF>
-ralph-next run --prd PRD.md --executor-profile <EXECUTOR_PROFILE> --judge-profile sample-real-judge --evaluation external --judge-threshold 85 --ui tui
+ralph profiles configure sample-real-judge --scope workspace --role judge --backend embedded --provider <PROVIDER_ID> --model <MODEL_ID> --credential <CREDENTIAL_REF>
+ralph run --prd PRD.md --executor-profile <EXECUTOR_PROFILE> --judge-profile sample-real-judge --evaluation external --judge-threshold 85 --ui tui
 ```
 
 Nenhuma API key ou token deve entrar no PRD, nos YAML do sample, em argv, logs ou reports.
@@ -115,18 +115,18 @@ Nenhuma API key ou token deve entrar no PRD, nos YAML do sample, em argv, logs o
 Para o caminho cooperativo, solicite parada por outro terminal e retome o mesmo run:
 
 ```text
-ralph-next status
-ralph-next stop --run-id <RUN_ID> --graceful --grace 30
-ralph-next resume --run-id <RUN_ID>
+ralph status
+ralph stop --run-id <RUN_ID> --graceful --grace 30
+ralph resume --run-id <RUN_ID>
 ```
 
 Para o drill de crash, encerre o processo pelo mecanismo seguro do ambiente somente depois de anotar
 o `RUN_ID`; nao edite SQLite, markers ou heartbeat manualmente. Ao reiniciar:
 
 ```text
-ralph-next status run --run-id <RUN_ID>
-ralph-next resume --run-id <RUN_ID>
-ralph-next attach --run-id <RUN_ID>
+ralph status run --run-id <RUN_ID>
+ralph resume --run-id <RUN_ID>
+ralph attach --run-id <RUN_ID>
 ```
 
 A retomada esperada parte da primeira folha ainda nao finalizada. Folhas concluidas nao voltam a ser

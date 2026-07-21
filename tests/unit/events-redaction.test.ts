@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import type { CommandResult } from "@ralph-next/domain"
+import type { CommandResult } from "@ralph/domain"
 import {
   type EventEnvelope,
   EventEnvelopeConsumerSchema,
@@ -11,7 +11,7 @@ import {
   secretValuesFromEnvironment,
   serializeCommandResult,
   serializeEventEnvelopes,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 
 function event(sequence: number, type = "workspace.initialized"): EventEnvelope {
   return {

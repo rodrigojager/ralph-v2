@@ -12,7 +12,7 @@ import {
   type RollbackOperation,
   type RollbackPlan,
   RollbackPlanSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   createLedgerCheckpointBackup,
   ensureCheckpointStore,
@@ -23,7 +23,7 @@ import {
   settleRollbackPlan,
   writeFileAtomic,
   writeJsonAtomic,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 
 export type GitCheckpointInventory = {
   head?: string

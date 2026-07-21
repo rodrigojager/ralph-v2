@@ -1,11 +1,11 @@
-import { type JudgeOutput, JudgeOutputSchema } from "@ralph-next/domain"
+import { type JudgeOutput, JudgeOutputSchema } from "@ralph/domain"
 import type {
   JudgeBackend,
   JudgeBackendCapabilities,
   JudgeCallHandle,
   JudgeEventSink,
   JudgeRequest,
-} from "@ralph-next/evaluation"
+} from "@ralph/evaluation"
 import {
   type ModelParameters,
   type ModelRef,
@@ -13,7 +13,7 @@ import {
   type ProviderEvent,
   type ProviderJsonObject,
   ProviderModelResultSchema,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 
 const JUDGE_OUTPUT_JSON_SCHEMA = {
   type: "object",

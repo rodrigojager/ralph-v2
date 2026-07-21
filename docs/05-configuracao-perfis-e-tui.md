@@ -282,9 +282,9 @@ valida o mesmo campo e mostra patch/config/argv equivalentes. A gravação exige
 escopo na própria linha de comando:
 
 ```text
-ralph-next config preview evaluation.threshold 85 --scope workspace
-ralph-next config set evaluation.threshold 85 --scope workspace
-ralph-next config set tui.theme high-contrast --scope global
+ralph config preview evaluation.threshold 85 --scope workspace
+ralph config set evaluation.threshold 85 --scope workspace
+ralph config set tui.theme high-contrast --scope global
 ```
 
 Valores compostos usam JSON. `config set` não aceita caminho de saída, não grava profiles pelo
@@ -296,10 +296,10 @@ credenciais continuam no credential store. Saves alteram apenas defaults de runs
 As mutações nunca inferem escopo. Os contratos públicos são:
 
 ```text
-ralph-next config unset evaluation.threshold --scope workspace [--dry-run]
-ralph-next config edit [INPUT.yaml|json] --scope workspace|global [--dry-run]
-ralph-next config import CONFIG.yaml --scope workspace|global [--dry-run]
-ralph-next config export --scope workspace|global|effective
+ralph config unset evaluation.threshold --scope workspace [--dry-run]
+ralph config edit [INPUT.yaml|json] --scope workspace|global [--dry-run]
+ralph config import CONFIG.yaml --scope workspace|global [--dry-run]
+ralph config export --scope workspace|global|effective
   [--serialization yaml|json] [--output PATH] [--force]
 ```
 

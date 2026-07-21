@@ -1,4 +1,4 @@
-import type { ProfileFormRequest, SettingsFieldMetadata } from "@ralph-next/commands"
+import type { ProfileFormRequest, SettingsFieldMetadata } from "@ralph/commands"
 import {
   composeRoleProfileConfigLayer,
   inheritRoleProfileConfigLayerPath,
@@ -8,7 +8,7 @@ import {
   RoleProfileConfigLayerSchema,
   RoleProfileConfigSchema,
   roleProfileLayerPathSemantics,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 export type ProfileFormScope = "global" | "workspace"
 

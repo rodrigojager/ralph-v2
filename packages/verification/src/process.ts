@@ -1,8 +1,8 @@
 import { mkdir, realpath } from "node:fs/promises"
 import { isAbsolute, relative, resolve, sep } from "node:path"
-import type { CommandSpecSchema } from "@ralph-next/prd"
-import { processShutdownRegistry } from "@ralph-next/supervisor"
-import { redactText, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+import type { CommandSpecSchema } from "@ralph/prd"
+import { processShutdownRegistry } from "@ralph/supervisor"
+import { redactText, secretValuesFromEnvironment } from "@ralph/telemetry"
 
 type CommandSpec = typeof CommandSpecSchema._output
 

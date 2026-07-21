@@ -7,7 +7,7 @@ import {
   JudgeAssessmentSchema,
   JudgeOutputSchema,
   JudgeRubricSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 const FIXTURES = resolve(import.meta.dir, "../fixtures/judge")
 const SCHEMAS = resolve(import.meta.dir, "../../schemas")

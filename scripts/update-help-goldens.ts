@@ -1,8 +1,8 @@
 import { mkdir, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 
-import { helpData, helpText } from "@ralph-next/commands"
-import { commandResult, serializeCommandResult } from "@ralph-next/telemetry"
+import { helpData, helpText } from "@ralph/commands"
+import { commandResult, serializeCommandResult } from "@ralph/telemetry"
 
 const VERSION = "9.8.7-test"
 const directory = resolve(import.meta.dir, "../tests/golden")

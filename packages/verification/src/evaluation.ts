@@ -5,7 +5,7 @@ import {
   EvaluationPolicySchema,
   type JudgeAssessment,
   JudgeAssessmentSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 function decisionMode(policy: EvaluationPolicy): CompletionDecision["evaluationMode"] {
   return policy.mode === "deterministic-only" ? "none" : policy.mode

@@ -1,4 +1,4 @@
-import type { DurableLeaseRecord, RunStatus } from "@ralph-next/domain"
+import type { DurableLeaseRecord, RunStatus } from "@ralph/domain"
 
 export type SupervisorStopRequest = {
   readonly requestId: string

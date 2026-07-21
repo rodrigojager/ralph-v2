@@ -5,7 +5,7 @@ import {
   captureCurrentProcessIdentity,
   type ExecutionRuntimeDependencies,
   executeReservedChildWorker,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 
 /**
  * Test-only worker transport that preserves the real child reservation,

@@ -6,13 +6,13 @@ import {
   type SettingsJsonValue,
   type SettingsPreRunInvocation,
   settingsCommandModel,
-} from "@ralph-next/commands"
-import { type EffectiveConfig, EXIT_CODES, RalphError } from "@ralph-next/domain"
+} from "@ralph/commands"
+import { type EffectiveConfig, EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   loadEffectiveConfig,
   type SettingsConfigMutation,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   createSettingsPaletteController,
   formatSettingsPaletteValue,
@@ -29,7 +29,7 @@ import {
   type SettingsPaletteScope,
   type SettingsPaletteSnapshot,
   type SettingsPaletteUpdateRequest,
-} from "@ralph-next/tui"
+} from "@ralph/tui"
 
 export interface RalphTuiSettingsOptions {
   readonly mode: SettingsPaletteMode
@@ -274,7 +274,7 @@ function palettePreview(
     entries,
     configCommands,
     runArguments,
-    runCommand: displayCommand(["ralph-next", "run", ...runArguments]),
+    runCommand: displayCommand(["ralph", "run", ...runArguments]),
     applyForRunAvailable: source.applyForRunAvailable && !containsMaskedEntry,
     ...(applyForRunUnavailableReason ? { applyForRunUnavailableReason } : {}),
     saveEffect: "future-runs-only",

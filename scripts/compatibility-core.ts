@@ -2,13 +2,13 @@ import { realpathSync } from "node:fs"
 import { lstat, mkdir, mkdtemp, readdir, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path"
-import { RalphConfigLayerSchema, WorkspaceIdentitySchema } from "@ralph-next/domain"
-import { readEvents, readWorkspaceConfig, writeFileAtomic } from "@ralph-next/persistence"
+import { RalphConfigLayerSchema, WorkspaceIdentitySchema } from "@ralph/domain"
+import { readEvents, readWorkspaceConfig, writeFileAtomic } from "@ralph/persistence"
 import {
   type EventEnvelope,
   EventEnvelopeConsumerSchema,
   secretValuesFromEnvironment,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 import {
   nativeTarget,
   RELEASE_TARGETS,
@@ -373,7 +373,7 @@ async function resolveNextInvocation(
       )
     }
     if (!(await Bun.file(source).exists())) {
-      throw new Error(`ralph-next source entry was not found: ${source}`)
+      throw new Error(`ralph source entry was not found: ${source}`)
     }
     return {
       kind: "source-entry",
@@ -404,7 +404,7 @@ async function resolveNextInvocation(
 
   const extension = process.platform === "win32" ? ".exe" : ""
   const target = nativeTarget()
-  const standalone = join(projectRoot, "dist", "standalone", target, `ralph-next${extension}`)
+  const standalone = join(projectRoot, "dist", "standalone", target, `ralph${extension}`)
   const validated = await validateStandaloneArtifact(standalone, projectRoot, target)
   const path = await realpath(validated.binary)
   return {
@@ -708,7 +708,7 @@ async function collectScenarioInvariants(
     evidence.push(
       invariant(
         `${side}.help.product-and-commands`,
-        (side === "legacy" ? /^ralph\s+-/iu.test(output) : /^ralph-next\s+\d/iu.test(output)) &&
+        (side === "legacy" ? /^ralph\s+-/iu.test(output) : /^ralph\s+\d/iu.test(output)) &&
           commands.passed,
         `${side === "legacy" ? "Legacy" : "V2"} help identifies the product and every required command in this baseline.`,
         `Help is missing required product/command evidence: ${commands.missing.join(", ") || "product heading"}.`,
@@ -726,7 +726,7 @@ async function collectScenarioInvariants(
   if (id === "version") {
     const semver =
       "(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?"
-    const product = side === "legacy" ? "ralph" : "ralph-next"
+    const product = side === "legacy" ? "ralph" : "ralph"
     evidence.push(
       invariant(
         `${side}.version.contract`,
@@ -896,7 +896,7 @@ export function classifyScenario(
   const rationale: Record<CompatibilityScenarioId, string> = {
     help: "Both help probes are valid; v2 deliberately exposes its independently implemented command surface, including accepted slices beyond this S01 baseline.",
     version:
-      "Both version probes satisfy their contracts; the ralph-next name and independent v2 version are deliberate changes.",
+      "Both version probes satisfy their contracts; the ralph name and independent v2 version are deliberate changes.",
     status:
       "Both commands report a complete uninitialized status and leave the directory untouched.",
     init: "Both init commands satisfy their schemas; v2 deliberately uses identified SQLite state and creates no PRD.",
@@ -960,7 +960,7 @@ function architectureForTarget(target: ReleaseTarget): PlatformEvidence["archite
 
 function standalonePath(projectRoot: string, target: ReleaseTarget): string {
   const extension = target.startsWith("bun-windows-") ? ".exe" : ""
-  return join(projectRoot, "dist", "standalone", target, `ralph-next${extension}`)
+  return join(projectRoot, "dist", "standalone", target, `ralph${extension}`)
 }
 
 async function collectPlatformEvidence(
@@ -1128,7 +1128,7 @@ export async function runCompatibilityHarness(
 
     const legacyVersion = scenarios.find((scenario) => scenario.id === "version")?.legacy
     const nextVersion = scenarios.find((scenario) => scenario.id === "version")?.next
-    if (!nextVersion) throw new Error("The version scenario did not produce ralph-next evidence")
+    if (!nextVersion) throw new Error("The version scenario did not produce ralph evidence")
     if (legacyInvocation && !legacyVersion) {
       throw new Error("The version scenario did not produce legacy evidence")
     }
@@ -1211,9 +1211,9 @@ captures are stored in \`s01-report.json\`; no command runs in the legacy checko
 - Mode: \`${report.comparisonMode}\`
 - Harness host: \`${report.environment.platform}/${report.environment.architecture}\`
 - Bun: \`${report.environment.bunVersion}\`
-- ralph-next invocation: \`${report.binaries.next.kind}\`
-- ralph-next evidence: \`${report.binaries.next.path}\`
-- ralph-next SHA-256: \`${report.binaries.next.sha256}\`
+- ralph invocation: \`${report.binaries.next.kind}\`
+- ralph evidence: \`${report.binaries.next.path}\`
+- ralph SHA-256: \`${report.binaries.next.sha256}\`
 
 ### Installed legacy Ralph
 

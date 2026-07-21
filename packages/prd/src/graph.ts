@@ -1,6 +1,6 @@
 import { realpath } from "node:fs/promises"
 import { dirname, isAbsolute, relative, resolve } from "node:path"
-import type { Diagnostic } from "@ralph-next/domain"
+import type { Diagnostic } from "@ralph/domain"
 import {
   type ChildEdgeSchema,
   type CompiledPrdGraph,

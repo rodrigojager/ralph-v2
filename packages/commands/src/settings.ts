@@ -1,4 +1,4 @@
-import { DEFAULT_CONFIG, type EffectiveRunOptions } from "@ralph-next/domain"
+import { DEFAULT_CONFIG, type EffectiveRunOptions } from "@ralph/domain"
 
 export type SettingsFieldKind =
   | "select"

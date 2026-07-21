@@ -1,5 +1,5 @@
 {
-  "name": "@ralph-next/providers",
+  "name": "@ralph/providers",
   "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",

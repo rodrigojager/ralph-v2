@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { cp, mkdir, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { type CommandContext, executeCli } from "@ralph-next/commands"
+import { type CommandContext, executeCli } from "@ralph/commands"
 import type {
   BackendCapabilities,
   CallHandle,
@@ -9,7 +9,7 @@ import type {
   ExecutionChannel,
   ExecutionRequest,
   ExecutionToolPort,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   getToolCallIntent,
   getToolCallSettlement,
@@ -22,9 +22,9 @@ import {
   readEvents,
   recordToolCallIntent,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { ScriptedExecutionBackend } from "@ralph-next/test-kit"
-import { hashCanonical, sha256 } from "@ralph-next/tool-host"
+} from "@ralph/persistence"
+import { ScriptedExecutionBackend } from "@ralph/test-kit"
+import { hashCanonical, sha256 } from "@ralph/tool-host"
 import { createRalphExecutionToolPort } from "../../apps/ralph-cli/src/tool-execution-port"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 

@@ -3,7 +3,7 @@
   "ok": true,
   "command": "version",
   "data": {
-    "name": "ralph-next",
+    "name": "ralph",
     "version": "9.8.7-test"
   },
   "diagnostics": []

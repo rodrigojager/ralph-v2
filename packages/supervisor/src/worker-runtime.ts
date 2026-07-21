@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto"
-import { redactText, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+import { redactText, secretValuesFromEnvironment } from "@ralph/telemetry"
 import { processShutdownRegistry } from "./shutdown"
 import {
   assertWorkerOperationAuthority,

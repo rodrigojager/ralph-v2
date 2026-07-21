@@ -46,7 +46,7 @@ import {
   transitionAttemptStatus,
   transitionRunStatus,
   transitionTaskRuntimeStatus,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 const NOW = "2026-07-18T12:00:00.000Z"
 const HASH_A = "a".repeat(64)

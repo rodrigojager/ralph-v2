@@ -3,7 +3,7 @@ import type {
   LoopbackCallbackResult,
   OAuthFetch,
   OAuthRandomBytes,
-} from "@ralph-next/credentials"
+} from "@ralph/credentials"
 
 export type ScriptedOAuthStep =
   | {

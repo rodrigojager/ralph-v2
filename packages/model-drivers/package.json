@@ -1,20 +1,20 @@
 {
-  "name": "@ralph-next/model-drivers",
+  "name": "@ralph/model-drivers",
   "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@ralph-next/domain": "workspace:*",
-    "@ralph-next/evaluation": "workspace:*",
-    "@ralph-next/openai-driver": "workspace:*",
-    "@ralph-next/orchestration": "workspace:*",
-    "@ralph-next/providers": "workspace:*",
-    "@ralph-next/supervisor": "workspace:*",
-    "@ralph-next/telemetry": "workspace:*",
+    "@ralph/domain": "workspace:*",
+    "@ralph/evaluation": "workspace:*",
+    "@ralph/openai-driver": "workspace:*",
+    "@ralph/orchestration": "workspace:*",
+    "@ralph/providers": "workspace:*",
+    "@ralph/supervisor": "workspace:*",
+    "@ralph/telemetry": "workspace:*",
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@ralph-next/tool-host": "workspace:*"
+    "@ralph/tool-host": "workspace:*"
   }
 }

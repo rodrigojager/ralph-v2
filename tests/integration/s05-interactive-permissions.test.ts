@@ -2,21 +2,21 @@ import { afterEach, describe, expect, test } from "bun:test"
 import { cp, readFile, unlink, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 
-import { type CommandContext, executeCli } from "@ralph-next/commands"
-import { ExecutorOutcomeSchema } from "@ralph-next/domain"
+import { type CommandContext, executeCli } from "@ralph/commands"
+import { ExecutorOutcomeSchema } from "@ralph/domain"
 import type {
   BackendCapabilities,
   CallHandle,
   ExecutionBackend,
   ExecutionChannel,
   ExecutionRequest,
-} from "@ralph-next/orchestration"
-import { initializeWorkspace } from "@ralph-next/persistence"
+} from "@ralph/orchestration"
+import { initializeWorkspace } from "@ralph/persistence"
 import type {
   PermissionPromptPort,
   ToolPermissionRequest,
   ToolPermissionResponse,
-} from "@ralph-next/tool-host"
+} from "@ralph/tool-host"
 import { createRalphExecutionToolPort } from "../../apps/ralph-cli/src/tool-execution-port"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 

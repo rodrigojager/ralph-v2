@@ -8,7 +8,7 @@ import {
   RalphError,
   type RollbackPlan,
   RollbackPlanSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { appendEventInTransaction, checkpointLedger, withLedger } from "./ledger"
 
 type CheckpointRow = {

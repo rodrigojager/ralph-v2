@@ -19,9 +19,9 @@ uma alegação de suporte de provider, plataforma ou distribuição.
 Para um run operacional, consulte os records autoritativos concretos:
 
 ```text
-ralph-next status run --run-id <RUN_ID> --format json
-ralph-next events --run-id <RUN_ID> --format jsonl
-ralph-next report show <RUN_ID> --format json
+ralph status run --run-id <RUN_ID> --format json
+ralph events --run-id <RUN_ID> --format jsonl
+ralph report show <RUN_ID> --format json
 ```
 
 Nunca copie valores destes goldens para preencher campos runtime ou evidence de promoção. Uma prova

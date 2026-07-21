@@ -19,8 +19,8 @@ import {
   ReleaseTargetSchema,
   releaseManifestSigningSha256,
   releaseSupportPolicySha256,
-} from "@ralph-next/distribution"
-import { TwoPhaseShutdownController } from "@ralph-next/supervisor"
+} from "@ralph/distribution"
+import { TwoPhaseShutdownController } from "@ralph/supervisor"
 import packageJson from "../package.json" with { type: "json" }
 import { RELEASE_TARGETS, sha256File, validateStandaloneArtifact } from "./build-artifact"
 import { PUBLIC_SCHEMA_DEFINITIONS, publicSchemaMismatches } from "./generate-schemas"
@@ -669,7 +669,7 @@ async function packageRelease(signal: AbortSignal): Promise<void> {
       "dist",
       "standalone",
       firstTarget,
-      `ralph-next${firstExtension}`,
+      `ralph${firstExtension}`,
     )
     const firstValidated = await validateStandaloneArtifact(firstBinary, projectRoot, firstTarget)
     const sourceFingerprintSha256 = firstValidated.metadata.sourceSha256.toLowerCase()
@@ -766,8 +766,8 @@ async function packageRelease(signal: AbortSignal): Promise<void> {
       }
       const extension = target.startsWith("bun-windows-") ? ".exe" : ""
       const buildDirectory = resolve(projectRoot, "dist", "standalone", target)
-      const binary = resolve(buildDirectory, `ralph-next${extension}`)
-      const launcher = resolve(buildDirectory, `ralph-next-launcher${extension}`)
+      const binary = resolve(buildDirectory, `ralph${extension}`)
+      const launcher = resolve(buildDirectory, `ralph-launcher${extension}`)
       const metadataPath = resolve(buildDirectory, "build-metadata.json")
       const launcherMetadataPath = resolve(buildDirectory, "launcher-build-metadata.json")
       const validated = await validateStandaloneArtifact(binary, projectRoot, target)
@@ -799,8 +799,8 @@ async function packageRelease(signal: AbortSignal): Promise<void> {
 
       const artifactDirectory = resolve(releaseDirectory, "artifacts", target)
       await mkdir(artifactDirectory, { recursive: true })
-      const releaseBinary = resolve(artifactDirectory, `ralph-next${extension}`)
-      const releaseLauncher = resolve(artifactDirectory, `ralph-next-launcher${extension}`)
+      const releaseBinary = resolve(artifactDirectory, `ralph${extension}`)
+      const releaseLauncher = resolve(artifactDirectory, `ralph-launcher${extension}`)
       const releaseMetadata = resolve(artifactDirectory, "build-metadata.json")
       const releaseLauncherMetadata = resolve(artifactDirectory, "launcher-build-metadata.json")
       await copyRegular(binary, releaseBinary, true, validated.metadata.sha256)
@@ -826,13 +826,13 @@ async function packageRelease(signal: AbortSignal): Promise<void> {
       await mkdir(resolve(bundleRoot, "bin"), { recursive: true })
       await copyRegular(
         binary,
-        resolve(bundleRoot, "bin", `ralph-next${extension}`),
+        resolve(bundleRoot, "bin", `ralph${extension}`),
         true,
         validated.metadata.sha256,
       )
       await copyRegular(
         launcher,
-        resolve(bundleRoot, "bin", `ralph-next-launcher${extension}`),
+        resolve(bundleRoot, "bin", `ralph-launcher${extension}`),
         true,
         parsedLauncherMetadata.sha256,
       )
@@ -868,9 +868,9 @@ async function packageRelease(signal: AbortSignal): Promise<void> {
       if (bundledSkillSha256 !== sourceSkillTreeSha256) {
         throw new Error(`Packaged skill tree differs from the clean source for target ${target}`)
       }
-      const archive = resolve(artifactDirectory, `ralph-next-${packageJson.version}-${target}.tar`)
+      const archive = resolve(artifactDirectory, `ralph-${packageJson.version}-${target}.tar`)
       await createDeterministicTar(bundleRoot, archive, epochSeconds, {
-        executablePaths: [`bin/ralph-next${extension}`, `bin/ralph-next-launcher${extension}`],
+        executablePaths: [`bin/ralph${extension}`, `bin/ralph-launcher${extension}`],
         expectedSha256ByPath: await expectedArchiveHashes(bundleRoot),
       })
       const archiveSha256 = await sha256File(archive)
@@ -1038,7 +1038,7 @@ async function packageRelease(signal: AbortSignal): Promise<void> {
         resolve(releaseDirectory, "release-candidate-receipt.json"),
         {
           schemaVersion: 1,
-          product: "ralph-next",
+          product: "ralph",
           subject: "standalone-release-candidate",
           status: "candidate-only",
           publishable: false,
@@ -1137,7 +1137,7 @@ async function packageRelease(signal: AbortSignal): Promise<void> {
         (error: unknown) => {
           const message = error instanceof Error ? error.message : String(error)
           process.stderr.write(
-            `ralph-next release candidate: committed with stale staging (${message})\n`,
+            `ralph release candidate: committed with stale staging (${message})\n`,
           )
         },
       )
@@ -1162,7 +1162,7 @@ async function packageRelease(signal: AbortSignal): Promise<void> {
 
     const manifestBase = {
       schemaVersion: 2,
-      product: "ralph-next",
+      product: "ralph",
       version: packageJson.version,
       channel: args.channel,
       publishedAt: args.publishedAt,
@@ -1318,9 +1318,7 @@ async function packageRelease(signal: AbortSignal): Promise<void> {
     committed = true
     await removeManagedReleaseOperation(stagingBase, operationDirectory).catch((error: unknown) => {
       const message = error instanceof Error ? error.message : String(error)
-      process.stderr.write(
-        `ralph-next release package: committed with stale staging (${message})\n`,
-      )
+      process.stderr.write(`ralph release package: committed with stale staging (${message})\n`)
     })
     process.stdout.write(
       `${JSON.stringify({
@@ -1368,7 +1366,7 @@ try {
   if (releaseAbort.signal.aborted) process.exitCode = 130
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error)
-  process.stderr.write(`ralph-next release package: ${message}\n`)
+  process.stderr.write(`ralph release package: ${message}\n`)
   process.exitCode = releaseAbort.signal.aborted ? 130 : 1
 } finally {
   releaseShutdown.close()

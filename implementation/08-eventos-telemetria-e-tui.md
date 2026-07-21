@@ -235,10 +235,10 @@ funcional local de S08.
 ## Comandos de verificação mínima
 
 ```text
-ralph-next attach --run-id <run-id>
-ralph-next replay --run-id <run-id>
-ralph-next events --run-id <run-id> --format jsonl
-ralph-next report last --format json
+ralph attach --run-id <run-id>
+ralph replay --run-id <run-id>
+ralph events --run-id <run-id> --format jsonl
+ralph report last --format json
 bun test packages/telemetry packages/tui
 bun run test:pty
 ```

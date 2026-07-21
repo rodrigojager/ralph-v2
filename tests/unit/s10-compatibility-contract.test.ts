@@ -184,10 +184,7 @@ describe("S10 closed legacy compatibility contract", () => {
     const projectRoot = resolve("C:/s10-project")
     expect(() => parseS10HarnessOptions([], projectRoot)).toThrow("--legacy-binary")
     expect(() =>
-      parseS10HarnessOptions(
-        ["--legacy-binary", "ralph", "--next-binary", "ralph-next"],
-        projectRoot,
-      ),
+      parseS10HarnessOptions(["--legacy-binary", "ralph", "--next-binary", "ralph"], projectRoot),
     ).toThrow("explicit file path")
 
     const parsed = parseS10HarnessOptions(
@@ -195,7 +192,7 @@ describe("S10 closed legacy compatibility contract", () => {
         "--legacy-binary",
         "./bin/ralph.exe",
         "--next-binary",
-        "./dist/ralph-next.exe",
+        "./dist/ralph.exe",
         "--format",
         "json",
         "--no-write",
@@ -209,7 +206,7 @@ describe("S10 closed legacy compatibility contract", () => {
       keepWorkspace: true,
     })
     expect(parsed.legacyBinary).toBe(resolve("./bin/ralph.exe"))
-    expect(parsed.nextBinary).toBe(resolve("./dist/ralph-next.exe"))
+    expect(parsed.nextBinary).toBe(resolve("./dist/ralph.exe"))
   })
 
   test("binds every non-black-box edge to a test suite that the coordinator executes", () => {
@@ -236,10 +233,10 @@ describe("S10 closed legacy compatibility contract", () => {
   test("lets the S03 addendum use the same explicit next standalone", () => {
     const projectRoot = resolve("C:/s10-project")
     const options = parseS03HarnessOptions(
-      ["--next-binary", "./dist/ralph-next.exe", "--no-write", "--json"],
+      ["--next-binary", "./dist/ralph.exe", "--no-write", "--json"],
       projectRoot,
     )
-    expect(options.nextBinary).toBe(resolve("./dist/ralph-next.exe"))
+    expect(options.nextBinary).toBe(resolve("./dist/ralph.exe"))
     expect(options).toMatchObject({ writeReports: false, printJson: true })
   })
 })

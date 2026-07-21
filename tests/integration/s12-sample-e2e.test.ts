@@ -1,14 +1,14 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { copyFile, cp, readFile } from "node:fs/promises"
 import { isAbsolute, relative, resolve, sep } from "node:path"
-import { ExternalCliJudgeBackend, JUDGE_OUTPUT_JSON_ADAPTER_ID } from "@ralph-next/model-drivers"
+import { ExternalCliJudgeBackend, JUDGE_OUTPUT_JSON_ADAPTER_ID } from "@ralph/model-drivers"
 import {
   type ExecuteRunInput,
   type ExecutionRuntimeDependencies,
   executeRun,
   type RunOptionOverrides,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   getEvidenceBundle,
   initializeWorkspace,
@@ -19,15 +19,15 @@ import {
   listRunTasks,
   readEvents,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { type CompiledPrdGraph, compilePrdGraph } from "@ralph-next/prd"
+} from "@ralph/persistence"
+import { type CompiledPrdGraph, compilePrdGraph } from "@ralph/prd"
 import {
   BunProcessSupervisor,
   type SupervisedProcessHandle,
   type SupervisedProcessRequest,
-} from "@ralph-next/supervisor"
-import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph-next/test-kit"
-import { buildSnapshotView } from "@ralph-next/tui"
+} from "@ralph/supervisor"
+import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph/test-kit"
+import { buildSnapshotView } from "@ralph/tui"
 import { buildRunUiSnapshot } from "../../apps/ralph-cli/src/tui-services"
 import { createInProcessChildWorkerFactory } from "../helpers/in-process-child-worker"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"

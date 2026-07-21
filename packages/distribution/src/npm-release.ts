@@ -310,7 +310,7 @@ const NpmPromotionReviewerSchema = z
 export const NpmReleasePromotionRecordSchema = z
   .object({
     schemaVersion: z.literal(2),
-    product: z.literal("ralph-next"),
+    product: z.literal("ralph"),
     subject: z.literal("npm-package"),
     package: NpmReleasePromotionPackageIdentitySchema,
     source: NpmReleaseSourceSchema,
@@ -745,7 +745,7 @@ export type NpmReleaseSignature = z.infer<typeof NpmReleaseSignatureSchema>
 export const NpmReleaseBindingSchema = z
   .object({
     schemaVersion: z.literal(1),
-    product: z.literal("ralph-next"),
+    product: z.literal("ralph"),
     subject: z.literal("npm-package"),
     package: NpmReleasePackageIdentitySchema,
     publishedAt: z.iso.datetime({ offset: true }),

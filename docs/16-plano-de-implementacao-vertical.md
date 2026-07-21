@@ -23,7 +23,7 @@ A ordem é propositalmente conservadora. Dentro de um subplano podem existir ite
 
 ## S01 — Fundação executável e compatibilidade observável
 
-**Resultado:** instalar/invocar `ralph-next`, inicializar workspace novo e consultar help/version/status em human e JSON sem chamar IA.
+**Resultado:** instalar/invocar `ralph`, inicializar workspace novo e consultar help/version/status em human e JSON sem chamar IA.
 
 **Corte transversal:** monorepo Bun/TypeScript, entrypoint CLI, config/schema mínimo, workspace identity/state mínimo, output/event básico, packaging dev e harness black-box inicial contra Ralph clássico.
 
@@ -131,7 +131,7 @@ A ordem é propositalmente conservadora. Dentro de um subplano podem existir ite
 
 **Subplano:** [09-subprds-paralelismo-git-e-seguranca.md](../implementation/09-subprds-paralelismo-git-e-seguranca.md).
 
-## S10 — Fluxos operacionais e migração lado a lado
+## S10 — Fluxos operacionais e migração controlada
 
 **Resultado:** comandos relevantes do Ralph atual têm implementação/alias/diagnóstico, settings são editáveis por CLI/TUI e um workspace v1 pode ser inspecionado/migrado sem sobrescrita.
 
@@ -139,7 +139,8 @@ A ordem é propositalmente conservadora. Dentro de um subplano podem existir ite
 
 **Não inclui:** declarar release final.
 
-**Prova:** matriz command/flag, migrate inspect/apply/rollback fixture, old/new coexistem, JSON output estável.
+**Prova:** matriz command/flag, migrate inspect/apply/rollback fixture, old/new comparados por paths
+absolutos sem compartilhar state e JSON output estável.
 
 **Subplano:** [10-comandos-operacionais-e-migracao.md](../implementation/10-comandos-operacionais-e-migracao.md).
 
@@ -149,7 +150,7 @@ A ordem é propositalmente conservadora. Dentro de um subplano podem existir ite
 
 **Corte transversal:** unit/property/golden/integration/E2E, fake kit, PTY, cross-platform CI, performance/backpressure, secret/license/SBOM e correções.
 
-**Não inclui:** renomear `ralph-next` antes dos resultados.
+**Não inclui:** publicar um segundo nome de executável; o comando permanece `ralph`.
 
 **Prova:** artifacts de CI e matriz de rastreabilidade sem requisito obrigatório órfão.
 

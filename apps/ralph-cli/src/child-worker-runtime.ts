@@ -1,9 +1,4 @@
-import {
-  EffectiveRunOptionsSchema,
-  EXIT_CODES,
-  RalphError,
-  type RunStatus,
-} from "@ralph-next/domain"
+import { EffectiveRunOptionsSchema, EXIT_CODES, RalphError, type RunStatus } from "@ralph/domain"
 import {
   type ChildTaskBudgetAuthority,
   type ChildTaskBudgetState,
@@ -11,9 +6,9 @@ import {
   effectiveOptionsHash,
   executeReservedChildWorker,
   parseRunOptionResolutionContext,
-} from "@ralph-next/orchestration"
-import { assertDurableLeaseOwned, getChildRunLink, workspaceLayout } from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
+} from "@ralph/orchestration"
+import { assertDurableLeaseOwned, getChildRunLink, workspaceLayout } from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
 import {
   type ChildRunWorkerRequest,
   ChildRunWorkerRequestSchema,
@@ -26,7 +21,7 @@ import {
   ChildTaskBudgetSnapshotSchema,
   type WorkerResourcePayload,
   type WorkerRoleAdapterContext,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 
 import { createS04Services } from "./s04-services"
 import { createS05Services } from "./s05-services"

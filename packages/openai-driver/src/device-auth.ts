@@ -30,7 +30,7 @@ export type DevicePollOptions = {
   userAgent?: string
 }
 
-export const DEFAULT_RALPH_OPENAI_USER_AGENT = "ralph-next/0.1.0-beta.2"
+export const DEFAULT_RALPH_OPENAI_USER_AGENT = "ralph/0.1.0-beta.2"
 
 export async function startDeviceAuthorization(
   runtime: Pick<ProtocolRuntime, "fetch">,

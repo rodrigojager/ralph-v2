@@ -19,7 +19,7 @@ import {
   type LegacyMigrationRollbackManifest,
   LegacyMigrationRollbackManifestSchema,
   RalphError,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   canonicalDirectory,
   initializeWorkspace,
@@ -28,14 +28,14 @@ import {
   workspaceLayout,
   writeFileAtomic,
   writeJsonAtomic,
-} from "@ralph-next/persistence"
-import { compilePrdGraph, migrateClassicFile, parseClassicPrdFile } from "@ralph-next/prd"
+} from "@ralph/persistence"
+import { compilePrdGraph, migrateClassicFile, parseClassicPrdFile } from "@ralph/prd"
 import {
   acquireFilesystemLease,
   FilesystemLeaseBlockedError,
   removeTrustedFile,
   type TrustedFileIdentity,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 import { parseDocument, stringify } from "yaml"
 
 const MAX_LEGACY_FILE_BYTES = 1_048_576
@@ -1925,7 +1925,7 @@ export async function applyLegacyMigration(
       handoff: {
         nextTask: inspection.handoff.nextTask,
         legacyRunImported: false,
-        command: `ralph-next run --workspace ${shellQuote(destinationRoot)} --prd PRD.migrated.md --new-run`,
+        command: `ralph run --workspace ${shellQuote(destinationRoot)} --prd PRD.migrated.md --new-run`,
         requiresProfileSelection: true,
       },
     }

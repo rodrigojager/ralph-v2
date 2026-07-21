@@ -3,14 +3,14 @@ import {
   CredentialConnectRequestSchema as CredentialConnectRequestSchemaAuth,
   CredentialMethodInfoSchema as CredentialMethodInfoSchemaAuth,
   CredentialRefSchema as CredentialRefSchemaAuth,
-} from "@ralph-next/credentials"
-import { ProfileParametersSchema } from "@ralph-next/domain"
+} from "@ralph/credentials"
+import { ProfileParametersSchema } from "@ralph/domain"
 import {
   CredentialConnectRequestSchema as CredentialConnectRequestSchemaProvider,
   CredentialMethodInfoSchema as CredentialMethodInfoSchemaProvider,
   CredentialRefSchema as CredentialRefSchemaProvider,
   ModelParametersSchema,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import type { ZodType } from "zod"
 
 function outcome(schema: ZodType, value: unknown): { success: boolean; data?: unknown } {

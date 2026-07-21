@@ -17,7 +17,7 @@ template preenche automaticamente os gates abaixo.
 
 ## Gate A — identidade e licença própria
 
-- [x] nome final do package escolhido pelo proprietário: `ralph-next`;
+- [x] nome final do package escolhido pelo proprietário: `ralph`;
 - [x] licença própria escolhida e registrada em `package.json`: MIT;
 - [x] `LICENSE` própria presente;
 - [x] owner/repository de publicação confirmado;
@@ -237,7 +237,7 @@ Os dois flags não são livres nem opcionais: `dev -> dev`, `nightly -> nightly`
 `stable`. O primeiro identificador precisa ser exato; `beta2`, por exemplo, não equivale a
 `beta.2`. O packager falha antes de compor o payload quando qualquer binding diverge.
 
-O tarball usa `package/`, bin `ralph-next`, bundle, documentação e samples autocontidos referenciados
+O tarball usa `package/`, bin `ralph`, bundle, documentação e samples autocontidos referenciados
 pelo README (`docs/`, `examples/`, `implementation/`, `skill-contract/`, `AGENTS.md`,
 `DEVELOPMENT.md` e `PRD.md`), schemas,
 skill, SBOM, provenance, hashes, licença e notices. O package exige Bun; npm/pnpm são canais de
@@ -463,28 +463,23 @@ forward test cego em checkout temporário produziram 2 documentos/7 tasks e pass
 abertos porque o teste ainda não usou o artifact empacotado, licenciado, content-addressed e ligado
 ao release candidate/reviewer formal.
 
-## Gate I — beta e nome final
+## Gate I — beta e substituição do CLI anterior
 
 - [ ] campanha, janela, coorte, targets e artifact hashes vinculados antes da entrada;
-- [ ] período beta operado exclusivamente como `ralph-next`;
+- [ ] período beta operado exclusivamente como `ralph`;
 - [ ] diagnostics locais, redaction, retenção, exclusão e known issues triados sem telemetria invasiva;
 - [ ] blockers fechados ou waivers explícitos;
-- [ ] TUI/PTY, migração, rollback e retorno ao Ralph clássico documentados e ensaiados;
+- [ ] TUI/PTY, migração, rollback e substituição do Ralph clássico documentados e ensaiados;
 - [ ] backup clássico registra path, versão, tamanho e SHA-256 e foi conferido por path absoluto;
-- [ ] status/preview do alias não mutam; apply exige receipt corrente `stable`, plano confirmado e
-  ausência de colisão;
-- [ ] remoção é channel-independent, move primeiro para quarentena receipt-bound, inclui
-  paths/hashes de recuperação no preview e bloqueia nova instalação enquanto qualquer quarentena
-  válida permanecer;
-- [ ] receipt de controle `N+1` é atômico, aparece no preview quando ainda não foi ativado e só é
-  reutilizado ou descartado após reconstrução canônica e hash idêntico;
-- [ ] oferta do alias `ralph` é somente opt-in, não altera `PATH` e inclui prova de
-  `Get-Command ralph -All`/`where.exe ralph` ou `type -a ralph`;
-- [ ] pacote npm continua expondo somente `ralph-next`, sem alias implícito;
-- [ ] Ralph clássico nunca removido implicitamente.
+- [ ] instalação clássica é removida explicitamente pelo mecanismo que a instalou antes da ativação
+  da v2;
+- [ ] `Get-Command ralph -All`/`where.exe ralph` ou `type -a ralph` prova que o comando esperado
+  resolve para a v2 e não para uma instalação antiga;
+- [ ] standalone e pacote npm expõem somente `ralph`, sem nome ou alias secundário;
+- [ ] workspaces/configurações clássicos nunca são removidos implicitamente.
 
 A worksheet determinística e os case IDs deste gate estão em
-[28 — Drills de release, beta, alias e handoff](28-release-drills-beta-alias-e-handoff-s12.md).
+[28 — Drills de release, beta e handoff](28-release-drills-beta-e-handoff-s12.md).
 
 ## Handoff a preencher
 
@@ -519,7 +514,7 @@ Platform install smokes:
 TUI/PTY runtime smokes:
 Migration drill/case/evidence:
 Engine and workspace rollback drills:
-Classic Ralph return drill:
+Classic Ralph replacement/rollback drill:
 Known issues:
 Waivers:
 Install commands:
@@ -537,12 +532,9 @@ Diagnostics/redaction/retention/deletion policy:
 Triage issue index/owner:
 Classic Ralph absolute path/version/size/SHA-256:
 Classic Ralph backup path/inventory SHA-256:
-Alias ralph decision/approval:
-Alias current receipt channel/generation/SHA-256:
-Alias preview plan SHA-256/collision result:
-Alias/receipt removal quarantine paths/SHA-256/state:
-Alias pending control receipt/quarantine path/SHA-256/state:
-Alias PATH/package-manager non-mutation proof:
+Classic Ralph removal mechanism/result:
+New ralph absolute path/version/size/SHA-256:
+PATH resolution proof after replacement:
 Release owner/reviewer/date:
 ```
 

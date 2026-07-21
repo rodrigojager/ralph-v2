@@ -9,9 +9,9 @@ import {
   ReleaseSignatureTrustPolicySchema,
   type ReleaseSignatureVerificationResult,
   type ReleaseSignatureVerifier,
-} from "@ralph-next/distribution"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
-import { BunProcessSupervisor, type ProcessSupervisor } from "@ralph-next/supervisor"
+} from "@ralph/distribution"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
+import { BunProcessSupervisor, type ProcessSupervisor } from "@ralph/supervisor"
 
 const CONFIG_LIMIT_BYTES = 1024 * 1024
 const RESULT_LIMIT_BYTES = 64 * 1024
@@ -473,7 +473,7 @@ async function removeVerifierTemporaryDirectory(
   })
   if (
     parent !== canonicalTemporaryRoot ||
-    !basename(path).startsWith("ralph-next-release-verify-") ||
+    !basename(path).startsWith("ralph-release-verify-") ||
     !current.isDirectory() ||
     current.isSymbolicLink() ||
     current.dev !== expectedIdentity.dev ||
@@ -612,9 +612,7 @@ export async function loadDistributionSignatureComposition(
           )
         }
         const canonicalTemporaryRoot = await realpath(resolve(tmpdir()))
-        const temporaryRoot = await mkdtemp(
-          join(canonicalTemporaryRoot, "ralph-next-release-verify-"),
-        )
+        const temporaryRoot = await mkdtemp(join(canonicalTemporaryRoot, "ralph-release-verify-"))
         const temporaryIdentity = await lstat(temporaryRoot)
         if (!temporaryIdentity.isDirectory() || temporaryIdentity.isSymbolicLink()) {
           throw signatureError(

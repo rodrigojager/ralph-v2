@@ -33,7 +33,7 @@ for the patch IDs used by that manifest.
 - Removed behavior: OpenCode plugin/session hooks, websocket pool, installation
   and version identity, OpenCode settings and user agent, product UI and every
   application-state dependency.
-- Ralph changes: injectable `ralph-next/...` user agent; independent API-key and
+- Ralph changes: injectable `ralph/...` user agent; independent API-key and
   subscription drivers; bounded timeout/cancel; sanitized failure taxonomy;
   composition of the pinned issuer/client/scopes/callback and account metadata
   parameters behind Ralph credential commands; read-only smoke request with

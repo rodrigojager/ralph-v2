@@ -1,18 +1,14 @@
 import { afterEach, describe, expect, test } from "bun:test"
 
-import type {
-  ExecutionChannel,
-  ExecutionRequest,
-  ExecutionToolResult,
-} from "@ralph-next/orchestration"
-import type { ExternalCliRuntimeConfig, ProviderToolCall } from "@ralph-next/providers"
+import type { ExecutionChannel, ExecutionRequest, ExecutionToolResult } from "@ralph/orchestration"
+import type { ExternalCliRuntimeConfig, ProviderToolCall } from "@ralph/providers"
 import type {
   ProcessSettlement,
   ProcessSupervisor,
   SupervisedProcessHandle,
   SupervisedProcessRequest,
-} from "@ralph-next/supervisor"
-import { ScriptedCliSupervisor } from "@ralph-next/test-kit"
+} from "@ralph/supervisor"
+import { ScriptedCliSupervisor } from "@ralph/test-kit"
 import { createTestDirectory, removeTestDirectory } from "../../../tests/helpers/temp-directory"
 
 import { ExternalCliExecutionBackend } from "../src/index"

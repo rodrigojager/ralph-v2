@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { mkdir, readdir, readFile, readlink, symlink, unlink, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { CommandSpecSchema, VerificationSpecSchema } from "@ralph-next/prd"
+import { CommandSpecSchema, VerificationSpecSchema } from "@ralph/prd"
 import {
   captureWorkspaceBaseline,
   collectArtifactEvidence,
@@ -11,7 +11,7 @@ import {
   runStructuredCommand,
   runVerification,
   verifyWorkspaceBaselineContent,
-} from "@ralph-next/verification"
+} from "@ralph/verification"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const temporaryDirectories: string[] = []

@@ -12,8 +12,8 @@ import {
   GateResultSchema,
   JudgeOutputSchema,
   RunModeSchema,
-} from "@ralph-next/domain"
-import { EventEnvelopeSchema } from "@ralph-next/telemetry"
+} from "@ralph/domain"
+import { EventEnvelopeSchema } from "@ralph/telemetry"
 import { z } from "zod"
 import { ProcessSettlementSchema } from "./contracts"
 import {

@@ -1,4 +1,4 @@
-import { PluginGateIdSchema, type VerificationSpec } from "@ralph-next/prd"
+import { PluginGateIdSchema, type VerificationSpec } from "@ralph/prd"
 import type {
   GateExecutionContext,
   GateExecutionOutcome,

@@ -15,7 +15,7 @@ import {
   ProviderToolCallSchema,
   type TokenUsage,
   TokenUsageSchema,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 
 export type ScriptedProviderRateLimit = {
   retryAfterMs: number

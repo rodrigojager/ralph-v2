@@ -16,7 +16,7 @@ import {
   type JudgeRubric,
   JudgeRubricSchema,
   MissingEvidenceSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { z } from "zod"
 
 const NonEmptyStringSchema = z.string().trim().min(1)

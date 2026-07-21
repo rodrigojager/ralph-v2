@@ -1,14 +1,14 @@
 import { createHash } from "node:crypto"
 import { lstat, open, readFile } from "node:fs/promises"
 import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path"
-import { EXIT_CODES, type ExitCode, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, type ExitCode, RalphError } from "@ralph/domain"
 import {
   canonicalDirectory,
   loadEffectiveConfig,
   readConfigTransferLayer,
   writeFileAtomic,
-} from "@ralph-next/persistence"
-import { REDACTED, redactValue, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+} from "@ralph/persistence"
+import { REDACTED, redactValue, secretValuesFromEnvironment } from "@ralph/telemetry"
 import { LineCounter, parseDocument, stringify } from "yaml"
 
 export type ConfigDocumentSerialization = "yaml" | "json"

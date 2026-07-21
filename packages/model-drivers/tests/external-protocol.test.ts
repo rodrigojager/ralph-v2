@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import type { ExecutorOutcome } from "@ralph-next/domain"
+import type { ExecutorOutcome } from "@ralph/domain"
 
 import {
   builtinKnownExternalOutputAdapters,

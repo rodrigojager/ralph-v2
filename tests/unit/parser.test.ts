@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
-import { inferRequestedFormat, parseCli } from "@ralph-next/commands"
-import { EXIT_CODES, type ExitCode, RalphError } from "@ralph-next/domain"
+import { inferRequestedFormat, parseCli } from "@ralph/commands"
+import { EXIT_CODES, type ExitCode, RalphError } from "@ralph/domain"
 
 function expectParseError(
   argv: readonly string[],

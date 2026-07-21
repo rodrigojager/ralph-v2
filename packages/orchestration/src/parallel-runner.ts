@@ -1,4 +1,4 @@
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   type ClaimedParallelDispatch,
   claimParallelDispatches,

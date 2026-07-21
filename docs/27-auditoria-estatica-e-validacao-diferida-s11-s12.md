@@ -17,7 +17,7 @@ com 1.777 asserções; watchdog 8/8; o smoke PTY real passou
 em três execuções consecutivas e a matriz Windows ConPTY S08.12 passou 5/5 com 34 verificações;
 properties/fuzz/goldens S11.03 passaram 111/111 com 5.205 asserções; compatibility source-only 5/5;
 addendum S03 15/15; build e smoke nativo Windows x64 verdes. O harness integral S10 passou 91/91,
-sem regressions ou surface regressions, comparando `ralph 0.2.0` e `ralph-next 0.1.0-dev.1` reais e
+sem regressions ou surface regressions, comparando `ralph 0.2.0` e `ralph 0.1.0-dev.1` reais e
 executando coexistência, inspect/apply/rollback e as suites vinculadas. Smokes reais de provider/auth,
 packaging, install/update de artifact de release, matriz multiplataforma, assinatura e promoção não
 foram executados. Separadamente, `EV-S12-DIST-8` validou o lifecycle local de distribuição com
@@ -394,15 +394,11 @@ standalone nativo e arquiva evidence por target. O receipt vincula também o lab
 `ImageOS`/`ImageVersion` quando expostos e o hash da workflow, impedindo que uma migração de imagem
 herde silenciosamente o baseline anterior. `EV-S11-FS-12` passou localmente no Windows x64,
 mas a presença do workflow não prova os outros cinco pares: `BLK-MULTIPLATFORM` permanece.
-O alias standalone opt-in também remove seus dois paths por rename para quarentena determinística,
-confere identidade/link count/descritor/hash depois do movimento e só então executa unlink. O retry
-confirmado reconhece uma quarentena receipt-bound deixada antes do unlink; estados ambíguos são
-preservados. Como nas demais operações locais portáveis, isso não cria isolamento forte contra um
-mutador concorrente com a mesma autoridade do processo, e nenhuma promessa inclui `PATH` ou um Ralph
-clássico fora do install root.
-O receipt de controle seguinte passou a ser publicado atomicamente e sua presença/quarentena/hash
-integram o snapshot e o plan hash. Na direção inversa, um pending `N+1` de install-recovery só é
-descartado se a reconstrução canônica a partir de `N` produzir exatamente os mesmos bytes; assim uma
+O launcher standalone usa diretamente o nome `ralph`; não existe cópia de alias nem segundo nome de
+binário. Como nas demais operações locais portáveis, isso não cria isolamento forte contra um mutador
+concorrente com a mesma autoridade do processo, e o instalador nunca amplia seu alvo para `PATH` ou
+para um Ralph clássico fora do install root. Um pending `N+1` de install-recovery só é descartado se
+a reconstrução canônica a partir de `N` produzir exatamente os mesmos bytes; assim uma
 geração órfã não ocupa silenciosamente o próximo número nem um receipt alheio é apagado por nome.
 
 **Prova local atual:** `EV-S10-COMPAT-91` executou o harness integral com dois binários explícitos,
@@ -604,9 +600,8 @@ A revisão cruzada posterior fechou outros gaps de source, ainda sem produzir pr
 - retenção de eventos/raw passou a snapshot por row na migration v14, lease global cross-process,
   revalidação path/handle/parent e remoção por quarentena; capturas de model-smoke são particionadas
   por workspace/policy estável sem transformar mudança futura de retenção em diretório órfão.
-- a superfície pública ganhou `alias ralph status|install|remove`: preview é hash-bound, install
-  exige receipt corrente `stable`, criação exclusiva e ownership geracional; remove verifica receipt
-  e bytes, sem editar `PATH`, afetar alias externo ou publicar bin npm implícito;
+- a superfície pública usa exclusivamente `ralph`; o mecanismo de alias de transição foi removido e
+  o corte exige desinstalação explícita da versão anterior mais prova de resolução do novo binário;
 - `docs/28-*` materializa a worksheet S12.09/S12.10 com case IDs, diagnostics locais/redigidos,
   gate beta e retorno exato ao clássico; `docs/26-*` agora carrega os campos ampliados de S12.11.
 
@@ -726,7 +721,7 @@ promover resultado local a suporte de release.
 
 ### B02 — identidade decidida; publicação do namespace ainda pendente
 
-O proprietário delegou a decisão e o source agora declara MIT própria, `ralph-next`, versão
+O proprietário delegou a decisão e o source agora declara MIT própria, `ralph`, versão
 `0.1.0-beta.2`, channel `beta` e repositório `https://github.com/rodrigojager/ralph-v2`. O gerador
 usa `$id` sob `https://rodrigojager.github.io/ralph-v2/schemas/v2/`, materializado por workflow Pages
 com actions pinadas por SHA. `private: true` permanece apenas no monorepo de desenvolvimento; o
@@ -932,12 +927,12 @@ partial`. Para uma nova campanha, quem assumir o trabalho deve:
 3. preservar a integração 149/149, o gate 673/673 e o sample S12.08 local 1/1 com 59 asserções,
    fechando somente as lacunas específicas sem extrapolar os resultados locais;
 4. manter stable fail-closed, sem assinatura ou trust implícitos;
-5. manter `ralph-next` lado a lado com o Ralph clássico;
+5. manter `ralph` lado a lado com o Ralph clássico;
 6. registrar qualquer novo gap na matriz R001–R079 e neste blocker ledger;
 7. para release, começar por checkout/lock/schema/build limpos e vinculados ao candidato, sem usar
    resultados locais como substitutos;
 8. preencher [o handoff formal](26-release-gates-e-handoff-s12.md) e a
-   [worksheet beta/drills](28-release-drills-beta-alias-e-handoff-s12.md) somente com valores observados.
+   [worksheet beta/drills](28-release-drills-beta-e-handoff-s12.md) somente com valores observados.
 
 Até isso ocorrer, a formulação correta é: **as superfícies acima foram implementadas e receberam
 validação local parcial nos graus registrados, mas o produto não foi validado na matriz externa,

@@ -13,13 +13,13 @@ import {
   WatchdogSnapshotSchema,
   type WatchdogTriState,
   WatchdogTriStateSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   type EventInput,
   type WatchdogEventContext,
   WatchdogEventContextSchema,
   watchdogEventInputs,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 import { evaluateWatchdog } from "./watchdog"
 
 export interface WatchdogClock {

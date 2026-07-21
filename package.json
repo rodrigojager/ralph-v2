@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "dev": "bun run apps/ralph-cli/src/main.ts",
-    "ralph-next": "bun run apps/ralph-cli/src/main.ts",
+    "ralph": "bun run apps/ralph-cli/src/main.ts",
     "lint": "biome check .",
     "format": "biome check --write .",
     "typecheck": "tsc --noEmit",

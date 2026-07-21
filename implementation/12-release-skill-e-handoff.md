@@ -28,7 +28,9 @@ O Ralph v2 é instalável, diagnosticável e reversível. Releases carregam chec
 - [x] S12.07 garantir que a skill nunca peça ao runtime/executor geração tardia de child, nunca invente critério só para satisfazer schema, prefira artifact útil declarado e permita um receipt bounded pré-declarado como último recurso determinístico quando nenhum outro entregável material existir.
 - [x] S12.08 preparar sample project end to end com pequenas slices atravessando camadas, judge fake/real opt-in, reprovação/revisão, child, crash/resume e TUI; gravar report/evidence esperado sem tokens/secrets reais.
 - [x] S12.09 executar instalação limpa e migration/rollback drill em plataformas alvo, auth smoke real opt-in, TUI runtime e release artifact verification; publicar limitações reais e não converter contract-only em claim de suporte.
-- [x] S12.10 operar período beta como `ralph-next`, coletar/triage diagnostics sem telemetria invasiva, fechar blockers e aplicar checklist de corte antes de oferecer alias `ralph`; backup e retorno ao binário antigo permanecem documentados.
+- [x] S12.10 operar período beta como `ralph`, coletar/triage diagnostics sem telemetria invasiva,
+  fechar blockers e aplicar checklist de corte para remover explicitamente a instalação antiga antes
+  de ativar a v2; backup e rollback permanecem documentados.
 - [x] S12.11 produzir handoff final com status S01–S12, matriz R001–R079, versões/commits, artifacts/checksums, comandos de instalação/uso, known issues, decisões configuráveis e processo de refresh upstream.
 
 ## Critérios de conclusão
@@ -38,7 +40,7 @@ O Ralph v2 é instalável, diagnosticável e reversível. Releases carregam chec
 - Skill gera root/children humanos e parser-valid sem escolher stack.
 - Sample prova execução, avaliação, revisão, resume e UI.
 - Migração/rollback foram realmente ensaiados.
-- `ralph` só substitui `ralph-next` depois do gate e nunca remove o antigo implicitamente.
+- `ralph` só substitui `ralph` depois do gate e nunca remove o antigo implicitamente.
 
 ## Estado de implementação estática da skill
 
@@ -229,7 +231,7 @@ antes dos renames de commit e removem staging não promovido em falha ou interru
 
 Os guias consolidados de usuário e operador estão em `docs/24-*` e `docs/25-*`. O gate único e o
 template de handoff estão em `docs/26-*`, cobrindo identidade/licença, targets, artifacts,
-install/update/rollback/uninstall, matriz R001–R079, skill, beta e decisão do alias `ralph`.
+install/update/rollback/uninstall, matriz R001–R079, skill, beta e substituição do CLI anterior.
 
 No ciclo local atual, os 60 schemas foram gerados/conferidos; lint e typecheck passaram; o gate
 consolidado aprovou 673 testes com 2 smokes reais opt-in corretamente ignorados; integração aprovou
@@ -247,21 +249,17 @@ reexecutadas neste fechamento.
 
 `docs/28-*` fornece os case IDs e a worksheet determinística reutilizável para artifacts,
 install/update/rollback/uninstall, migração/resume, auth opt-in, TUI/PTY, beta, diagnostics locais e
-retorno ao Ralph clássico. A cópia preenchida do candidato, os logs redigidos e seus digests ficam
-fora do commit no handoff final, vinculados ao manifest exato. O source também expõe o alias
-standalone `ralph` como operação opt-in receipt-bound: preview hash-bound, apply somente a partir de
-receipt corrente `stable`, colisão fail-closed, remoção por quarentena com identidade/hash verificados,
-recuperação determinística entre rename/unlink, receipt de controle `N+1` atômico e hash-bound, e
-nenhum efeito em `PATH` ou no pacote npm.
-`docs/26-*` contém o handoff ampliado de S01–S12, campanha beta, smokes, decisões, upstream refresh,
-classic backup e alias. A campanha final mantém provider/auth real como `not-executed` quando não há
-credencial opt-in elegível; isso é uma limitação publicada, não um pass. O alias `ralph` recebe
-decisão de não oferta no beta e o Ralph clássico permanece intacto.
+substituição controlada do Ralph clássico. A cópia preenchida do candidato, os logs redigidos e seus
+digests ficam fora do commit no handoff final, vinculados ao manifest exato. O source expõe somente
+o launcher e o comando `ralph`; não existe alias de transição.
+`docs/26-*` contém o handoff ampliado de S01–S12, campanha beta, smokes, decisões, upstream refresh e
+inventário da instalação anterior. A campanha final mantém provider/auth real como `not-executed`
+quando não há credencial opt-in elegível; isso é uma limitação publicada, não um pass.
 
 ## Identidade e licença próprias decididas
 
 O proprietário delegou as decisões finais. O source agora usa MIT própria, copyright Rodrigo Jager,
-package/binário `ralph-next`, versão `0.1.0-beta.2`, primeiro channel `beta`, repositório
+package/binário `ralph`, versão `0.1.0-beta.2`, primeiro channel `beta`, repositório
 `https://github.com/rodrigojager/ralph-v2` e namespace de schemas
 `https://rodrigojager.github.io/ralph-v2/schemas/v2/`. O monorepo raiz permanece `private: true`
 porque não é o tarball publicável; `package:npm` materializa o package público em staging separado.
@@ -309,8 +307,8 @@ os artifacts e os drills; nenhum valor exato é copiado para este arquivo para e
 commit ao próprio hash.
 
 ```text
-ralph-next prd validate <skill-generated-root> --recursive --strict
-ralph-next doctor --format json
+ralph prd validate <skill-generated-root> --recursive --strict
+ralph doctor --format json
 <release-artifact> version
 <release-artifact> run --prd <sample> --executor-profile <fake-or-opt-in>
 <checksum-command> <release-artifacts>

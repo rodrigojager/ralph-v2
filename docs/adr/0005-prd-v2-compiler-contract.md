@@ -20,7 +20,7 @@ O esboço conceitual inicial de `docs/17-*` não resolvia quatro pontos necessá
 1. A skill externa `ralph-loop-prd-generator` é a única autora de root PRD e de todos os children
    referenciados; ela foi materializada posteriormente em `skills/ralph-loop-prd-generator/` sem
    transferir autoridade de parsing para o pacote.
-2. A skill escreve o graph inteiro e executa `ralph-next prd validate <root> --recursive --strict` antes de entregar o plano.
+2. A skill escreve o graph inteiro e executa `ralph prd validate <root> --recursive --strict` antes de entregar o plano.
 3. O runtime Ralph detecta, compila, valida, inspeciona, migra quando comandado, executa e edita markers; ele não cria nem expande planejamento.
 4. Child ausente, cycle, parent mismatch ou schema inválido falha antes de provider/model call.
 5. Nenhum prompt, fallback, tool ou outcome do executor pode pedir que ele crie PRD/sub-PRD para continuar um run.
@@ -136,8 +136,8 @@ A skill final de S12 empacota esse conteúdo conforme a plataforma, apontando pa
 ## Evidência esperada
 
 ```text
-ralph-next prd validate skill-contract/ralph-loop-prd-generator/PRD-v2.template.md --recursive --strict
-ralph-next prd inspect skill-contract/ralph-loop-prd-generator/PRD-v2.template.md --recursive --strict --format json
+ralph prd validate skill-contract/ralph-loop-prd-generator/PRD-v2.template.md --recursive --strict
+ralph prd inspect skill-contract/ralph-loop-prd-generator/PRD-v2.template.md --recursive --strict --format json
 ```
 
 Além disso:

@@ -5,13 +5,13 @@ import type {
   ExecutionToolPort,
   ExecutionToolReconciliationContext,
   ExecutionToolResult,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   type ReplayedToolSettlement,
   reconcileUnsettledToolCalls,
   type ToolReconciliationResult,
   type ToolReplayDecision,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   createSqliteToolCallJournal,
   ensureRunLayout,
@@ -24,15 +24,15 @@ import {
   type ToolCallIntentRecord,
   workspaceLayout,
   writeFileAtomic,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   type ProviderToolCall,
   ProviderToolCallSchema,
   type ProviderToolDefinition,
   ProviderToolDefinitionSchema,
-} from "@ralph-next/providers"
-import type { ProcessSupervisor } from "@ralph-next/supervisor"
-import { redactText, redactValue, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+} from "@ralph/providers"
+import type { ProcessSupervisor } from "@ralph/supervisor"
+import { redactText, redactValue, secretValuesFromEnvironment } from "@ralph/telemetry"
 import {
   type ArtifactPublisherPort,
   type CommandRule,
@@ -61,7 +61,7 @@ import {
   type ToolSettlement,
   ToolSettlementSchema,
   WorkspacePathResolver,
-} from "@ralph-next/tool-host"
+} from "@ralph/tool-host"
 import { probeDurableProcessIntent, reattachDurableProcessIntent } from "./durable-process-owner"
 import {
   createWorkspaceBunProcessSupervisor,

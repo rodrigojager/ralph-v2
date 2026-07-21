@@ -6,7 +6,7 @@ import {
   EXIT_CODES,
   parseTelemetryEventRetention,
   RalphError,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   acquireFilesystemLease,
   type EventEnvelope,
@@ -15,7 +15,7 @@ import {
   type EventInput,
   redactValue,
   secretValuesFromEnvironment,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 import { writeFileAtomic } from "./atomic"
 import { CHILD_RUN_LINKS_MIGRATION_SQL } from "./child-run-links-migration"
 import type { WorkspaceLayout } from "./paths"

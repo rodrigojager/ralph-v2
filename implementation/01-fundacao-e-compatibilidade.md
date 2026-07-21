@@ -7,7 +7,7 @@ engine: codex
 
 ## Resultado do subplano
 
-Um usuário consegue instalar/invocar `ralph-next`, inicializar um workspace isolado e consultar help, version e status em saída humana ou JSON. O projeto já possui a direção arquitetural, schemas mínimos, event/output contract e um harness que compara uma superfície inicial do Ralph antigo sem modificar seu checkout.
+Um usuário consegue instalar/invocar `ralph`, inicializar um workspace isolado e consultar help, version e status em saída humana ou JSON. O projeto já possui a direção arquitetural, schemas mínimos, event/output contract e um harness que compara uma superfície inicial do Ralph antigo sem modificar seu checkout.
 
 ## Referências obrigatórias
 
@@ -20,14 +20,14 @@ Um usuário consegue instalar/invocar `ralph-next`, inicializar um workspace iso
 
 - Cada item abaixo termina com um comando/fluxo observável, não apenas arquivos base.
 - Não copiar ainda o loop de agente nem providers do OpenCode.
-- Usar `ralph-next` como nome do binário durante a construção.
+- Usar `ralph` como nome do binário durante a construção.
 - Toda saída JSON segue `CommandResult` e nunca recebe banner.
 - Não criar estado global quando um estado local resolve.
 
 ## Tarefas
 
-- [x] S01.01 criar o workspace Bun/TypeScript com entrypoint `ralph-next`, workspaces `apps/ralph-cli` e packages mínimos `domain`, `commands`, `persistence` e `telemetry`, fixar versões/lockfile, adicionar lint/format/typecheck/test e provar `ralph-next version` a partir do source e do binário/package de desenvolvimento.
-- [x] S01.02 implementar resolução segura de workspace, `workspaceId`, layout `.ralph/`, schema versionado de configuração mínima e `ralph-next init`, garantindo init idempotente, paths com espaços/Unicode, recusa de sobrescrita e saída human/JSON.
+- [x] S01.01 criar o workspace Bun/TypeScript com entrypoint `ralph`, workspaces `apps/ralph-cli` e packages mínimos `domain`, `commands`, `persistence` e `telemetry`, fixar versões/lockfile, adicionar lint/format/typecheck/test e provar `ralph version` a partir do source e do binário/package de desenvolvimento.
+- [x] S01.02 implementar resolução segura de workspace, `workspaceId`, layout `.ralph/`, schema versionado de configuração mínima e `ralph init`, garantindo init idempotente, paths com espaços/Unicode, recusa de sobrescrita e saída human/JSON.
 - [x] S01.03 implementar o parser de commands/flags e os comandos `help`, `about`, `version` e `status`, com exit codes normativos, `--format human|json`, `--no-color`, `--debug` e precedência inicial builtin/global/workspace/env/CLI explicável por `config explain`.
 - [x] S01.04 implementar store inicial e event outbox suficientes para registrar init/status sem JSON solto incoerente, criar migrations e um event envelope v1, e provar que replay de eventos da fixture reconstrói o mesmo snapshot vazio.
 - [x] S01.05 criar outputs headless compartilhados, diagnostics com code/file/line quando aplicável, separação stdout/stderr e redaction básica; adicionar goldens que impedem banners, ANSI ou segredos em JSON.
@@ -37,7 +37,7 @@ Um usuário consegue instalar/invocar `ralph-next`, inicializar um workspace iso
 
 ## Critérios de conclusão
 
-- `ralph-next init`, `status`, `help` e `version` funcionam fora do source checkout.
+- `ralph init`, `status`, `help` e `version` funcionam fora do source checkout.
 - `.ralph` da v2 tem identity/schema próprios e não colide com state antigo.
 - Human/JSON têm testes e exit codes previsíveis.
 - Harness aponta diferenças em vez de mascará-las.

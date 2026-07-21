@@ -144,18 +144,18 @@ async function createReleaseFixture(): Promise<ReleaseFixture> {
     DEPENDENCY_NAME,
   )
   const installedManifestPath = resolve(installedPackageRoot, "package.json")
-  const workspaceManifestPath = resolve(root, "packages", "ralph-next", "package.json")
+  const workspaceManifestPath = resolve(root, "packages", "ralph", "package.json")
   const outputParent = resolve(root, "output")
 
   const lock = {
     lockfileVersion: 1,
     workspaces: {
       "apps/ralph-launcher": {
-        name: "@ralph-next/launcher",
+        name: "@ralph/launcher",
         version: APPLICATION_VERSION,
       },
-      "packages/ralph-next": {
-        name: "ralph-next",
+      "packages/ralph": {
+        name: "ralph",
         version: APPLICATION_VERSION,
         dependencies: { [DEPENDENCY_NAME]: DEPENDENCY_VERSION },
       },
@@ -179,11 +179,11 @@ async function createReleaseFixture(): Promise<ReleaseFixture> {
     writeText(resolve(root, "LICENSE"), "Synthetic root license for tests only.\n"),
     writeJson(resolve(root, "bun.lock"), lock),
     writeJson(resolve(root, "apps", "ralph-launcher", "package.json"), {
-      name: "@ralph-next/launcher",
+      name: "@ralph/launcher",
       version: APPLICATION_VERSION,
     }),
     writeJson(workspaceManifestPath, {
-      name: "ralph-next",
+      name: "ralph",
       version: APPLICATION_VERSION,
       dependencies: { [DEPENDENCY_NAME]: DEPENDENCY_VERSION },
     }),
@@ -638,7 +638,7 @@ describe("release SBOM and license inventory boundary", () => {
   test("rejects a source workspace that diverges from bun.lock", async () => {
     const fixture = await createReleaseFixture()
     await writeJson(fixture.workspaceManifestPath, {
-      name: "ralph-next",
+      name: "ralph",
       version: APPLICATION_VERSION,
       dependencies: { [DEPENDENCY_NAME]: `^${DEPENDENCY_VERSION}` },
     })

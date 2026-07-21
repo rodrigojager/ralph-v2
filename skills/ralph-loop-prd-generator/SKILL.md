@@ -55,8 +55,8 @@ marcar tarefas ou escolher tecnologias que a fonte não escolheu.
 9. **Validar pela autoridade oficial.** Executar, salvo proibição explícita do usuário:
 
    ```text
-   ralph-next prd validate <root-prd> --recursive --strict
-   ralph-next prd inspect <root-prd> --recursive --strict --format json
+   ralph prd validate <root-prd> --recursive --strict
+   ralph prd inspect <root-prd> --recursive --strict --format json
    ```
 
    Corrigir todos os diagnostics e confirmar identities/child edges. Se o binário não estiver

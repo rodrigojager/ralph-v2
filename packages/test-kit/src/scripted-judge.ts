@@ -1,8 +1,4 @@
-import {
-  type EvaluationProfileSnapshot,
-  type JudgeOutput,
-  JudgeOutputSchema,
-} from "@ralph-next/domain"
+import { type EvaluationProfileSnapshot, type JudgeOutput, JudgeOutputSchema } from "@ralph/domain"
 import type {
   JudgeBackend,
   JudgeBackendCapabilities,
@@ -10,7 +6,7 @@ import type {
   JudgeCallHandle,
   JudgeEventSink,
   JudgeRequest,
-} from "@ralph-next/evaluation"
+} from "@ralph/evaluation"
 
 export type ScriptedJudgeStep = {
   score?: number

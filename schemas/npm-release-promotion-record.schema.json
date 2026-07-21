@@ -10,7 +10,7 @@
     },
     "product": {
       "type": "string",
-      "const": "ralph-next"
+      "const": "ralph"
     },
     "subject": {
       "type": "string",
@@ -297,7 +297,7 @@
         },
         "product": {
           "type": "string",
-          "const": "ralph-next"
+          "const": "ralph"
         },
         "version": {
           "type": "string",

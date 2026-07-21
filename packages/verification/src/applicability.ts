@@ -1,4 +1,4 @@
-import type { VerificationSpec } from "@ralph-next/prd"
+import type { VerificationSpec } from "@ralph/prd"
 import { pathWithinPortableScope, portablePath, resolveSafeWorkspaceTarget } from "./path-safety"
 
 export type ApplicabilityResult =

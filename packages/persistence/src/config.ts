@@ -23,7 +23,7 @@ import {
   RoleProfileConfigLayerSchema,
   RoleProfileConfigSchema,
   roleProfileLayerPathSemantics,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { LineCounter, parseDocument, stringify } from "yaml"
 import type { ZodIssue } from "zod"
 import { writeFileAtomic } from "./atomic"
@@ -515,12 +515,12 @@ export function globalConfigPath(
     return join(resolve(environment.RALPH_CONFIG_HOME), "config.yaml")
   }
   if (process.platform === "win32" && environment.APPDATA) {
-    return join(environment.APPDATA, "ralph-next", "config.yaml")
+    return join(environment.APPDATA, "ralph", "config.yaml")
   }
   const base = environment.XDG_CONFIG_HOME
     ? resolve(environment.XDG_CONFIG_HOME)
     : join(homedir(), ".config")
-  return join(base, "ralph-next", "config.yaml")
+  return join(base, "ralph", "config.yaml")
 }
 
 async function readConfigDocument(path: string): Promise<ConfigDocument> {

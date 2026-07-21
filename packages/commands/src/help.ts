@@ -1,4 +1,4 @@
-import { EXIT_CODES } from "@ralph-next/domain"
+import { EXIT_CODES } from "@ralph/domain"
 import { COMMAND_METADATA, commandRegistryData } from "./command-registry"
 
 export { COMMAND_METADATA } from "./command-registry"
@@ -290,8 +290,7 @@ export const OPTION_METADATA = [
   },
   {
     syntax: "--confirm-plan-hash SHA256",
-    summary:
-      "Confirm checkpoint/migration rollback or optional-alias mutation with the exact matching preview hash",
+    summary: "Confirm checkpoint or migration rollback with the exact matching preview hash",
   },
   { syntax: "--retry-delay SEC", summary: "Set a non-negative delay between retry opportunities" },
   {
@@ -371,9 +370,9 @@ export const OPTION_METADATA = [
 
 export function helpData(version: string): Record<string, unknown> {
   return {
-    product: "ralph-next",
+    product: "ralph",
     version,
-    usage: "ralph-next <command> [options]",
+    usage: "ralph <command> [options]",
     commands: commandRegistryData(),
     options: OPTION_METADATA,
     exitCodes: EXIT_CODES,
@@ -394,10 +393,10 @@ export function helpText(version: string): string {
   const options = OPTION_METADATA.map(
     (option) => `  ${option.syntax.padEnd(optionWidth)}  ${option.summary}`,
   ).join("\n")
-  return `ralph-next ${version} — command-authoritative AI task runner
+  return `ralph ${version} — command-authoritative AI task runner
 
 USAGE
-  ralph-next <command> [options]
+  ralph <command> [options]
 
 COMMANDS
 ${commands}

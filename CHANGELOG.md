@@ -5,6 +5,13 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
 
 ## [Unreleased]
 
+### Changed
+
+- O pacote, o launcher, o binário standalone, os scripts e toda a documentação usam exclusivamente
+  o comando `ralph`.
+- Removida a superfície de alias de transição. Uma instalação anterior que já forneça `ralph` deve
+  ser removida explicitamente antes da instalação da v2 para evitar precedência ambígua no `PATH`.
+
 ## [0.1.0-beta.2] — candidato de hardening
 
 ### Fixed
@@ -29,7 +36,7 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
 
 ### Added
 
-- Runtime TypeScript/Bun independente sob o nome coexistente `ralph-next`.
+- Runtime TypeScript/Bun independente com o comando público `ralph`.
 - PRD v2 humano e determinístico, Sub-PRDs pré-autorizados e execução command-owned.
 - Providers/perfis independentes para executor e judge, ToolHost, evidence bundles e revisões.
 - Price snapshots imutáveis, custo reportado ou derivado com proveniência separada,
@@ -53,9 +60,7 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
   que distinguem `built-not-tested`, `tested` e suporte real.
 - Curadoria offline do runtime Bun `1.3.14` presa ao commit exato, com licença/notice upstream,
   provenance de tag/release/assets e receipts determinísticos usados pelo SBOM standalone.
-- Alias standalone `ralph` opt-in, receipt-bound e reversível, com preview confirmado, gate de
-  receipt `stable`, colisão fail-closed e nenhuma alteração de `PATH` ou bin npm implícito.
-- Worksheet de drills/beta com diagnostics locais e retorno ao Ralph clássico, além do handoff
+- Worksheet de drills/beta com diagnostics locais e substituição controlada do Ralph clássico, além do handoff
   S01–S12 ampliado para campanha, smokes, decisões e refresh upstream.
 
 ### Security
@@ -85,8 +90,8 @@ somente depois que um channel for promovido; builds `dev` e `nightly` não const
   indisponível de forma explícita; checksums e source binding não constituem assinatura.
 - Smokes de provider/API key/OAuth/ChatGPT reais são opt-in e não foram inferidos a partir da sessão
   do operador. A ausência de credenciais elegíveis permanece `not-executed` no handoff.
-- A campanha beta mantém `ralph-next`; o alias `ralph` não é oferecido e o Ralph clássico permanece
-  intacto. O pacote npm é produzido e verificado localmente, mas publicação no registry exige
+- A campanha beta usa `ralph`; a substituição da instalação anterior exige inventário, remoção
+  explícita e verificação do `PATH`. O pacote npm é produzido e verificado localmente, mas publicação no registry exige
   credencial explícita do proprietário.
 
 ## [0.1.0-dev.1] — não publicado

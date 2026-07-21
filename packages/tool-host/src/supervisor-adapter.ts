@@ -1,4 +1,4 @@
-import type { ProcessSupervisor } from "@ralph-next/supervisor"
+import type { ProcessSupervisor } from "@ralph/supervisor"
 import type { ProcessExecutorPort, ProcessPortRequest, ProcessPortResult } from "./contracts"
 
 /** Keeps the tool host coupled to the supervisor port, never its Bun backend. */

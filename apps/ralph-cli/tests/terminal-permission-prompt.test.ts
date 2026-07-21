@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { PassThrough } from "node:stream"
 
-import { ToolPermissionRequestSchema } from "@ralph-next/tool-host"
+import { ToolPermissionRequestSchema } from "@ralph/tool-host"
 
 import { TerminalPermissionPrompt } from "../src/terminal-permission-prompt"
 

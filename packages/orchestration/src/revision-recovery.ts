@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
-import { appendEventInTransaction, withLedger } from "@ralph-next/persistence"
-import { type EventEnvelope, EventEnvelopeConsumerSchema } from "@ralph-next/telemetry"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
+import { appendEventInTransaction, withLedger } from "@ralph/persistence"
+import { type EventEnvelope, EventEnvelopeConsumerSchema } from "@ralph/telemetry"
 import { z } from "zod"
 
 const SafeNonNegativeIntegerSchema = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER)

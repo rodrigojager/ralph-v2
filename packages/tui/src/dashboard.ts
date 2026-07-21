@@ -1005,7 +1005,7 @@ export function RunDashboard(props: RunDashboardProps): JSX.Element {
     const roleFlag = providersState.role === "executor" ? "executor" : "judge"
     const routeCli = selectedModelValue
       ? [
-          "ralph-next run",
+          "ralph run",
           `--${roleFlag}-provider ${selectedModelValue.provider}`,
           `--${roleFlag}-model ${selectedModelValue.id}`,
           ...(selectedCredentialValue

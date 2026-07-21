@@ -11,7 +11,7 @@ import {
   type RunOptionOverrides,
   type RunOptionResolutionContext,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   acquireDurableLease,
   getEvidenceBundle,
@@ -24,10 +24,10 @@ import {
   listRunTasks,
   readEvents,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
-import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph-next/test-kit"
-import { readVerifiedContentReference } from "@ralph-next/verification"
+} from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
+import { type ScriptedExecution, ScriptedExecutionBackend } from "@ralph/test-kit"
+import { readVerifiedContentReference } from "@ralph/verification"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const temporaryDirectories: string[] = []

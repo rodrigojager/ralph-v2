@@ -8,7 +8,7 @@ import {
   releaseManifestSigningSha256,
   type StandaloneReleaseCandidateReceipt,
   StandaloneReleaseCandidateReceiptSchema,
-} from "@ralph-next/distribution"
+} from "@ralph/distribution"
 import { compareUtf8Bytes } from "./release-order"
 
 const MAXIMUM_CANDIDATE_METADATA_BYTES = 8 * 1024 * 1024

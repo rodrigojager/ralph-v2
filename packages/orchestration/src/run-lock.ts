@@ -7,7 +7,7 @@ import {
   type LeaseProbeRecord,
   RalphError,
   WorkspaceIdentitySchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   acquireDurableLease,
   assertDurableLeaseOwned,
@@ -20,7 +20,7 @@ import {
   type WorkspaceLayout,
   workspaceLayout,
   writeFileAtomic,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   captureCurrentProcessIdentity,
   type ProcessIdentity,
@@ -73,7 +73,7 @@ export type DurableExecutionLock = ExecutionLock & {
 
 function safeDefaultCommand(): string {
   const executable = basename(process.execPath)
-  const entrypoint = process.argv[1] ? basename(process.argv[1]) : "ralph-next"
+  const entrypoint = process.argv[1] ? basename(process.argv[1]) : "ralph"
   const subcommand = process.argv[2]?.startsWith("-") ? undefined : process.argv[2]
   return [executable, entrypoint, subcommand].filter(Boolean).join(" ")
 }

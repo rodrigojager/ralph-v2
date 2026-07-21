@@ -26,12 +26,8 @@ import {
   TaskRecordSchema,
   type TaskRuntimeStatus,
   TaskRuntimeStatusSchema,
-} from "@ralph-next/domain"
-import {
-  type EventEnvelope,
-  EventEnvelopeConsumerSchema,
-  type EventLevel,
-} from "@ralph-next/telemetry"
+} from "@ralph/domain"
+import { type EventEnvelope, EventEnvelopeConsumerSchema, type EventLevel } from "@ralph/telemetry"
 import { appendEventInTransaction, withLedger } from "./ledger"
 
 export { CHILD_RUN_LINKS_MIGRATION_SQL } from "./child-run-links-migration"

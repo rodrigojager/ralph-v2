@@ -3,7 +3,7 @@ import { realpathSync } from "node:fs"
 import { cp, lstat, mkdir, mkdtemp, readdir, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path"
-import { writeFileAtomic } from "@ralph-next/persistence"
+import { writeFileAtomic } from "@ralph/persistence"
 import { nativeTarget, sha256File, validateStandaloneArtifact } from "./build-artifact"
 import {
   type CompatibilityReport,

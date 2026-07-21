@@ -6,7 +6,7 @@ import {
   WatchdogRecoveryDecisionSchema,
   WatchdogSnapshotSchema,
   WatchdogStateSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { z } from "zod"
 import type { EventInput, EventLevel } from "./events"
 

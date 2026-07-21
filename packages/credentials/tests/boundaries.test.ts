@@ -49,7 +49,7 @@ describe("credential package dependency and authority boundary", () => {
           `${file} imports outside the credential boundary: ${specifier}`,
         ).toBe(true)
       }
-      expect(source, file).not.toContain("@ralph-next/")
+      expect(source, file).not.toContain("@ralph/")
       expect(source, file).not.toMatch(/\b(?:child_process|execFile|spawnSync)\b/)
       if (basename(file) === "secret-process.ts") {
         expect(source.match(/\bBun\.spawn\b/g) ?? []).toHaveLength(1)

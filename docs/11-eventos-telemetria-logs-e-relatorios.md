@@ -298,7 +298,7 @@ As views reconstruíveis são independentes:
 - `diagnostic`: errors, failures e diagnostics.
 
 O comando canônico é
-`ralph-next logs tail [--run-id ID] [--source SOURCE] [--task DOC/TASK]`
+`ralph logs tail [--run-id ID] [--source SOURCE] [--task DOC/TASK]`
 `[--worker-id ID] [--type EVENT] [--level LEVEL] [--since ISO] [--limit N]`
 `[--follow]`. Sem `--run-id`, ele escolhe o run persistido mais recente quando
 existe; filtros são aplicados antes do tail. Follow começa no cursor durável depois

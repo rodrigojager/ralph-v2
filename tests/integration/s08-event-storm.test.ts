@@ -10,13 +10,9 @@ import {
   runLayout,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
-import { type EventInput, RawStreamRecordSchema } from "@ralph-next/telemetry"
-import {
-  type RunUiEventEnvelope,
-  RunUiEventStore,
-  type RunUiRenderScheduler,
-} from "@ralph-next/tui"
+} from "@ralph/persistence"
+import { type EventInput, RawStreamRecordSchema } from "@ralph/telemetry"
+import { type RunUiEventEnvelope, RunUiEventStore, type RunUiRenderScheduler } from "@ralph/tui"
 import { createWorkspaceBunProcessSupervisor } from "../../apps/ralph-cli/src/process-output-store"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 

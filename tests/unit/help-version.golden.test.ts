@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import { readFile } from "node:fs/promises"
 import { resolve } from "node:path"
-import { helpData, helpText } from "@ralph-next/commands"
-import { commandResult, serializeCommandResult } from "@ralph-next/telemetry"
+import { helpData, helpText } from "@ralph/commands"
+import { commandResult, serializeCommandResult } from "@ralph/telemetry"
 
 const VERSION = "9.8.7-test"
 const GOLDEN_DIRECTORY = resolve(import.meta.dir, "../golden")
@@ -23,8 +23,8 @@ describe("help/version golden output", () => {
   })
 
   test("human and JSON version remain stable", async () => {
-    const data = { name: "ralph-next", version: VERSION }
-    expect(`ralph-next ${VERSION}\n`).toBe(await golden("version.human.txt"))
+    const data = { name: "ralph", version: VERSION }
+    expect(`ralph ${VERSION}\n`).toBe(await golden("version.human.txt"))
     expect(serializeCommandResult(commandResult("version", data), "json", [])).toBe(
       await golden("version.json.txt"),
     )

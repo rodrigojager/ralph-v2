@@ -262,7 +262,7 @@ de compliance sem depender apenas do nome do commit. O contrato estrutural corre
 S11.11 foi fechada pelo harness integral `bun run compat:s10`, executado exclusivamente pelo wrapper
 Windows oculto/`BelowNormal` depois de validação mínima 11/11 com 161 assertions, typecheck e build
 fresco. O report de `2026-07-19T23:05:54.068Z` passou 91/91 checks, sem regressions ou surface
-regressions. Ele comparou `ralph 0.2.0` e `ralph-next 0.1.0-dev.1` reais, executou S01/S03, sondou o
+regressions. Ele comparou `ralph 0.2.0` e `ralph 0.1.0-dev.1` reais, executou S01/S03, sondou o
 inventário fechado de commands/flags, exercitou human/JSON/aliases e completou coexistência,
 inspect/apply/rollback com origem/config/sentinels imutáveis. As suites vinculadas de execution/options,
 control-flow, parallel/Git/security e signal/resume terminaram com exit 0.

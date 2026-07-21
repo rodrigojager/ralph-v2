@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto"
 import { lstat, readFile } from "node:fs/promises"
-import type { VerificationSpec } from "@ralph-next/prd"
+import type { VerificationSpec } from "@ralph/prd"
 import { evaluateVerificationApplicability } from "./applicability"
 import { validateArtifactContract } from "./artifact-contract"
 import type {

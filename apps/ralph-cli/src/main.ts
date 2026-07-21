@@ -5,20 +5,15 @@ import { chmod, copyFile, lstat, mkdtemp, open, readFile, realpath } from "node:
 import { tmpdir } from "node:os"
 import { extname, isAbsolute, join, relative, resolve, sep } from "node:path"
 import { fileURLToPath } from "node:url"
-import {
-  type CommandContext,
-  executeCli,
-  type RunUiCommandService,
-  runCli,
-} from "@ralph-next/commands"
+import { type CommandContext, executeCli, type RunUiCommandService, runCli } from "@ralph/commands"
 import {
   DeferredUninstallRequestSchema,
   type DeferredUninstallScheduler,
   executeDeferredUninstallCleanup,
   InstallOriginSchema,
   serializeDistributionControlFile,
-} from "@ralph-next/distribution"
-import { createSandboxProcessPort, discoverSandboxCapability } from "@ralph-next/orchestration"
+} from "@ralph/distribution"
+import { createSandboxProcessPort, discoverSandboxCapability } from "@ralph/orchestration"
 import packageJson from "../../../package.json" with { type: "json" }
 import { createCommandShutdownLifecycle } from "./command-shutdown"
 import { createConfigEditorCommandService } from "./config-editor"
@@ -40,7 +35,7 @@ import {
 import { runWorkerMain } from "./worker-main"
 
 const INTERNAL_UNINSTALL_CLEANUP = "--ralph-internal-uninstall-cleanup"
-const DISTRIBUTION_ORIGIN_SYMBOL = Symbol.for("ralph-next.distribution-origin")
+const DISTRIBUTION_ORIGIN_SYMBOL = Symbol.for("ralph.distribution-origin")
 
 async function commandDistributionOrigin(): Promise<CommandContext["distributionOrigin"]> {
   const shared = globalThis as typeof globalThis & Record<symbol, unknown>
@@ -116,7 +111,7 @@ function deferredUninstallScheduler(): DeferredUninstallScheduler {
     async schedule(rawRequest) {
       const request = DeferredUninstallRequestSchema.parse(rawRequest)
       const canonicalTemp = await realpath(resolve(tmpdir()))
-      const operationRoot = await mkdtemp(join(canonicalTemp, "ralph-next-uninstall-"))
+      const operationRoot = await mkdtemp(join(canonicalTemp, "ralph-uninstall-"))
       const installRoot = resolve(request.installRoot)
       if (operationRoot === installRoot || inside(installRoot, operationRoot)) {
         throw new Error("OS temp directory is not external to the requested install root")

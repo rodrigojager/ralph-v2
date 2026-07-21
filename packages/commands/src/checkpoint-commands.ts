@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { lstat, readFile, realpath } from "node:fs/promises"
 import { isAbsolute, relative, resolve, sep } from "node:path"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
 import {
   applyCheckpointRollback,
   createGitCommandPort,
@@ -10,7 +10,7 @@ import {
   type GitCommandPort,
   inspectGitBaseline,
   previewCheckpointRollback,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   canonicalDirectory,
   getRun,
@@ -19,7 +19,7 @@ import {
   readEventHighWater,
   snapshotLedgerWorkspaceEventRetention,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 
 type InitializedCheckpointWorkspace = {
   root: string

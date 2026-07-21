@@ -1,9 +1,9 @@
 import { lstat, mkdtemp, open, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { basename, dirname, isAbsolute, join, resolve } from "node:path"
-import type { ConfigEditorCommandService } from "@ralph-next/commands"
-import { EXIT_CODES, RalphError } from "@ralph-next/domain"
-import { writeFileAtomic } from "@ralph-next/persistence"
+import type { ConfigEditorCommandService } from "@ralph/commands"
+import { EXIT_CODES, RalphError } from "@ralph/domain"
+import { writeFileAtomic } from "@ralph/persistence"
 
 const MAX_EDITOR_DOCUMENT_BYTES = 1024 * 1024
 
@@ -103,7 +103,7 @@ async function resolveEditorExecutable(
 async function removeEditorTemporaryDirectory(path: string): Promise<void> {
   const canonicalTemp = await realpath(resolve(tmpdir()))
   const parent = await realpath(dirname(path))
-  if (parent !== canonicalTemp || !basename(path).startsWith("ralph-next-config-edit-")) {
+  if (parent !== canonicalTemp || !basename(path).startsWith("ralph-config-edit-")) {
     throw new RalphError(
       "RALPH_CONFIG_EDITOR_TEMP_UNSAFE",
       "Refusing to clean an unexpected config editor temporary directory",
@@ -189,7 +189,7 @@ export function createConfigEditorCommandService(
       const executable = await resolveEditorExecutable(environment)
       const args = editorArguments(environment)
       const canonicalTemp = await realpath(resolve(tmpdir()))
-      const temporaryRoot = await mkdtemp(join(canonicalTemp, "ralph-next-config-edit-"))
+      const temporaryRoot = await mkdtemp(join(canonicalTemp, "ralph-config-edit-"))
       const documentPath = join(temporaryRoot, "config.yaml")
       try {
         await writeFileAtomic(documentPath, request.document, { overwrite: false, mode: 0o600 })

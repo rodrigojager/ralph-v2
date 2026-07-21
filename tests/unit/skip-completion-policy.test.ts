@@ -4,18 +4,18 @@ import {
   type GateResult,
   GateResultSchema,
   GitBaselineSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   compilePrdGraph,
   type PrdTask,
   type VerificationSpec,
   VerificationSpecSchema,
-} from "@ralph-next/prd"
+} from "@ralph/prd"
 import {
   buildEvidenceBundle,
   decideDeterministicCompletion,
   runVerification,
-} from "@ralph-next/verification"
+} from "@ralph/verification"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const TASK_FIXTURE = "tests/fixtures/execution/single-pass/PRD.md"

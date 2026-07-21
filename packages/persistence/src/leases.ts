@@ -8,7 +8,7 @@ import {
   LeaseProbeRecordSchema,
   type LeaseProbeStatus,
   RalphError,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { appendEventInTransaction, withLedger } from "./ledger"
 
 const LEASE_COLUMNS = `id, schema_version, kind, resource_key, workspace_id, run_id,

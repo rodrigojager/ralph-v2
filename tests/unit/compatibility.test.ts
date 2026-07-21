@@ -77,7 +77,7 @@ describe("compatibility classification", () => {
     const result = classifyScenario(
       "help",
       capture("ralph - legacy help\n"),
-      capture("ralph-next 0.1.0 - S01 help\n"),
+      capture("ralph 0.1.0 - S01 help\n"),
     )
     expect(result.classification).toBe("changed")
     expect(result.assessment).toBe("pass")

@@ -23,7 +23,7 @@ A S05 não entrega judge, watchdog completo, TUI rica, execução de Sub-PRDs, p
 ## Fluxo autoritativo
 
 ```text
-ralph-next once/run/loop
+ralph once/run/loop
         │
         ├─ compila PRD e seleciona task
         ├─ resolve snapshot imutável de config/perfil
@@ -170,7 +170,7 @@ Flags operacionais relevantes:
 Exemplo headless conservador:
 
 ```text
-ralph-next once --prd PRD.md --executor-profile executor-openai \
+ralph once --prd PRD.md --executor-profile executor-openai \
   --security safe --headless-ask deny \
   --read-path . --write-path src \
   --allow-command "project-check --slice current" \
@@ -268,9 +268,9 @@ Embedded e external CLI convergem para eventos Ralph comandados. Entre os evento
 Consulte o stream persistido com:
 
 ```text
-ralph-next events --run-id <RUN_ID> --format jsonl
-ralph-next status run --run-id <RUN_ID> --format json
-ralph-next report show <RUN_ID> --format json
+ralph events --run-id <RUN_ID> --format jsonl
+ralph status run --run-id <RUN_ID> --format json
+ralph report show <RUN_ID> --format json
 ```
 
 Raw stdout/stderr e frames de provider ficam sob `.ralph/runs/<run-id>/raw/` por chamada/processo, referenciados por hash/URI portável nos settlements e eventos. A visão bounded informa quando output resumido ou raw foi truncado.
@@ -284,7 +284,7 @@ Esses eventos são a base para os painéis de status, tokens, progresso, logs e 
 Use o mesmo comando de execução com `--dry-run`:
 
 ```text
-ralph-next once --prd PRD.md --executor-profile executor-cli \
+ralph once --prd PRD.md --executor-profile executor-cli \
   --dry-run --non-interactive --format json
 ```
 
@@ -297,7 +297,7 @@ A saída deve ser tratada como preflight de configuração, não como prova de q
 Perfil embedded:
 
 ```text
-ralph-next profiles configure executor-openai \
+ralph profiles configure executor-openai \
   --scope workspace --role executor --backend embedded \
   --provider openai --model <MODEL_ID> --credential <CREDENTIAL_REF> \
   --require-tools
@@ -306,7 +306,7 @@ ralph-next profiles configure executor-openai \
 Perfil external CLI v1 com tools governadas pelo Ralph:
 
 ```text
-ralph-next profiles configure executor-cli \
+ralph profiles configure executor-cli \
   --scope workspace --role executor --backend external-cli \
   --provider <PROVIDER_ID> --model <MODEL_ID> \
   --cli-executable custom-agent \

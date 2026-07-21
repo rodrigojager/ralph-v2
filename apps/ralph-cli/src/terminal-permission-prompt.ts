@@ -5,7 +5,7 @@ import {
   type ToolPermissionRequest,
   type ToolPermissionResponse,
   ToolPermissionResponseSchema,
-} from "@ralph-next/tool-host"
+} from "@ralph/tool-host"
 
 type TtyReadable = NodeJS.ReadableStream & { readonly isTTY?: boolean }
 type TtyWritable = NodeJS.WritableStream & { readonly isTTY?: boolean }

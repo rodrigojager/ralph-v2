@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { ControlledTestClock } from "@ralph-next/test-kit"
+import { ControlledTestClock } from "@ralph/test-kit"
 import type { LoopbackCallbackFactory, OAuthClock, OAuthFetch, SecretInput } from "../src/index"
 import {
   OAuthFlowError,

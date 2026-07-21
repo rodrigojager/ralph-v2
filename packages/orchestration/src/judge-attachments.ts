@@ -1,9 +1,9 @@
 import { lstat } from "node:fs/promises"
 import { basename, isAbsolute, relative, resolve, sep } from "node:path"
 
-import type { EvidenceBundle } from "@ralph-next/domain"
-import type { JudgeTextAttachmentInput } from "@ralph-next/evaluation"
-import { readVerifiedContentReference } from "@ralph-next/verification"
+import type { EvidenceBundle } from "@ralph/domain"
+import type { JudgeTextAttachmentInput } from "@ralph/evaluation"
+import { readVerifiedContentReference } from "@ralph/verification"
 import { z } from "zod"
 
 const Sha256Schema = z.string().regex(/^[a-f0-9]{64}$/)

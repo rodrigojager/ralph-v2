@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { readFile } from "node:fs/promises"
 import { basename, extname } from "node:path"
-import type { Diagnostic } from "@ralph-next/domain"
+import type { Diagnostic } from "@ralph/domain"
 import { fromMarkdown } from "mdast-util-from-markdown"
 import { parseDocument, stringify } from "yaml"
 import {

@@ -14,14 +14,14 @@ import {
   RalphError,
   type VerificationCommandReport,
   VerificationCommandReportSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   buildJudgeEvaluationBundle,
   createJudgeEvaluator,
   type JudgeBackendResolver,
   type JudgeEventSink,
   type JudgeKind,
-} from "@ralph-next/evaluation"
+} from "@ralph/evaluation"
 import {
   appendEvent,
   createCommandOperation,
@@ -38,7 +38,7 @@ import {
   readEvidenceBundleObject,
   runLayout,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   type CompiledPrdGraph,
   compilePrdGraph,
@@ -46,8 +46,8 @@ import {
   hashCanonicalValue,
   type PrdDocument,
   type PrdTask,
-} from "@ralph-next/prd"
-import { redactValue, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+} from "@ralph/prd"
+import { redactValue, secretValuesFromEnvironment } from "@ralph/telemetry"
 import {
   buildEvidenceBundle,
   captureWorkspaceBaseline,
@@ -63,7 +63,7 @@ import {
   runVerifications,
   verifyWorkspaceBaselineContent,
   type WorkspaceBaseline,
-} from "@ralph-next/verification"
+} from "@ralph/verification"
 import { loadTaskBaseline } from "./baseline"
 import { evaluationPolicyForTask } from "./evaluation"
 import {

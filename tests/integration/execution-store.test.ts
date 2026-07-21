@@ -13,7 +13,7 @@ import {
   ExecutorOutcomeSchema,
   GateResultSchema,
   GitBaselineSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   ATTEMPT_EFFECTIVE_OPTIONS_MIGRATION_SQL,
   commitCompletion,
@@ -54,7 +54,7 @@ import {
   upsertRunTask,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const NOW = "2026-07-18T12:00:00.000Z"

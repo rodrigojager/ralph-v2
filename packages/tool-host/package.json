@@ -1,12 +1,12 @@
 {
-  "name": "@ralph-next/tool-host",
+  "name": "@ralph/tool-host",
   "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@ralph-next/supervisor": "workspace:*",
-    "@ralph-next/telemetry": "workspace:*",
+    "@ralph/supervisor": "workspace:*",
+    "@ralph/telemetry": "workspace:*",
     "zod": "4.4.3"
   }
 }

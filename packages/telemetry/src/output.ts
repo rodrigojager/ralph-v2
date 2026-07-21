@@ -3,7 +3,7 @@ import {
   CommandResultSchema,
   type Diagnostic,
   DiagnosticSchema,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { type EventEnvelope, EventEnvelopeConsumerSchema } from "./events"
 import { redactText, redactValue, secretValuesFromEnvironment } from "./redaction"
 

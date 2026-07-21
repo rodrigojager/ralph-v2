@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname, resolve } from "node:path"
-import { type CommandContext, executeCli } from "@ralph-next/commands"
-import { ExecutorOutcomeSchema } from "@ralph-next/domain"
+import { type CommandContext, executeCli } from "@ralph/commands"
+import { ExecutorOutcomeSchema } from "@ralph/domain"
 import type {
   BackendCapabilities,
   CallHandle,
   ExecutionBackend,
   ExecutionChannel,
   ExecutionRequest,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   initializeWorkspace,
   listAttempts,
@@ -18,7 +18,7 @@ import {
   listRunTasks,
   readEvents,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 
 const VERSION = "0.1.0-s07-watchdog-recovery"

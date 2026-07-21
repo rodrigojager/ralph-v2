@@ -5,7 +5,7 @@ import {
   RalphError,
   type ResourceClaimMode,
   type ResourceClaimSpec,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 
 export type CanonicalPathClaimBinding = {
   workspaceRoot: string

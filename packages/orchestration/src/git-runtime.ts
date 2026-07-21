@@ -10,13 +10,13 @@ import {
   GitWorktreeRecordSchema,
   RalphError,
   type ResourceClaimSetRecord,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   createGitIntegrationRecord,
   createGitWorktreeRecord,
   transitionGitIntegrationRecord,
   transitionGitWorktreeRecord,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 
 export type GitCommandResult = {
   exitCode?: number

@@ -6,7 +6,7 @@ import {
   ProcessShutdownRegistry,
   spawnTypedWorker,
   workerExecutableContentHash,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 import {
   type CommandSignal,
   type CommandSignalSource,

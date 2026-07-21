@@ -40,8 +40,8 @@ Um humano escreve/lê Markdown normal e o Ralph compila exatamente a mesma estru
 ## Verificação mínima
 
 ```text
-ralph-next prd validate examples/PRD-v2-exemplo.md --recursive --strict
-ralph-next prd inspect examples/PRD-v2-exemplo.md --recursive --strict --format json
-ralph-next prd migrate <fixture-v1> --output <temp-v2>
+ralph prd validate examples/PRD-v2-exemplo.md --recursive --strict
+ralph prd inspect examples/PRD-v2-exemplo.md --recursive --strict --format json
+ralph prd migrate <fixture-v1> --output <temp-v2>
 bun test packages/prd
 ```

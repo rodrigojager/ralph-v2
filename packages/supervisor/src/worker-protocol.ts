@@ -1,6 +1,6 @@
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isAbsolute } from "node:path"
-import { redactValue } from "@ralph-next/telemetry"
+import { redactValue } from "@ralph/telemetry"
 import { z } from "zod"
 
 const NonEmptyStringSchema = z.string().min(1).max(4_096)

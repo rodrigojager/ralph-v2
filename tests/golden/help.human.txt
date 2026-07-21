@@ -1,7 +1,7 @@
-ralph-next 9.8.7-test — command-authoritative AI task runner
+ralph 9.8.7-test — command-authoritative AI task runner
 
 USAGE
-  ralph-next <command> [options]
+  ralph <command> [options]
 
 COMMANDS
   init (aliases: setup)                            Initialize an isolated Ralph v2 workspace [compatible]
@@ -77,9 +77,6 @@ COMMANDS
   update                                           Stage and atomically activate a verified standalone engine without replacing the running launcher [changed]
   rollback                                         Atomically reactivate a receipt-bound installed version without touching workspace state [changed]
   uninstall                                        Remove only receipt-owned standalone files while preserving config, credentials and workspaces [changed]
-  alias ralph status                               Inspect the receipt-bound optional ralph alias without changing PATH or files [changed]
-  alias ralph install                              Create the stable-only receipt-owned ralph alias after exact preview plan-hash confirmation [changed]
-  alias ralph remove                               Remove only the receipt/hash-verified Ralph v2 alias after exact preview plan-hash confirmation [changed]
   profiles list                                    List independent executor and judge profiles [changed]
   profiles inspect                                 Inspect one resolved role profile [changed]
   profiles configure                               Configure or inherit exact role-profile layer fields through shared CLI/form metadata [changed]
@@ -220,7 +217,7 @@ OPTIONS
   --to-version VERSION                           Require a release version or select a receipt-bound version for install rollback
   --allow-downgrade                              Explicitly authorize an older compatible release during standalone update
   --expires-in SEC                               Bound the validity window of a persisted rollback preview
-  --confirm-plan-hash SHA256                     Confirm checkpoint/migration rollback or optional-alias mutation with the exact matching preview hash
+  --confirm-plan-hash SHA256                     Confirm checkpoint or migration rollback with the exact matching preview hash
   --retry-delay SEC                              Set a non-negative delay between retry opportunities
   --max-iterations N                             Limit positive Wiggum iterations; requires effective mode wiggum
   --max-model-calls N                            Limit model calls to a positive integer

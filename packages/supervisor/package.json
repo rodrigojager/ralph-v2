@@ -1,5 +1,5 @@
 {
-  "name": "@ralph-next/supervisor",
+  "name": "@ralph/supervisor",
   "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",
@@ -8,8 +8,8 @@
     "./process-identity": "./src/process-identity.ts"
   },
   "dependencies": {
-    "@ralph-next/domain": "workspace:*",
-    "@ralph-next/telemetry": "workspace:*",
+    "@ralph/domain": "workspace:*",
+    "@ralph/telemetry": "workspace:*",
     "zod": "4.4.3"
   }
 }

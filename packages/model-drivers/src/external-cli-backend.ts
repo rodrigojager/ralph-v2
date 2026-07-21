@@ -2,26 +2,26 @@ import { lstat, mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { isAbsolute, join, relative, resolve, sep } from "node:path"
 
-import { ExecutorOutcomeSchema } from "@ralph-next/domain"
+import { ExecutorOutcomeSchema } from "@ralph/domain"
 import type {
   CallHandle,
   ExecutionBackend,
   ExecutionBackendLimits,
   ExecutionChannel,
   ExecutionRequest,
-} from "@ralph-next/orchestration"
+} from "@ralph/orchestration"
 import {
   type ExternalCliRuntimeConfig,
   ExternalCliRuntimeConfigSchema,
   type ProviderModelInput,
   RoleProfileLimitsSchema,
-} from "@ralph-next/providers"
+} from "@ralph/providers"
 import {
   type ProcessSettlement,
   type ProcessSupervisor,
   type SupervisedProcessHandle,
   workerExecutableContentHash,
-} from "@ralph-next/supervisor"
+} from "@ralph/supervisor"
 
 import {
   ExternalCliProtocolInputSchema,

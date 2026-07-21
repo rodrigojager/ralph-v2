@@ -101,16 +101,16 @@
       "classification": "derived",
       "sourcePaths": ["packages/opencode/src/plugin/openai/codex.ts"],
       "patchIds": ["P0002"],
-      "sha256": "d19cf3d7e857114e2b435f736eabd3072a2ae4c8f90fc13b8bc821285c4030e6",
-      "sha256Lf": "d19cf3d7e857114e2b435f736eabd3072a2ae4c8f90fc13b8bc821285c4030e6"
+      "sha256": "dd466c047fb47f18d5979076eafa2797a45beaa653a35ca6435b064c7c66520f",
+      "sha256Lf": "dd466c047fb47f18d5979076eafa2797a45beaa653a35ca6435b064c7c66520f"
     },
     {
       "path": "packages/openai-driver/src/device-auth.ts",
       "classification": "derived",
       "sourcePaths": ["packages/opencode/src/plugin/openai/codex.ts"],
       "patchIds": ["P0002"],
-      "sha256": "5787fd1fb5b5789f1ad55f90282fe1b16f6735ffcb19b0db92e05ce8867b607f",
-      "sha256Lf": "5787fd1fb5b5789f1ad55f90282fe1b16f6735ffcb19b0db92e05ce8867b607f"
+      "sha256": "d5b76f278621c970a48f55ab2e5f6fbdebd39852975bfedb7842143f33ecff0f",
+      "sha256Lf": "d5b76f278621c970a48f55ab2e5f6fbdebd39852975bfedb7842143f33ecff0f"
     },
     {
       "path": "packages/openai-driver/src/driver.ts",

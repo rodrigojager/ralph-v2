@@ -12,7 +12,7 @@ import {
   EXIT_CODES,
   RalphError,
   type RunStatus,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   acquireDurableLease,
   assertDurableLeaseOwned,
@@ -34,7 +34,7 @@ import {
   reserveChildRun,
   settleChildRun,
   updateChildRunObservation,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   type CompiledPrdGraph,
   CompiledPrdGraphSchema,
@@ -42,8 +42,8 @@ import {
   type PrdDocument,
   type PrdTask,
   type TaskRef,
-} from "@ralph-next/prd"
-import type { EventEnvelope } from "@ralph-next/telemetry"
+} from "@ralph/prd"
+import type { EventEnvelope } from "@ralph/telemetry"
 
 const TERMINAL_RUN_STATUSES: readonly RunStatus[] = ["completed", "failed", "cancelled"]
 const DEFAULT_CHILD_LIMITS = Object.freeze({

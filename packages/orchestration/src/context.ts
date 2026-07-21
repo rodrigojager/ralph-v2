@@ -15,7 +15,7 @@ import {
   type RecoveryManifest,
   RecoveryManifestSchema,
   type RunMode,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import {
   type CompiledPrdGraph,
   hashCanonicalValue,
@@ -24,7 +24,7 @@ import {
   stableJson,
   type TaskRef,
   type VerificationSpec,
-} from "@ralph-next/prd"
+} from "@ralph/prd"
 
 export type ContextLimits = {
   maxTotalPayloadBytes: number

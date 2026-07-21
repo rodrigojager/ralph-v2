@@ -3,7 +3,7 @@ import type { Dirent } from "node:fs"
 import { lstat, readdir, rmdir } from "node:fs/promises"
 import { join, relative, resolve, sep } from "node:path"
 
-import { parseTelemetryEventRetention, type TelemetryConfig } from "@ralph-next/domain"
+import { parseTelemetryEventRetention, type TelemetryConfig } from "@ralph/domain"
 import {
   acquireFilesystemLease,
   clearAbandonedFilesystemLease,
@@ -13,7 +13,7 @@ import {
   removeTrustedFile,
   type TrustedFileIdentity,
   trustedFileIdentity,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 
 import { DEFAULT_RAW_STREAM_RETENTION } from "./raw-streams"
 

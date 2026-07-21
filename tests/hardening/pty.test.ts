@@ -3,15 +3,15 @@ import { createHash, randomUUID } from "node:crypto"
 import { cp, readFile, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { resolve } from "node:path"
-import { executeCli } from "@ralph-next/commands"
+import { executeCli } from "@ralph/commands"
 import {
   executeRun,
   type RunOptionOverrides,
   resolveEffectiveRunOptions,
-} from "@ralph-next/orchestration"
-import { initializeWorkspace } from "@ralph-next/persistence"
-import { compilePrdGraph } from "@ralph-next/prd"
-import { ScriptedExecutionBackend } from "@ralph-next/test-kit"
+} from "@ralph/orchestration"
+import { initializeWorkspace } from "@ralph/persistence"
+import { compilePrdGraph } from "@ralph/prd"
+import { ScriptedExecutionBackend } from "@ralph/test-kit"
 import { buildRunUiSnapshot } from "../../apps/ralph-cli/src/tui-services"
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 

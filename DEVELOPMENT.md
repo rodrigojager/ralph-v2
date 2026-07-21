@@ -19,7 +19,7 @@ O estado correto é `development, unpublished`: prova local não substitui smoke
 candidate binding, assinatura, packaging ou promoção descritos em
 `docs/27-auditoria-estatica-e-validacao-diferida-s11-s12.md`.
 
-O `/goal` do Codex é usado para implementar o projeto, não para executar o produto. `ralph-next` continua sendo um CLI independente que governa modelos por comandos próprios e consome PRDs.
+O `/goal` do Codex é usado para implementar o projeto, não para executar o produto. `ralph` continua sendo um CLI independente que governa modelos por comandos próprios e consome PRDs.
 
 ## Requisitos
 
@@ -71,17 +71,17 @@ Esse comando modifica arquivos. O CI usa somente `bun run lint`.
 O script de workspace aceita os argumentos depois de `--`:
 
 ```text
-bun run ralph-next -- version
-bun run ralph-next -- help
-bun run ralph-next -- about --format json
-bun run ralph-next -- status --workspace <diretorio>
-bun run ralph-next -- status run --workspace <diretorio>
-bun run ralph-next -- init --workspace <diretorio> --format json
-bun run ralph-next -- once --workspace <diretorio> --prd PRD.md --dry-run --format json
-bun run ralph-next -- providers list --format json
-bun run ralph-next -- models list --provider openai --format json
-bun run ralph-next -- auth list --format json
-bun run ralph-next -- profiles list --format json
+bun run ralph -- version
+bun run ralph -- help
+bun run ralph -- about --format json
+bun run ralph -- status --workspace <diretorio>
+bun run ralph -- status run --workspace <diretorio>
+bun run ralph -- init --workspace <diretorio> --format json
+bun run ralph -- once --workspace <diretorio> --prd PRD.md --dry-run --format json
+bun run ralph -- providers list --format json
+bun run ralph -- models list --provider openai --format json
+bun run ralph -- auth list --format json
+bun run ralph -- profiles list --format json
 ```
 
 Para consumo automatizado de JSON durante o desenvolvimento, prefira o entrypoint direto com Bun silencioso ou o standalone, evitando que mensagens do próprio package runner sejam confundidas com output do CLI:
@@ -231,8 +231,8 @@ O parser também reconhece `--allow-insecure-store`, mas a composition S04 recus
 Os exemplos oficiais e o contrato da skill são validados pelo mesmo parser runtime:
 
 ```text
-bun run ralph-next -- prd validate examples/PRD-v2-exemplo.md --recursive --strict
-bun run ralph-next -- prd inspect examples/PRD-v2-exemplo.md --recursive --format json
+bun run ralph -- prd validate examples/PRD-v2-exemplo.md --recursive --strict
+bun run ralph -- prd inspect examples/PRD-v2-exemplo.md --recursive --format json
 bun test tests/unit/prd-parser.test.ts tests/unit/prd-graph.test.ts
 bun test tests/unit/prd-marker-format-classic.test.ts tests/integration/prd-cli.test.ts
 ```
@@ -371,7 +371,7 @@ Esse último comando realiza rede/consumo reais quando a credential aponta para 
 
 ### Storage e artefatos
 
-O data root é o diretório que contém o config global: `%APPDATA%/ralph-next` no Windows quando `APPDATA` existe, ou `$XDG_CONFIG_HOME/ralph-next`/`~/.config/ralph-next` nas demais plataformas. `RALPH_CONFIG_HOME` substitui o diretório em fixtures/CI.
+O data root é o diretório que contém o config global: `%APPDATA%/ralph` no Windows quando `APPDATA` existe, ou `$XDG_CONFIG_HOME/ralph`/`~/.config/ralph` nas demais plataformas. `RALPH_CONFIG_HOME` substitui o diretório em fixtures/CI.
 
 ```text
 config.yaml                         perfis globais, somente credential refs
@@ -452,7 +452,7 @@ O snapshot fixado do OpenCode é `45cd8d76920839e4a7b6b931c4e26b52e1495636`, MIT
 arquivo por arquivo, hashes, patch IDs, licença e exceções nominais. `copied-files.md`, `patches.md` e
 `UPSTREAM.md` são projeções humanas que o gate confere contra esse inventário. O parâmetro protocolar
 `originator=opencode` é uma exceção nominal preservada: não é User-Agent ou branding. O User-Agent é
-`ralph-next/...` e pode ser injetado. O gate rejeita dependência OpenCode flutuante, pacote privado,
+`ralph/...` e pode ser injetado. O gate rejeita dependência OpenCode flutuante, pacote privado,
 source/destination não inventariado, hash divergente e branding ou asset upstream não declarado.
 
 O guia operacional completo está em [docs/20-providers-auth-e-modelos-s04.md](docs/20-providers-auth-e-modelos-s04.md).
@@ -546,9 +546,9 @@ bun run build
 O comando gera:
 
 ```text
-dist/ralph-next.js
-dist/ralph-next.js.map
-dist/standalone/<target>/ralph-next[.exe]
+dist/ralph.js
+dist/ralph.js.map
+dist/standalone/<target>/ralph[.exe]
 dist/standalone/<target>/build-metadata.json
 ```
 
@@ -602,7 +602,7 @@ O smoke:
 Para testar explicitamente outro binário compatível com a plataforma atual:
 
 ```text
-bun run scripts/smoke.ts --binary <caminho-do-ralph-next>
+bun run scripts/smoke.ts --binary <caminho-do-ralph>
 ```
 
 O smoke exige `build-metadata.json` ao lado do standalone e valida target nativo, SHA-256 do artefato e fingerprint do source/receita de build atuais antes de executar. Um artefato antigo não pode produzir nova evidência `tested`; reconstrua com `bun run build`.

@@ -1,10 +1,10 @@
-import { type ExecutorOutcome, ExecutorOutcomeSchema } from "@ralph-next/domain"
+import { type ExecutorOutcome, ExecutorOutcomeSchema } from "@ralph/domain"
 import {
   ProviderModelInputSchema,
   ProviderToolCallSchema,
   ProviderToolDefinitionSchema,
-} from "@ralph-next/providers"
-import { redactText } from "@ralph-next/telemetry"
+} from "@ralph/providers"
+import { redactText } from "@ralph/telemetry"
 import { z } from "zod"
 
 const MAX_EXTERNAL_OUTPUT_BYTES = 4 * 1024 * 1024

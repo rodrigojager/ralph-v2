@@ -15,7 +15,7 @@ O Ralph clássico possui comportamentos que nem sempre correspondem à interface
 
 ### Nome e superfície S01
 
-- Manter `ralph-next` até o gate final de migração.
+- Manter `ralph` até o gate final de migração.
 - Implementar `help`, `version`, `about`, `init`/`setup`, `status`, `doctor`, `config explain` e `config list`.
 - Não registrar comandos de provider/modelo, execução de task ou TUI antes das slices proprietárias.
 - Flags desconhecidas/duplicadas, valores ausentes e combinações inválidas falham com exit code 2 e diagnostic estável.

@@ -3,7 +3,7 @@ import { afterEach, describe, expect, setDefaultTimeout, test } from "bun:test"
 import { mkdir } from "node:fs/promises"
 import { dirname } from "node:path"
 
-import { type JudgeAssessment, JudgeAssessmentSchema } from "@ralph-next/domain"
+import { type JudgeAssessment, JudgeAssessmentSchema } from "@ralph/domain"
 import {
   ATTEMPT_EFFECTIVE_OPTIONS_MIGRATION_SQL,
   createJudgeCall,
@@ -22,7 +22,7 @@ import {
   TOOL_CALL_JOURNAL_MIGRATION_SQL,
   withLedger,
   workspaceLayout,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 
 import { createTestDirectory, removeTestDirectory } from "../helpers/temp-directory"
 

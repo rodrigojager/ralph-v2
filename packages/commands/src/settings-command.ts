@@ -6,15 +6,15 @@ import {
   ProfileParametersSchema,
   RalphConfigLayerSchema,
   RalphError,
-} from "@ralph-next/domain"
-import type { RunOptionOverrides } from "@ralph-next/orchestration"
+} from "@ralph/domain"
+import type { RunOptionOverrides } from "@ralph/orchestration"
 import {
   inspectWorkspace,
   type SettingsConfigMutation,
   type SettingsConfigPatch,
   type SettingsConfigScope,
   writeSettingsConfig,
-} from "@ralph-next/persistence"
+} from "@ralph/persistence"
 import {
   EVALUATION_SETTINGS_METADATA,
   EXECUTION_SECURITY_SETTINGS_METADATA,
@@ -1355,15 +1355,7 @@ export function previewSettingsDraft(
       )
     }
     const configArguments = field.configPath
-      ? [
-          "ralph-next",
-          "config",
-          "set",
-          field.configPath,
-          JSON.stringify(change.value),
-          "--scope",
-          scope,
-        ]
+      ? ["ralph", "config", "set", field.configPath, JSON.stringify(change.value), "--scope", scope]
       : undefined
     return {
       fieldId: field.id,
@@ -1392,7 +1384,7 @@ export function previewSettingsDraft(
     configPatch: configPatch as SettingsConfigPatch,
     configCommands: entries.flatMap((entry) => (entry.configCommand ? [entry.configCommand] : [])),
     runArguments,
-    runCommand: displayCommand(["ralph-next", "run", ...runArguments]),
+    runCommand: displayCommand(["ralph", "run", ...runArguments]),
     entries,
     applyForRunAvailable: unavailableReason === undefined,
     ...(unavailableReason ? { applyForRunUnavailableReason: unavailableReason } : {}),

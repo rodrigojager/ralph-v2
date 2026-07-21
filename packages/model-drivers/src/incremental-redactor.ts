@@ -1,5 +1,5 @@
-import type { OpenAiEvent } from "@ralph-next/openai-driver"
-import { REDACTED, redactText, redactValue } from "@ralph-next/telemetry"
+import type { OpenAiEvent } from "@ralph/openai-driver"
+import { REDACTED, redactText, redactValue } from "@ralph/telemetry"
 
 type PendingStream = {
   channel: string

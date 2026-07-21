@@ -1,4 +1,4 @@
-import { EXIT_CODES, type ExecutorOutcome, RalphError } from "@ralph-next/domain"
+import { EXIT_CODES, type ExecutorOutcome, RalphError } from "@ralph/domain"
 import type { CallHandle, ExecutionBackend } from "./backend"
 
 const MAX_TIMER_DELAY_MS = 2_147_483_647

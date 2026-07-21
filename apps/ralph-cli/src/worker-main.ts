@@ -1,5 +1,5 @@
-import { runWorkerEntrypointFromEnvironment } from "@ralph-next/supervisor"
-import { redactText, secretValuesFromEnvironment } from "@ralph-next/telemetry"
+import { runWorkerEntrypointFromEnvironment } from "@ralph/supervisor"
+import { redactText, secretValuesFromEnvironment } from "@ralph/telemetry"
 import { createBuiltinRalphWorkerRoleAdapter } from "./worker-adapters"
 
 function boundedError(error: unknown): string {

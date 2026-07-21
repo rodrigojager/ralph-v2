@@ -1,4 +1,4 @@
-import { type CommandResult, EXIT_CODES, type ExitCode, toRalphError } from "@ralph-next/domain"
+import { type CommandResult, EXIT_CODES, type ExitCode, toRalphError } from "@ralph/domain"
 import {
   type CommandExecution,
   type OutputFormat,
@@ -7,7 +7,7 @@ import {
   secretValuesFromEnvironment,
   writeCommandExecution,
   writeCommandStream,
-} from "@ralph-next/telemetry"
+} from "@ralph/telemetry"
 import { type CommandContext, handleCommand } from "./handlers"
 import { inferRequestedFormat, parseCli } from "./parser"
 

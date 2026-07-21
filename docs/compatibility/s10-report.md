@@ -7,12 +7,12 @@ de produto (compatible/changed/deprecated/removed) permanece separada do assessm
 
 ## Identidade da execução
 
-- Gerado em: 2026-07-20T15:37:43.103Z
+- Gerado em: 2026-07-21T10:00:10.656Z
 - Host: win32/x64
 - Target nativo: bun-windows-x64-baseline
 - Legacy: `<LEGACY_BINARY_DIR>\ralph.exe` — `ffd6b016713e8754b06ad1c9a2f51d6ba761e7b223bd2083fd1f99c9b0a217ee`
-- Next: `<PROJECT_ROOT>\dist\standalone\bun-windows-x64-baseline\ralph-next.exe` — `8c7ef6834a517dbf2441428340ffd0e16d111446b0caf426147e9956864f56f2`
-- Source antes/depois: `f757b8208c30e0e1360028d7d8b525dce88905ee612e9989dd0704589e151973` / `f757b8208c30e0e1360028d7d8b525dce88905ee612e9989dd0704589e151973`
+- Next: `<PROJECT_ROOT>\dist\standalone\bun-windows-x64-baseline\ralph.exe` — `6a875d6a69c45b3c431b86f5a6b4be13c8d4f72daa00afd7221791ea89605613`
+- Source antes/depois: `1615ef4768c45996fd51d0d6125aecfa7dd12e5474f29248ae2a561123f7608b` / `1615ef4768c45996fd51d0d6125aecfa7dd12e5474f29248ae2a561123f7608b`
 - Binários distintos e imutáveis: yes
 - Workspace descartável com espaço/Unicode, env allowlist, configs isolados e subprocessos windowsHide: yes
 - Retido para diagnóstico: no

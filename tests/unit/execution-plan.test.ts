@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { resolve } from "node:path"
-import { buildExecutionPlan, resolveEffectiveRunOptions } from "@ralph-next/orchestration"
-import { compilePrdGraph } from "@ralph-next/prd"
+import { buildExecutionPlan, resolveEffectiveRunOptions } from "@ralph/orchestration"
+import { compilePrdGraph } from "@ralph/prd"
 
 async function graphFor(path: string) {
   const absolute = resolve(path)

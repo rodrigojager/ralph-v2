@@ -10,7 +10,7 @@ import {
   commandOperationRequestHash,
   EXIT_CODES,
   RalphError,
-} from "@ralph-next/domain"
+} from "@ralph/domain"
 import { appendEventInTransaction, withLedger } from "./ledger"
 
 const MAX_ERROR_CHARACTERS = 65_536

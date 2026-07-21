@@ -1,11 +1,7 @@
 import { describe, expect, test } from "bun:test"
 
-import type {
-  OpenAiEventSink,
-  OpenAiModelRequest,
-  ResponseConsumption,
-} from "@ralph-next/openai-driver"
-import { CURATED_CATALOG_SEED, type ProviderEvent } from "@ralph-next/providers"
+import type { OpenAiEventSink, OpenAiModelRequest, ResponseConsumption } from "@ralph/openai-driver"
+import { CURATED_CATALOG_SEED, type ProviderEvent } from "@ralph/providers"
 
 import {
   type OpenAiInvokerLease,
